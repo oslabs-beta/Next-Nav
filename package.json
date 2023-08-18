@@ -1,6 +1,6 @@
 {
-  "name": "test1",
-  "displayName": "test1",
+  "name": "next-extension",
+  "displayName": "next-extension",
   "description": "",
   "version": "0.0.1",
   "engines": {
@@ -14,8 +14,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "test1.helloWorld",
-        "title": "Test Me"
+        "command": "next-extension.helloWorld",
+        "title": "Hello World"
       }
     ]
   },
