@@ -1,32 +1,47 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deactivate = exports.activate = void 0;
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 const vscode = require("vscode");
+const path = require("path");
 const makeTree_1 = require("./makeTree");
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
+const fs_1 = require("fs");
 function activate(context) {
-    // Use the console to output diagnostic information (console.log) and errors (console.error)
-    // This line of code will only be executed once when your extension is activated
-    console.log('Congratulations, your extension "test1" is now active!');
-    // The command has been defined in the package.json file
-    // Now provide the implementation of the command with registerCommand
-    // The commandId parameter must match the command field in package.json
-    let disposable = vscode.commands.registerCommand('test1.helloWorld', async () => {
-        // The code you place here will be executed every time your command is executed
-        // Display a message box to the user
-        // vscode.window.showInformationMessage('Hello World from test1!');
-        // vscode.window.showInformationMessage('Hello part2 from test1!');
+    console.log('Congratulations, your extension "next-extension" is now active!');
+    let disposable = vscode.commands.registerCommand('next-extension.helloWorld', async () => {
         const result = await (0, makeTree_1.default)();
         vscode.window.showInformationMessage(JSON.stringify(result));
-        // console.log('hi hello hey');
+        const webview = vscode.window.createWebviewPanel('reactWebview', 'React Webview', vscode.ViewColumn.One, {
+            enableScripts: true
+        });
+        const scriptPathOnDisk = vscode.Uri.file(path.join(context.extensionPath, 'webview-react-app', 'dist', 'bundle.js'));
+        const scriptUri = scriptPathOnDisk.with({ scheme: 'vscode-resource' });
+        // Read the content of the bundle.js file and insert it directly into the script tag
+        try {
+            const bundlePath = path.join(context.extensionPath, 'webview-react-app', 'dist', 'bundle.js');
+            const bundleContent = await fs_1.promises.readFile(bundlePath, 'utf-8');
+            webview.webview.html = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="UTF-8">
+          <title>React Webview</title>
+        </head>
+        <body>
+          <div id="root"></div>
+          <script>
+          ${bundleContent}
+          </script>
+        </body>
+        </html>`;
+        }
+        catch (err) {
+            console.error('Error reading bundle.js:', err);
+        }
+        vscode.window.showInformationMessage('Hello, World!');
     });
     context.subscriptions.push(disposable);
 }
 exports.activate = activate;
-// This method is called when your extension is deactivated
 function deactivate() { }
 exports.deactivate = deactivate;
 //# sourceMappingURL=extension.js.map
