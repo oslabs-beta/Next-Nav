@@ -13,15 +13,15 @@ export default async function treeMaker(): Promise<any> {
     contents: []
     }
     ];
-    
+
     const directory =  await findDir();
     const extensions = /\.(js|jsx|css|ts|tsx)$/;
- 
+
   async function listFiles(dir: string, parent: number): Promise<void> {
-    
+
     const withFileTypes = true;
     const entities = await fs.readdir(dir, { withFileTypes });
-   
+
     for (const entity of entities as Dirent[]) {
       const fullPath = path.join(dir, entity.name);
 
@@ -32,16 +32,16 @@ export default async function treeMaker(): Promise<any> {
           parentNode: parent,
           contents: []
         };
-        
+
         structure.push(directoryData);
-        
+
         await listFiles(fullPath, directoryData.id);
       } else if (extensions.test(entity.name)) {
         structure[parent].contents.push(entity.name);
       }
     }
   }
-  
+
   await listFiles(directory, 0);
   console.log('tree ', JSON.stringify(structure, null, 2));
   return structure;
