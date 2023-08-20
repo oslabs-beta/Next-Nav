@@ -27,133 +27,133 @@ const elkOptions = {
   'elk.spacing.nodeNode': '100',
 };
 
-type FileNode = {
-  id: number;
-  folderName: string;
-  parentNode: number | null;
-  contents?: string[];
-};
+// type FileNode = {
+//   id: number;
+//   folderName: string;
+//   parentNode: number | null;
+//   contents?: string[];
+// };
 
-type Tree = FileNode[];
+// type Tree = FileNode[];
 
-const initialNodes: any[] = [];
-const initialEdges: any[] = [];
-const parseData = (serverResponse: Tree) => {
-  const position = { x: 0, y: 0 };
-  //create initialNodes
-  serverResponse.forEach((obj) => {
-    initialNodes.push({
-      id: `${obj.id}`,
-      data: {
-        label: (
-          <div>
-            {obj.folderName}
-            <ul>{obj.contents}</ul>
-            <button>View</button>
-          </div>
-        ),
-      },
-      position,
-    });
-    if (obj.parentNode !== null) {
-      initialEdges.push({
-        id: `${obj.parentNode}`,
-        source: `${obj.parentNode}`,
-        target: `${obj.id}`,
-        type: 'smoothstep',
-      });
-    }
-  });
-  //create initialEdges
-};
+// const initialNodes: any[] = [];
+// const initialEdges: any[] = [];
+// const parseData = (serverResponse: Tree) => {
+//   const position = { x: 0, y: 0 };
+//   //create initialNodes
+//   serverResponse.forEach((obj) => {
+//     initialNodes.push({
+//       id: `${obj.id}`,
+//       data: {
+//         label: (
+//           <div>
+//             {obj.folderName}
+//             <ul>{obj.contents}</ul>
+//             <button>View</button>
+//           </div>
+//         ),
+//       },
+//       position,
+//     });
+//     if (obj.parentNode !== null) {
+//       initialEdges.push({
+//         id: `${obj.parentNode}`,
+//         source: `${obj.parentNode}`,
+//         target: `${obj.id}`,
+//         type: 'smoothstep',
+//       });
+//     }
+//   });
+//   //create initialEdges
+// };
 
 // //fetch request
-parseData([
-  {
-    id: 0,
-    folderName: 'app',
-    parentNode: null,
-    contents: ['globals.css', 'layout.js', 'page.jsx', 'page.module.css'],
-  },
-  {
-    id: 1,
-    folderName: 'about',
-    parentNode: 0,
-    contents: ['page.jsx', 'page.module.css'],
-  },
-  {
-    id: 2,
-    folderName: 'blog',
-    parentNode: 0,
-    contents: ['page.jsx', 'page.module.css'],
-  },
-  {
-    id: 3,
-    folderName: '[id]',
-    parentNode: 2,
-    contents: ['page.jsx', 'page.module.css'],
-  },
-  {
-    id: 4,
-    folderName: 'contact',
-    parentNode: 0,
-    contents: ['loading.jsx', 'page.jsx', 'page.module.css'],
-  },
-  {
-    id: 5,
-    folderName: 'dashboard',
-    parentNode: 0,
-    contents: ['page.jsx', 'page.module.css'],
-  },
-  {
-    id: 6,
-    folderName: '(auth)',
-    parentNode: 5,
-    contents: [],
-  },
-  {
-    id: 7,
-    folderName: 'login',
-    parentNode: 6,
-    contents: ['page.jsx', 'page.module.css'],
-  },
-  {
-    id: 8,
-    folderName: 'register',
-    parentNode: 6,
-    contents: ['page.jsx', 'page.module.css'],
-  },
-  {
-    id: 9,
-    folderName: 'logs',
-    parentNode: 5,
-    contents: [],
-  },
-  {
-    id: 10,
-    folderName: 'settings',
-    parentNode: 5,
-    contents: [],
-  },
-  {
-    id: 11,
-    folderName: 'users',
-    parentNode: 5,
-    contents: [],
-  },
-  {
-    id: 12,
-    folderName: 'portfolio',
-    parentNode: 0,
-    contents: ['page.jsx', 'page.module.css'],
-  },
-  {
-    id: 13,
-    folderName: '[category]',
-    parentNode: 12,
-    contents: ['page.jsx', 'page.module.css'],
-  },
-]);
+// parseData([
+//   {
+//     id: 0,
+//     folderName: 'app',
+//     parentNode: null,
+//     contents: ['globals.css', 'layout.js', 'page.jsx', 'page.module.css'],
+//   },
+//   {
+//     id: 1,
+//     folderName: 'about',
+//     parentNode: 0,
+//     contents: ['page.jsx', 'page.module.css'],
+//   },
+//   {
+//     id: 2,
+//     folderName: 'blog',
+//     parentNode: 0,
+//     contents: ['page.jsx', 'page.module.css'],
+//   },
+//   {
+//     id: 3,
+//     folderName: '[id]',
+//     parentNode: 2,
+//     contents: ['page.jsx', 'page.module.css'],
+//   },
+//   {
+//     id: 4,
+//     folderName: 'contact',
+//     parentNode: 0,
+//     contents: ['loading.jsx', 'page.jsx', 'page.module.css'],
+//   },
+//   {
+//     id: 5,
+//     folderName: 'dashboard',
+//     parentNode: 0,
+//     contents: ['page.jsx', 'page.module.css'],
+//   },
+//   {
+//     id: 6,
+//     folderName: '(auth)',
+//     parentNode: 5,
+//     contents: [],
+//   },
+//   {
+//     id: 7,
+//     folderName: 'login',
+//     parentNode: 6,
+//     contents: ['page.jsx', 'page.module.css'],
+//   },
+//   {
+//     id: 8,
+//     folderName: 'register',
+//     parentNode: 6,
+//     contents: ['page.jsx', 'page.module.css'],
+//   },
+//   {
+//     id: 9,
+//     folderName: 'logs',
+//     parentNode: 5,
+//     contents: [],
+//   },
+//   {
+//     id: 10,
+//     folderName: 'settings',
+//     parentNode: 5,
+//     contents: [],
+//   },
+//   {
+//     id: 11,
+//     folderName: 'users',
+//     parentNode: 5,
+//     contents: [],
+//   },
+//   {
+//     id: 12,
+//     folderName: 'portfolio',
+//     parentNode: 0,
+//     contents: ['page.jsx', 'page.module.css'],
+//   },
+//   {
+//     id: 13,
+//     folderName: '[category]',
+//     parentNode: 12,
+//     contents: ['page.jsx', 'page.module.css'],
+//   },
+// ]);
 
 // interface customElkNode extends ElkNode {
 //   data?: {
@@ -195,7 +195,7 @@ const getLayoutedElements = async (
     edges: edges,
   };
   try {
-    const elkGraph = await elk.layout(graph);
+    const elkGraph = await elk.layout(graph); //this is what's failing
     if (!elkGraph.children) {
       elkGraph.children = [];
     }
@@ -211,13 +211,20 @@ const getLayoutedElements = async (
       edges: elkGraph.edges,
     };
   } catch (error) {
-    console.log(error);
+    console.log('catch block failed: ', error);
   }
 };
 
-export default function LayoutFlow() {
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+type props = {
+  initialNodes: any[];
+  initialEdges: any[];
+};
+
+export default function LayoutFlow({ initialNodes, initialEdges }: props) {
+  console.log('nodes: ', initialNodes);
+  console.log('edges: ', initialEdges);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const { fitView } = useReactFlow();
 
   const onConnect = useCallback(
@@ -297,3 +304,4 @@ export default function LayoutFlow() {
 //       </div>
 //     </div>
 //   );
+// }

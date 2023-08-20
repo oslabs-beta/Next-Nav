@@ -1,12 +1,12 @@
 import React from 'react';
-import TreeView from './components/TreeView';
+import TreeContainer from './components/TreeContainer';
 
 const App: React.FC = () => {
   return (
     <div>
       <h1>Next.Nav</h1>
       <button>Import Next Project Root Folder</button>
-      <TreeView />
+      <TreeContainer />
     </div>
   );
 };
