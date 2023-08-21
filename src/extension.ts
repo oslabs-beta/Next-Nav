@@ -7,10 +7,6 @@ export function activate(context: vscode.ExtensionContext) {
   console.log('Congratulations, your extension "next-extension" is now active!');
 
   let disposable = vscode.commands.registerCommand('next-extension.helloWorld', async () => {
-
-    const result = await treeMaker();
-		vscode.window.showInformationMessage(JSON.stringify(result));
-
     const webview = vscode.window.createWebviewPanel(
       'reactWebview',
       'React Webview',
@@ -20,10 +16,26 @@ export function activate(context: vscode.ExtensionContext) {
       }
     );
 
-    const scriptPathOnDisk = vscode.Uri.file(
-      path.join(context.extensionPath, 'webview-react-app', 'dist', 'bundle.js')
+    webview.webview.onDidReceiveMessage(
+      async message => {
+        switch (message.command) {
+          case 'getRequest':
+            const { src, app } = message;
+            const result = await treeMaker(src, app);
+            const sendString = JSON.stringify(result);
+            vscode.window.showInformationMessage(sendString);
+            webview.webview.postMessage({command: 'sendString', data: sendString});
+            break;
+        }
+      },
+      undefined, //this value for event listener
+      context.subscriptions
     );
-    const scriptUri = scriptPathOnDisk.with({ scheme: 'vscode-resource' });
+
+    // const scriptPathOnDisk = vscode.Uri.file(
+    //   path.join(context.extensionPath, 'webview-react-app', 'dist', 'bundle.js')
+    // );
+    // const scriptUri = scriptPathOnDisk.with({ scheme: 'vscode-resource' });
 
     // Read the content of the bundle.js file and insert it directly into the script tag
     try {
