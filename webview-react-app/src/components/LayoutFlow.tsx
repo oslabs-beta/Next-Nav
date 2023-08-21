@@ -221,8 +221,7 @@ type props = {
 };
 
 export default function LayoutFlow({ initialNodes, initialEdges }: props) {
-  console.log('nodes: ', initialNodes);
-  console.log('edges: ', initialEdges);
+  // console.log('component rendered');
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const { fitView } = useReactFlow();
@@ -231,6 +230,7 @@ export default function LayoutFlow({ initialNodes, initialEdges }: props) {
     (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
     []
   );
+
   const onLayout = useCallback(
     async ({
       direction,
@@ -241,8 +241,10 @@ export default function LayoutFlow({ initialNodes, initialEdges }: props) {
     }): Promise<any> => {
       const opts = { 'elk.direction': direction, ...elkOptions };
       const ns = useInitialNodes ? initialNodes : nodes;
+      console.log('OnLayout-nodes', ns);
       // const ns = initialNodes;
       const es = useInitialNodes ? initialEdges : edges;
+      console.log('OnLayout-edges', es);
       // const es = initialEdges;
 
       // getLayoutedElements(ns, es, opts).then(
@@ -262,13 +264,14 @@ export default function LayoutFlow({ initialNodes, initialEdges }: props) {
 
       window.requestAnimationFrame(() => fitView());
     },
-    [nodes, edges]
+    [nodes, edges, initialNodes]
   );
 
   // Calculate the initial layout on mount.
   useLayoutEffect(() => {
+    console.log('initNodes', initialNodes);
     onLayout({ direction: 'DOWN', useInitialNodes: true });
-  }, []);
+  }, [initialNodes]);
 
   return (
     <ReactFlow
