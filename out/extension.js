@@ -9,10 +9,12 @@ function activate(context) {
     console.log('Congratulations, your extension "next-extension" is now active!');
     let disposable = vscode.commands.registerCommand('next-extension.helloWorld', async () => {
         const result = await (0, makeTree_1.default)();
-        vscode.window.showInformationMessage(JSON.stringify(result));
+        const sendString = JSON.stringify(result);
+        vscode.window.showInformationMessage(sendString);
         const webview = vscode.window.createWebviewPanel('reactWebview', 'React Webview', vscode.ViewColumn.One, {
-            enableScripts: true
+            enableScripts: true,
         });
+        webview.webview.postMessage({ command: 'sendString', data: sendString });
         const scriptPathOnDisk = vscode.Uri.file(path.join(context.extensionPath, 'webview-react-app', 'dist', 'bundle.js'));
         const scriptUri = scriptPathOnDisk.with({ scheme: 'vscode-resource' });
         // Read the content of the bundle.js file and insert it directly into the script tag

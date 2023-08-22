@@ -4,32 +4,47 @@ import treeMaker from './makeTree';
 import { promises as fs } from 'fs';
 
 export function activate(context: vscode.ExtensionContext) {
-  console.log('Congratulations, your extension "next-extension" is now active!');
+  console.log(
+    'Congratulations, your extension "next-extension" is now active!'
+  );
 
-  let disposable = vscode.commands.registerCommand('next-extension.helloWorld', async () => {
+  let disposable = vscode.commands.registerCommand(
+    'next-extension.helloWorld',
+    async () => {
+      const result = await treeMaker();
+      const sendString = JSON.stringify(result);
+      vscode.window.showInformationMessage(sendString);
 
-    const result = await treeMaker();
-		vscode.window.showInformationMessage(JSON.stringify(result));
+      const webview = vscode.window.createWebviewPanel(
+        'reactWebview',
+        'React Webview',
+        vscode.ViewColumn.One,
+        {
+          enableScripts: true,
+        }
+      );
 
-    const webview = vscode.window.createWebviewPanel(
-      'reactWebview',
-      'React Webview',
-      vscode.ViewColumn.One,
-      {
-        enableScripts: true
-      }
-    );
+      webview.webview.postMessage({ command: 'sendString', data: sendString });
+      const scriptPathOnDisk = vscode.Uri.file(
+        path.join(
+          context.extensionPath,
+          'webview-react-app',
+          'dist',
+          'bundle.js'
+        )
+      );
+      const scriptUri = scriptPathOnDisk.with({ scheme: 'vscode-resource' });
 
-    const scriptPathOnDisk = vscode.Uri.file(
-      path.join(context.extensionPath, 'webview-react-app', 'dist', 'bundle.js')
-    );
-    const scriptUri = scriptPathOnDisk.with({ scheme: 'vscode-resource' });
-
-    // Read the content of the bundle.js file and insert it directly into the script tag
-    try {
-      const bundlePath = path.join(context.extensionPath, 'webview-react-app', 'dist', 'bundle.js');
-      const bundleContent = await fs.readFile(bundlePath, 'utf-8');
-      webview.webview.html = `
+      // Read the content of the bundle.js file and insert it directly into the script tag
+      try {
+        const bundlePath = path.join(
+          context.extensionPath,
+          'webview-react-app',
+          'dist',
+          'bundle.js'
+        );
+        const bundleContent = await fs.readFile(bundlePath, 'utf-8');
+        webview.webview.html = `
         <!DOCTYPE html>
         <html>
         <head>
@@ -43,11 +58,12 @@ export function activate(context: vscode.ExtensionContext) {
           </script>
         </body>
         </html>`;
-    } catch (err) {
-      console.error('Error reading bundle.js:', err);
+      } catch (err) {
+        console.error('Error reading bundle.js:', err);
+      }
+      vscode.window.showInformationMessage('Hello, World!');
     }
-    vscode.window.showInformationMessage('Hello, World!');
-  });
+  );
 
   context.subscriptions.push(disposable);
 }

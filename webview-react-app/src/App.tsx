@@ -1,11 +1,12 @@
 import React from 'react';
+import TreeContainer from './components/TreeContainer';
 
 const App: React.FC = () => {
   return (
     <div>
-      <h1>Hello, VS Code!</h1>
-      <button> Go To Hell VSCode!!!!!!!!!!</button>
-      <p>This is a simple React component running inside a VS Code extension.</p>
+      <h1>Next.Nav</h1>
+      <button>Import Next Project Root Folder</button>
+      <TreeContainer />
     </div>
   );
 };
