@@ -7,6 +7,7 @@ type FileNode = {
   folderName: string;
   parentNode: number | null;
   contents?: string[];
+  filePath?: string;
 };
 
 type Tree = FileNode[];
@@ -43,10 +44,6 @@ const initNodes: Tree = [
     contents: ['loading.jsx', 'page.jsx', 'page.module.css'],
   },
 ];
-
-// TODO test ReactFlowProvider
-// TODO dependencies for rerendering
-// TODO elkgraph x y syntax
 
 // const initEdges = [
 //   { id: 'e12', source: '0', target: '1', type: 'smoothstep' },
@@ -124,21 +121,23 @@ export default function TreeContainer() {
               initialEdges={initialEdges}
             />
           </ReactFlowProvider>
+          <button
+            style={{
+              position: 'absolute',
+              top: '100px',
+              right: '10px',
+            }}
+            onClick={() => {
+              console.log('directory: ', directory);
+              parseData(JSON.parse(directory));
+            }}
+          >
+            Get Data
+          </button>
         </div>
       ) : (
         <div>loading</div>
       )}
-      <div>
-        <h1>Test your app</h1>
-        <button
-          onClick={() => {
-            console.log('directory: ', directory);
-            parseData(JSON.parse(directory));
-          }}
-        >
-          Button
-        </button>
-      </div>
     </div>
   );
 }
