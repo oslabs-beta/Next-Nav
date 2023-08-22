@@ -280,7 +280,6 @@ export default function LayoutFlow({ initialNodes, initialEdges }: props) {
       onConnect={onConnect}
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
-      fitView
     >
       <Panel position="top-right">
         <button onClick={() => onLayout({ direction: 'DOWN' })}>

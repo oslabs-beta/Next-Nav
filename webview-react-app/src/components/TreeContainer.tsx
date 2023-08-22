@@ -117,7 +117,7 @@ export default function TreeContainer() {
   return (
     <div>
       {isParsed ? (
-        <div style={{ width: '80vw', height: '80vh', display: 'flex' }}>
+        <div style={{ width: '100vw', height: '100vh', display: 'flex' }}>
           <ReactFlowProvider>
             <LayoutFlow
               initialNodes={initialNodes}
