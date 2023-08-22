@@ -270,7 +270,9 @@ export default function LayoutFlow({ initialNodes, initialEdges }: props) {
   // Calculate the initial layout on mount.
   useLayoutEffect(() => {
     console.log('initNodes', initialNodes);
-    onLayout({ direction: 'DOWN', useInitialNodes: true });
+
+    //sets the initial direction of the graph:
+    onLayout({ direction: 'RIGHT', useInitialNodes: true });
   }, [initialNodes]);
 
   return (
@@ -293,17 +295,3 @@ export default function LayoutFlow({ initialNodes, initialEdges }: props) {
     </ReactFlow>
   );
 }
-
-// export default function TreeView() {
-//   return (
-//     <div style={{ width: '80vw', height: '80vh', display: 'flex' }}>
-//       <ReactFlowProvider>
-//         <LayoutFlow />
-//       </ReactFlowProvider>
-//       <div>
-//         <h1>Test your app</h1>
-//         {/* <button onClick={}>Button</button> */}
-//       </div>
-//     </div>
-//   );
-// }
