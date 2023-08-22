@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import LayoutFlow from './LayoutFlow';
 import { ReactFlowProvider } from 'reactflow';
+import Node from './Node';
 
-type FileNode = {
+export type FileNode = {
   id: number;
   folderName: string;
   parentNode: number | null;
   contents?: string[];
-  filePath?: string;
+  path?: string;
 };
 
-type Tree = FileNode[];
+export type Tree = FileNode[];
 
 const initNodes: Tree = [
   {
@@ -83,11 +84,12 @@ export default function TreeContainer() {
         id: `${obj.id}`,
         data: {
           label: (
-            <div>
-              {obj.folderName}
-              <ul>{obj.contents}</ul>
-              <button>View</button>
-            </div>
+            // <div>
+            //   {obj.folderName}
+            //   <ul>{obj.contents}</ul>
+            //   <button>View</button>
+            // </div>
+            <Node obj={obj} />
           ),
         },
         position,
