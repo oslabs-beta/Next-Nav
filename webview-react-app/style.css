@@ -1,0 +1,12 @@
+.react-flow__node {
+  border: none;
+}
+
+.react-flow__node:focus {
+  border: none;
+}
+
+.react-flow__edge-path {
+  stroke-width: 5;
+  stroke: black;
+}

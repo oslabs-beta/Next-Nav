@@ -12,7 +12,9 @@ import ReactFlow, {
   Connection,
 } from 'reactflow';
 
-import 'reactflow/dist/style.css';
+import 'reactflow/dist/base.css';
+
+import '../../style.css';
 
 const elk = new ELK();
 
@@ -35,125 +37,6 @@ const elkOptions = {
 // };
 
 // type Tree = FileNode[];
-
-// const initialNodes: any[] = [];
-// const initialEdges: any[] = [];
-// const parseData = (serverResponse: Tree) => {
-//   const position = { x: 0, y: 0 };
-//   //create initialNodes
-//   serverResponse.forEach((obj) => {
-//     initialNodes.push({
-//       id: `${obj.id}`,
-//       data: {
-//         label: (
-//           <div>
-//             {obj.folderName}
-//             <ul>{obj.contents}</ul>
-//             <button>View</button>
-//           </div>
-//         ),
-//       },
-//       position,
-//     });
-//     if (obj.parentNode !== null) {
-//       initialEdges.push({
-//         id: `${obj.parentNode}`,
-//         source: `${obj.parentNode}`,
-//         target: `${obj.id}`,
-//         type: 'smoothstep',
-//       });
-//     }
-//   });
-//   //create initialEdges
-// };
-
-// //fetch request
-// parseData([
-//   {
-//     id: 0,
-//     folderName: 'app',
-//     parentNode: null,
-//     contents: ['globals.css', 'layout.js', 'page.jsx', 'page.module.css'],
-//   },
-//   {
-//     id: 1,
-//     folderName: 'about',
-//     parentNode: 0,
-//     contents: ['page.jsx', 'page.module.css'],
-//   },
-//   {
-//     id: 2,
-//     folderName: 'blog',
-//     parentNode: 0,
-//     contents: ['page.jsx', 'page.module.css'],
-//   },
-//   {
-//     id: 3,
-//     folderName: '[id]',
-//     parentNode: 2,
-//     contents: ['page.jsx', 'page.module.css'],
-//   },
-//   {
-//     id: 4,
-//     folderName: 'contact',
-//     parentNode: 0,
-//     contents: ['loading.jsx', 'page.jsx', 'page.module.css'],
-//   },
-//   {
-//     id: 5,
-//     folderName: 'dashboard',
-//     parentNode: 0,
-//     contents: ['page.jsx', 'page.module.css'],
-//   },
-//   {
-//     id: 6,
-//     folderName: '(auth)',
-//     parentNode: 5,
-//     contents: [],
-//   },
-//   {
-//     id: 7,
-//     folderName: 'login',
-//     parentNode: 6,
-//     contents: ['page.jsx', 'page.module.css'],
-//   },
-//   {
-//     id: 8,
-//     folderName: 'register',
-//     parentNode: 6,
-//     contents: ['page.jsx', 'page.module.css'],
-//   },
-//   {
-//     id: 9,
-//     folderName: 'logs',
-//     parentNode: 5,
-//     contents: [],
-//   },
-//   {
-//     id: 10,
-//     folderName: 'settings',
-//     parentNode: 5,
-//     contents: [],
-//   },
-//   {
-//     id: 11,
-//     folderName: 'users',
-//     parentNode: 5,
-//     contents: [],
-//   },
-//   {
-//     id: 12,
-//     folderName: 'portfolio',
-//     parentNode: 0,
-//     contents: ['page.jsx', 'page.module.css'],
-//   },
-//   {
-//     id: 13,
-//     folderName: '[category]',
-//     parentNode: 12,
-//     contents: ['page.jsx', 'page.module.css'],
-//   },
-// ]);
 
 // interface customElkNode extends ElkNode {
 //   data?: {
@@ -189,8 +72,8 @@ const getLayoutedElements = async (
       sourcePosition: isHorizontal ? 'right' : 'bottom',
 
       // Hardcode a width and height for elk to use when layouting.
-      width: 150,
-      height: 50,
+      width: 200,
+      height: 300,
     })),
     edges: edges,
   };
@@ -275,6 +158,10 @@ export default function LayoutFlow({ initialNodes, initialEdges }: props) {
     onLayout({ direction: 'RIGHT', useInitialNodes: true });
   }, [initialNodes]);
 
+  const reactFlowStyle = {
+    background: 'gray',
+  };
+
   return (
     <ReactFlow
       nodes={nodes}
@@ -282,6 +169,7 @@ export default function LayoutFlow({ initialNodes, initialEdges }: props) {
       onConnect={onConnect}
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
+      style={reactFlowStyle}
     >
       <Panel position="top-right">
         <button onClick={() => onLayout({ direction: 'DOWN' })}>
