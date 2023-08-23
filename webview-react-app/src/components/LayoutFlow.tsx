@@ -1,6 +1,6 @@
 // import { initialNodes, initialEdges } from './nodes-edges.tsx';
-import ELK, { ElkNode } from 'elkjs/lib/elk.bundled.js';
-import React, { useCallback, useLayoutEffect } from 'react';
+import ELK, { ElkNode } from "elkjs/lib/elk.bundled.js";
+import React, { useCallback, useLayoutEffect } from "react";
 import ReactFlow, {
   ReactFlowProvider,
   addEdge,
@@ -10,11 +10,25 @@ import ReactFlow, {
   useReactFlow,
   Edge,
   Connection,
-} from 'reactflow';
+} from "reactflow";
+import {Card, Button, Heading} from '@chakra-ui/react'
 
-import 'reactflow/dist/base.css';
 
-import '../../style.css';
+export type FileNode = {
+  id: number;
+  folderName: string;
+  parentNode: number | null;
+  contents?: string[];
+  path?: string;
+};
+
+export type Tree = FileNode[];
+
+//import the empty styles from reactflow to allow for other styles
+import "reactflow/dist/base.css";
+//import styles from NextNav style.css file.
+//This import is required to remove ReactFlow borders
+import "../../style.css";
 
 const elk = new ELK();
 
@@ -24,20 +38,12 @@ const elk = new ELK();
 // - https://www.eclipse.org/elk/reference/algorithms.html
 // - https://www.eclipse.org/elk/reference/options.html
 const elkOptions = {
-  'elk.algorithm': 'layered',
-  'elk.layered.spacing.nodeNodeBetweenLayers': '200',
-  'elk.spacing.nodeNode': '100',
+  "elk.algorithm": "layered",
+  "elk.layered.spacing.nodeNodeBetweenLayers": "200",
+  "elk.spacing.nodeNode": "100",
 };
 
-// type FileNode = {
-//   id: number;
-//   folderName: string;
-//   parentNode: number | null;
-//   contents?: string[];
-// };
-
-// type Tree = FileNode[];
-
+//---For Update the types later--??
 // interface customElkNode extends ElkNode {
 //   data?: {
 //     label: string;
@@ -52,68 +58,80 @@ const elkOptions = {
 // interface customElkEdge extends ElkExtendedEdge {
 //   type?: string;
 // }
+//------------//
 
+//Retrieves the nodes with updated positions from elkJS
 const getLayoutedElements = async (
   nodes: any[],
   edges: any[],
-  options = { ['elk.direction']: 'RIGHT' }
+  options = { ["elk.direction"]: "RIGHT" }
 ): Promise<any> => {
-  // const isHorizontal = options?.['elk.direction'] === 'RIGHT';
+  //Changes the Direction of the graph based on the input
   const isHorizontal: boolean =
-    options['elk.direction'] === 'DOWN' ? false : true;
+    options["elk.direction"] === "DOWN" ? false : true;
+  
+  //Forms data to pass to ELK function
   const graph: ElkNode = {
-    id: 'root',
+    id: "root",
     layoutOptions: options,
     children: nodes.map((node) => ({
       ...node,
       // Adjust the target and source handle positions based on the layout
       // direction.
-      targetPosition: isHorizontal ? 'left' : 'top',
-      sourcePosition: isHorizontal ? 'right' : 'bottom',
+      targetPosition: isHorizontal ? "left" : "top",
+      sourcePosition: isHorizontal ? "right" : "bottom",
 
       // Hardcode a width and height for elk to use when layouting.
+      //Adjust this to change the spacing between nodes
       width: 200,
-      height: 300,
+      height: 200,
     })),
     edges: edges,
   };
+
   try {
-    const elkGraph = await elk.layout(graph); //this is what's failing
+    const elkGraph = await elk.layout(graph); //retrieves the new nodes with new positions
     if (!elkGraph.children) {
-      elkGraph.children = [];
+      elkGraph.children = []; //prevents elkGraph.children from being undefined
     }
-    console.log('elkGraph', elkGraph);
+
+    console.log("elkGraph", elkGraph);
     return {
       nodes: elkGraph.children.map((node) => ({
         ...node,
-        // React Flow expects a position property on the node instead of `x`
-        // and `y` fields.
+        //applies the positions to the child nodes to be readble for ReactFlow
         position: { x: node.x, y: node.y },
       })),
 
       edges: elkGraph.edges,
     };
   } catch (error) {
-    console.log('catch block failed: ', error);
+    //Displayed when the wrong data is passed to elk.layout
+    console.log("catch block failed: ", error);
   }
 };
 
 type props = {
   initialNodes: any[];
   initialEdges: any[];
+  parseData: () => void
 };
 
-export default function LayoutFlow({ initialNodes, initialEdges }: props) {
+export default function LayoutFlow({ initialNodes, initialEdges, parseData }: props) {
   // console.log('component rendered');
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const { fitView } = useReactFlow();
+  const { fitView } = useReactFlow(); //needed to position the tree within the window
 
+  //For when a use connects a node. Not needed currently
   const onConnect = useCallback(
     (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
     []
   );
 
+  //Caches a function that retrieves the positions from the nodes from getLayoutedElements
+  //This funciton persists between loads, unless one of the dependencies change.
+  //All variables associated with this funciton are cached as well. 
   const onLayout = useCallback(
     async ({
       direction,
@@ -122,44 +140,38 @@ export default function LayoutFlow({ initialNodes, initialEdges }: props) {
       direction: string;
       useInitialNodes?: boolean;
     }): Promise<any> => {
-      const opts = { 'elk.direction': direction, ...elkOptions };
+      const opts = { "elk.direction": direction, ...elkOptions };
       const ns = useInitialNodes ? initialNodes : nodes;
-      console.log('OnLayout-nodes', ns);
-      // const ns = initialNodes;
+      console.log("OnLayout-nodes", ns);
+
       const es = useInitialNodes ? initialEdges : edges;
-      console.log('OnLayout-edges', es);
-      // const es = initialEdges;
+      console.log("OnLayout-edges", es);
 
-      // getLayoutedElements(ns, es, opts).then(
-      //   ({ nodes: layoutedNodes, edges: layoutedEdges }: nodesEdges) => {
-      //     setNodes(layoutedNodes);
-      //     setEdges(layoutedEdges);
-
-      //     window.requestAnimationFrame(() => fitView());
-      //   }
-      // );
-
+      //gets the new nodes from the result of getLayoutedElements
       const layoutedElms = await getLayoutedElements(ns, es, opts);
-      console.log('layouted', layoutedElms);
+      console.log("layouted", layoutedElms);
 
       setNodes(layoutedElms.nodes);
       setEdges(layoutedElms.edges);
 
+      //adjusts the view based on the new tree
       window.requestAnimationFrame(() => fitView());
     },
+    //initialNodes is a required dependency to make the useCalbback cache a new function with new data
     [nodes, edges, initialNodes]
   );
 
   // Calculate the initial layout on mount.
   useLayoutEffect(() => {
-    console.log('initNodes', initialNodes);
+    console.log("initNodes", initialNodes);
 
     //sets the initial direction of the graph:
-    onLayout({ direction: 'RIGHT', useInitialNodes: true });
+    onLayout({ direction: "RIGHT", useInitialNodes: true });
   }, [initialNodes]);
 
+  //BACKGROUND OF THE APP
   const reactFlowStyle = {
-    background: 'gray',
+    background: "linear-gradient(#212121, #000000)",
   };
 
   return (
@@ -170,15 +182,51 @@ export default function LayoutFlow({ initialNodes, initialEdges }: props) {
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
       style={reactFlowStyle}
+      minZoom={0.1} //Required to show the full tree and allow user to zoom out more. 
     >
+      {/*Stores the buttons in the top right*/}
       <Panel position="top-right">
-        <button onClick={() => onLayout({ direction: 'DOWN' })}>
-          vertical layout
-        </button>
-
-        <button onClick={() => onLayout({ direction: 'RIGHT' })}>
-          horizontal layout
-        </button>
+        <Heading color='#FFFFFF'>Next.Nav</Heading>
+        <Card
+          flexDir="column"
+          gap="1.5rem"
+          padding="2vh 20px"
+          borderRadius="10px"
+          mr="10px"
+          mt="10px"
+          boxShadow='2xl'
+          bgColor="#454545">
+          <Button
+            fontSize="10px"
+            bgColor="#010101"
+            color="white"
+            onClick={parseData}>
+            Get data
+          </Button>
+          <Button
+            bgColor="#010101"
+            color="white"
+            fontSize="10px"
+            onClick={() => onLayout({ direction: "DOWN" })}>
+            vertical layout
+          </Button>
+          <Button
+            bgColor="#010101"
+            color="white"
+            fontSize="10px"
+            onClick={() => onLayout({ direction: "RIGHT" })}>
+            horizontal layout
+          </Button>
+          <Button
+            bgColor="#010101"
+            color="white"
+            fontSize="10px"
+            onClick={() => {
+              console.log("Page should be refreshed");
+            }}>
+            Refresh
+          </Button>
+        </Card>
       </Panel>
     </ReactFlow>
   );
