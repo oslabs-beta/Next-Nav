@@ -25,6 +25,7 @@ function activate(context) {
         //create a webview to put React on
         const webview = vscode.window.createWebviewPanel('reactWebview', 'React Webview', vscode.ViewColumn.One, {
             enableScripts: true,
+            //make the extnsion persist on tab
             retainContextWhenHidden: true
         });
         //When we get requests from React
