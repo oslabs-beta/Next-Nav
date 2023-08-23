@@ -59,6 +59,7 @@ export default function TreeContainer() {
   const [initialEdges, setInitialEdges] = useState<any[]>([]);
   const [isParsed, setIsParsed] = useState(false); //tracks if the parseData function was called
   const [directory, setDirectory] = useState("");
+  const [viewDirection, setViewDirection] = useState('RIGHT');
 
   useEffect(() => {
     window.addEventListener("message", handleReceivedMessage);
@@ -88,7 +89,7 @@ export default function TreeContainer() {
         id: `${obj.id}`,
         data: {
           label: (
-            <Node props={obj} />
+            <Node props={obj} direction={viewDirection}/>
           ),
         },
         position,
@@ -127,6 +128,7 @@ export default function TreeContainer() {
             <LayoutFlow
               initialNodes={initialNodes}
               initialEdges={initialEdges}
+              setViewDirection={setViewDirection}
               parseData={() => {
                 parseData(JSON.parse(directory));
               }}

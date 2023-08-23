@@ -1,6 +1,6 @@
 // import { initialNodes, initialEdges } from './nodes-edges.tsx';
 import ELK, { ElkNode } from "elkjs/lib/elk.bundled.js";
-import React, { useCallback, useLayoutEffect } from "react";
+import React, { useState, useCallback, useLayoutEffect } from "react";
 import ReactFlow, {
   ReactFlowProvider,
   addEdge,
@@ -11,7 +11,7 @@ import ReactFlow, {
   Edge,
   Connection,
 } from "reactflow";
-import {Card, Button, Heading} from '@chakra-ui/react'
+import {Card, Button, Heading} from '@chakra-ui/react';
 
 
 export type FileNode = {
@@ -114,10 +114,11 @@ const getLayoutedElements = async (
 type props = {
   initialNodes: any[];
   initialEdges: any[];
-  parseData: () => void
+  parseData: () => void;
+  setViewDirection: (string: string) => void
 };
 
-export default function LayoutFlow({ initialNodes, initialEdges, parseData }: props) {
+export default function LayoutFlow({ initialNodes, initialEdges, parseData, setViewDirection }: props) {
   // console.log('component rendered');
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -207,14 +208,20 @@ export default function LayoutFlow({ initialNodes, initialEdges, parseData }: pr
             bgColor="#010101"
             color="white"
             fontSize="10px"
-            onClick={() => onLayout({ direction: "DOWN" })}>
+            onClick={() => {
+              onLayout({ direction: "DOWN" });
+              setViewDirection('DOWN');
+            }}>
             vertical layout
           </Button>
           <Button
             bgColor="#010101"
             color="white"
             fontSize="10px"
-            onClick={() => onLayout({ direction: "RIGHT" })}>
+            onClick={() => {
+              onLayout({ direction: "RIGHT" });
+              setViewDirection('DOWN');
+            }}>
             horizontal layout
           </Button>
           <Button
