@@ -28,7 +28,7 @@ function activate(context) {
           <meta charset="UTF-8">
           <title>React Webview</title>
         </head>
-        <body>
+        <body style='margin: none !important; padding: none !important; overflow: hidden !important'>
           <div id="root"></div>
           <script>
           ${bundleContent}
