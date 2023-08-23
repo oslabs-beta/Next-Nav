@@ -1,8 +1,9 @@
 //directory
 export interface Directory {
-    id: number;
-    folderName: string;
-    parentNode: number | null;
+    id: number,
+    folderName: string,
+    parentNode: number | null,
+    path: string,
     contents: (string | Directory)[];
   }
 
