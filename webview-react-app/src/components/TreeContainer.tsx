@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import LayoutFlow from './LayoutFlow';
-import { ReactFlowProvider } from 'reactflow';
-import Node from './Node';
+import React, { useEffect, useState } from "react";
+import LayoutFlow from "./LayoutFlow";
+import { ReactFlowProvider } from "reactflow";
+import Node from "./Node";
 
 export type FileNode = {
   id: number;
@@ -13,62 +13,64 @@ export type FileNode = {
 
 export type Tree = FileNode[];
 
+//---Dumby data to show on initial load---//
 const initNodes: Tree = [
   {
     id: 0,
-    folderName: 'app',
+    folderName: "Root",
     parentNode: null,
-    contents: ['globals.css', 'layout.js', 'page.jsx', 'page.module.css'],
+    contents: ["globals.css", "layout.js", "page.jsx", "page.module.css"],
   },
   {
     id: 1,
-    folderName: 'about',
+    folderName: "Child",
     parentNode: 0,
-    contents: ['page.jsx', 'page.module.css'],
+    contents: ["page.jsx", "page.module.css"],
   },
   {
     id: 2,
-    folderName: 'blog',
+    folderName: "Child",
     parentNode: 0,
-    contents: ['page.jsx', 'page.module.css'],
+    contents: ["page.jsx", "page.module.css"],
   },
   {
     id: 3,
-    folderName: '[id]',
+    folderName: "Sub-Child",
     parentNode: 2,
-    contents: ['page.jsx', 'page.module.css'],
+    contents: ["page.jsx", "page.module.css"],
   },
   {
     id: 4,
-    folderName: 'contact',
+    folderName: "Sub-Child",
+    parentNode: 2,
+    contents: ["page.jsx", "page.module.css"],
+  },
+  {
+    id: 5,
+    folderName: "Child",
     parentNode: 0,
-    contents: ['loading.jsx', 'page.jsx', 'page.module.css'],
+    contents: ["loading.jsx", "page.jsx", "page.module.css"],
   },
 ];
 
-// const initEdges = [
-//   { id: 'e12', source: '0', target: '1', type: 'smoothstep' },
-//   { id: 'e13', source: '0', target: '2', type: 'smoothstep' },
-//   { id: 'e22a', source: '1', target: '4', type: 'smoothstep' },
-// ];
-
+//---COMPONENTS---//
 export default function TreeContainer() {
   const [initialNodes, setInitialNodes] = useState<any[]>([]);
   const [initialEdges, setInitialEdges] = useState<any[]>([]);
-  const [isParsed, setIsParsed] = useState(false);
-  const [directory, setDirectory] = useState('');
+  const [isParsed, setIsParsed] = useState(false); //tracks if the parseData function was called
+  const [directory, setDirectory] = useState("");
 
   useEffect(() => {
-    window.addEventListener('message', handleReceivedMessage);
+    window.addEventListener("message", handleReceivedMessage);
     return () => {
-      window.removeEventListener('message', handleReceivedMessage);
+      window.removeEventListener("message", handleReceivedMessage);
     };
   }, []);
 
   const handleReceivedMessage = (event: MessageEvent) => {
     const message = event.data;
     switch (message.command) {
-      case 'sendString':
+      case "sendString":
         setDirectory(message.data);
         break;
     }
@@ -76,69 +78,63 @@ export default function TreeContainer() {
 
   const parseData = (serverResponse: Tree) => {
     const position = { x: 0, y: 0 };
-    //create initialNodes
+
     const newNodes: any[] = [];
     const newEdges: any[] = [];
+
     serverResponse.forEach((obj) => {
+      //populate the newNodes with the data from the "server"
       newNodes.push({
         id: `${obj.id}`,
         data: {
           label: (
-            // <div>
-            //   {obj.folderName}
-            //   <ul>{obj.contents}</ul>
-            //   <button>View</button>
-            // </div>
-            <Node obj={obj} />
+            <Node props={obj} />
           ),
         },
         position,
       });
-      //create initialEdges
+      //create newEdges from the "server" if the current node has a parent
       if (obj.parentNode !== null) {
         newEdges.push({
           id: `${obj.parentNode}_${obj.id}`,
-          source: `${obj.parentNode}`,
+          source: `${obj.parentNode}`, //this is the parents id
           target: `${obj.id}`,
-          type: 'smoothstep',
+          type: "smoothstep", //determines the line style
+          animated: true //displays marching ants
         });
       }
     });
-    setInitialNodes(newNodes);
+    //update state with new nodes and edges
+    setInitialNodes(newNodes); 
     setInitialEdges(newEdges);
     setIsParsed(true);
   };
 
+  //invoked parseData on load
   useEffect(() => {
     parseData(initNodes);
   }, []);
 
   return (
+
+    //if isParsed has not been called, don't display the ReactFlow content:
     <div>
       {isParsed ? (
-        <div style={{ width: '100vw', height: '100vh', display: 'flex' }}>
+        //this outer div is required to give the size of the ReactFlow window
+        <div style={{ width: "100vw", height: "100vh", display: "flex" }}>
+          {/* Must Wrap the Layout flow in the ReactFlow component imported from ReactFLOW */}
           <ReactFlowProvider>
             <LayoutFlow
               initialNodes={initialNodes}
               initialEdges={initialEdges}
+              parseData={() => {
+                parseData(JSON.parse(directory));
+              }}
             />
           </ReactFlowProvider>
-          <button
-            style={{
-              position: 'absolute',
-              top: '100px',
-              right: '10px',
-            }}
-            onClick={() => {
-              console.log('directory: ', directory);
-              parseData(JSON.parse(directory));
-            }}
-          >
-            Get Data
-          </button>
         </div>
       ) : (
-        <div>loading</div>
+        <div>Nothing to Display</div>
       )}
     </div>
   );
