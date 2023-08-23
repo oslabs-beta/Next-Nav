@@ -18,6 +18,7 @@ const App: React.FC = () => {
     appDirRef.current = appDir;
   }, [srcDir, appDir]);
 
+  //add listener for messages from backend
   useEffect(() => {
     window.addEventListener('message', handleReceivedMessage);
     return () => {
@@ -25,17 +26,21 @@ const App: React.FC = () => {
     };
   }, []);
 
+  //all of the different messages
   const handleReceivedMessage = (event: MessageEvent) => {
     const message = event.data;
     switch (message.command) {
+      //get directory
       case 'sendString':
         const formattedDirectory = JSON.stringify(JSON.parse(message.data), null, 2);
         setDirectory(formattedDirectory);
         break;
+      //file was just added we need to get directory again
       case 'added_addFile':
         console.log('file added');
         handleRequestDirectory();
         break;
+      //file was just deleted we need to get directory again
       case 'added_deleteFile':
         console.log('file deleted');
         handleRequestDirectory();
@@ -43,6 +48,7 @@ const App: React.FC = () => {
     }
   };
 
+  //get directory
   const handleRequestDirectory = () => {
     console.log('srcDir: ', srcDirRef.current, ' appDir: ', appDirRef.current);
     vscode.postMessage({
@@ -52,13 +58,15 @@ const App: React.FC = () => {
     });
   };
 
+  //open a tab
   const handleOpenFile = () => {
     vscode.postMessage({
       command: 'open_file',
-      filePath
+      filePath: filePath
     });
   };
 
+  //add a file need path and filename.extension
   const handleAddFile = () => {
     console.log(filePath);
     vscode.postMessage({
@@ -68,6 +76,7 @@ const App: React.FC = () => {
     });
   };
 
+  //delete a file need path and filename.extension
   const handleDeleteFile = () => {
     vscode.postMessage({
       command: 'deleteFile',
