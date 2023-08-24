@@ -1,6 +1,6 @@
 // import { initialNodes, initialEdges } from './nodes-edges.tsx';
 import ELK, { ElkNode } from "elkjs/lib/elk.bundled.js";
-import React, { useCallback, useLayoutEffect } from "react";
+import React, { useState, useCallback, useLayoutEffect } from "react";
 import ReactFlow, {
   ReactFlowProvider,
   addEdge,
@@ -11,7 +11,8 @@ import ReactFlow, {
   Edge,
   Connection,
 } from "reactflow";
-import {Card, Button, Heading} from '@chakra-ui/react'
+import {Card, Button, Heading} from '@chakra-ui/react';
+import { VsCodeApiProvider, useVsCodeApi } from '../VsCodeApiContext';
 
 
 export type FileNode = {
@@ -114,14 +115,18 @@ const getLayoutedElements = async (
 type props = {
   initialNodes: any[];
   initialEdges: any[];
-  parseData: () => void
+  srcDir: string;
+  appDir: string;
+  parseData: () => void;
+  handleRequestDir: () => void
 };
 
-export default function LayoutFlow({ initialNodes, initialEdges, parseData }: props) {
+export default function LayoutFlow({ initialNodes, initialEdges, parseData, handleRequestDir }: props) {
   // console.log('component rendered');
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const { fitView } = useReactFlow(); //needed to position the tree within the window
+  const vscode = useVsCodeApi();
 
   //For when a use connects a node. Not needed currently
   const onConnect = useCallback(
@@ -200,21 +205,26 @@ export default function LayoutFlow({ initialNodes, initialEdges, parseData }: pr
             fontSize="10px"
             bgColor="#010101"
             color="white"
-            onClick={parseData}>
+            onClick={parseData}
+          >
             Get data
           </Button>
           <Button
             bgColor="#010101"
             color="white"
             fontSize="10px"
-            onClick={() => onLayout({ direction: "DOWN" })}>
+            onClick={() => {
+              onLayout({ direction: "DOWN" });
+            }}>
             vertical layout
           </Button>
           <Button
             bgColor="#010101"
             color="white"
             fontSize="10px"
-            onClick={() => onLayout({ direction: "RIGHT" })}>
+            onClick={() => {
+              onLayout({ direction: "RIGHT" });
+            }}>
             horizontal layout
           </Button>
           <Button
@@ -227,6 +237,13 @@ export default function LayoutFlow({ initialNodes, initialEdges, parseData }: pr
             Refresh
           </Button>
         </Card>
+      </Panel>
+      <Panel position="top-left">
+        <Button onClick={() => {
+          handleRequestDir();
+          // parseData();
+        }
+        }>Get Directory</Button>
       </Panel>
     </ReactFlow>
   );

@@ -27,3 +27,12 @@ div button {
   border-top-left-radius: 7px ;
   background-color: rgb(40, 33, 33);
 }
+
+.react-flow__handle {
+  background-color: #050505;
+  z-index: -1000000000000;
+}
+
+.react-flow__node-default.selected {
+  border: unset
+}

@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import LayoutFlow from "./LayoutFlow";
 import { ReactFlowProvider } from "reactflow";
 import Node from "./Node";
+// import { handleReceivedMessage, handleRequestDirectory } from "../functions";
+import { useVsCodeApi } from '../VsCodeApiContext';
 
 export type FileNode = {
   id: number;
@@ -53,28 +55,76 @@ const initNodes: Tree = [
   },
 ];
 
+const tutorialTree = JSON.stringify(initNodes);
+
 //---COMPONENTS---//
 export default function TreeContainer() {
   const [initialNodes, setInitialNodes] = useState<any[]>([]);
   const [initialEdges, setInitialEdges] = useState<any[]>([]);
   const [isParsed, setIsParsed] = useState(false); //tracks if the parseData function was called
-  const [directory, setDirectory] = useState("");
+  const [directory, setDirectory] = useState(tutorialTree);
+  const vscode = useVsCodeApi();
 
+  //state for communicating with "backend"
+  const [srcDir, setSrcDir] = useState("src");
+  const [appDir, setAppDir] = useState("app");
+  const srcDirRef = useRef('src');
+  const appDirRef = useRef('app');
+
+  // Update the refs whenever srcDir or appDir changes
   useEffect(() => {
-    window.addEventListener("message", handleReceivedMessage);
+    srcDirRef.current = srcDir;
+    appDirRef.current = appDir;
+    window.addEventListener("message", (e) => handleReceivedMessage(e, setDirectory, srcDirRef.current, appDirRef.current));
     return () => {
-      window.removeEventListener("message", handleReceivedMessage);
+      window.removeEventListener("message", (e) =>
+        handleReceivedMessage(
+          e,
+          setDirectory,
+          srcDirRef.current,
+          appDirRef.current
+        )
+      );
     };
-  }, []);
+  }, [srcDir, appDir]);
 
-  const handleReceivedMessage = (event: MessageEvent) => {
-    const message = event.data;
-    switch (message.command) {
-      case "sendString":
-        setDirectory(message.data);
-        break;
-    }
+  const handleRequestDirectory = (srcDirRef: string, appDirRef: string) => {
+    console.log('srcDir: ', srcDirRef, ' appDir: ', appDirRef);
+    console.log('asking for directory');
+    vscode.postMessage({
+      command: 'getRequest',
+      src: srcDirRef || 'src',
+      app: appDirRef || 'app',
+    });
   };
+
+const handleReceivedMessage = (
+  event: MessageEvent,
+  setDirectory: (state: string) => void,
+  srcDirRef: string,
+  appDirRef: string
+) => {
+      const message = event.data;
+      switch (message.command) {
+        //get directory
+        case 'sendString':
+          console.log('getting directory');
+          const formattedDirectory = JSON.stringify(JSON.parse(message.data), null, 2);
+          setDirectory(formattedDirectory);
+          break;
+        //file was just added we need to get directory again
+        case 'added_addFile':
+          console.log('file added');
+          handleRequestDirectory(srcDirRef, appDirRef);
+          break;
+        //file was just deleted we need to get directory again
+        case 'added_deleteFile':
+          console.log('file deleted');
+          handleRequestDirectory(srcDirRef, appDirRef);
+          break;
+      }
+    };
+
 
   const parseData = (serverResponse: Tree) => {
     const position = { x: 0, y: 0 };
@@ -87,9 +137,7 @@ export default function TreeContainer() {
       newNodes.push({
         id: `${obj.id}`,
         data: {
-          label: (
-            <Node props={obj} />
-          ),
+          label: <Node props={obj} />,
         },
         position,
       });
@@ -100,23 +148,23 @@ export default function TreeContainer() {
           source: `${obj.parentNode}`, //this is the parents id
           target: `${obj.id}`,
           type: "smoothstep", //determines the line style
-          animated: true //displays marching ants
+          animated: true, //displays marching ants
         });
       }
     });
+    
     //update state with new nodes and edges
-    setInitialNodes(newNodes); 
+    setInitialNodes(newNodes);
     setInitialEdges(newEdges);
     setIsParsed(true);
   };
 
-  //invoked parseData on load
+  //invoked parseData to show tutorial tree
   useEffect(() => {
-    parseData(initNodes);
-  }, []);
+    parseData(JSON.parse(directory));
+  }, [directory]);
 
   return (
-
     //if isParsed has not been called, don't display the ReactFlow content:
     <div>
       {isParsed ? (
@@ -127,9 +175,12 @@ export default function TreeContainer() {
             <LayoutFlow
               initialNodes={initialNodes}
               initialEdges={initialEdges}
+              srcDir={srcDir}
+              appDir={appDir}
               parseData={() => {
                 parseData(JSON.parse(directory));
               }}
+              handleRequestDir={() => {handleRequestDirectory(srcDir, appDir)}}
             />
           </ReactFlowProvider>
         </div>
