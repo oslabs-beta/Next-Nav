@@ -207,7 +207,7 @@ export default function LayoutFlow({ initialNodes, initialEdges, parseData, hand
             color="white"
             onClick={parseData}
           >
-            Get data
+            Refresh
           </Button>
           <Button
             bgColor="#010101"
@@ -227,23 +227,13 @@ export default function LayoutFlow({ initialNodes, initialEdges, parseData, hand
             }}>
             horizontal layout
           </Button>
-          <Button
-            bgColor="#010101"
-            color="white"
-            fontSize="10px"
-            onClick={() => {
-              console.log("Page should be refreshed");
-            }}>
-            Refresh
-          </Button>
         </Card>
       </Panel>
       <Panel position="top-left">
         <Button onClick={() => {
           handleRequestDir();
-          // parseData();
         }
-        }>Get Directory</Button>
+        }>Import</Button>
       </Panel>
     </ReactFlow>
   );
