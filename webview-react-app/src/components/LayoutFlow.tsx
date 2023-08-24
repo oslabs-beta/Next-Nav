@@ -12,6 +12,7 @@ import ReactFlow, {
   Connection,
 } from "reactflow";
 import {Card, Button, Heading} from '@chakra-ui/react';
+import { VsCodeApiProvider, useVsCodeApi } from '../VsCodeApiContext';
 
 
 export type FileNode = {
@@ -114,15 +115,18 @@ const getLayoutedElements = async (
 type props = {
   initialNodes: any[];
   initialEdges: any[];
+  srcDir: string;
+  appDir: string;
   parseData: () => void;
-  setViewDirection: (string: string) => void
+  handleRequestDir: () => void
 };
 
-export default function LayoutFlow({ initialNodes, initialEdges, parseData, setViewDirection }: props) {
+export default function LayoutFlow({ initialNodes, initialEdges, parseData, handleRequestDir }: props) {
   // console.log('component rendered');
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const { fitView } = useReactFlow(); //needed to position the tree within the window
+  const vscode = useVsCodeApi();
 
   //For when a use connects a node. Not needed currently
   const onConnect = useCallback(
@@ -201,7 +205,8 @@ export default function LayoutFlow({ initialNodes, initialEdges, parseData, setV
             fontSize="10px"
             bgColor="#010101"
             color="white"
-            onClick={parseData}>
+            onClick={parseData}
+          >
             Get data
           </Button>
           <Button
@@ -210,7 +215,6 @@ export default function LayoutFlow({ initialNodes, initialEdges, parseData, setV
             fontSize="10px"
             onClick={() => {
               onLayout({ direction: "DOWN" });
-              setViewDirection('DOWN');
             }}>
             vertical layout
           </Button>
@@ -220,7 +224,6 @@ export default function LayoutFlow({ initialNodes, initialEdges, parseData, setV
             fontSize="10px"
             onClick={() => {
               onLayout({ direction: "RIGHT" });
-              setViewDirection('DOWN');
             }}>
             horizontal layout
           </Button>
@@ -234,6 +237,13 @@ export default function LayoutFlow({ initialNodes, initialEdges, parseData, setV
             Refresh
           </Button>
         </Card>
+      </Panel>
+      <Panel position="top-left">
+        <Button onClick={() => {
+          handleRequestDir();
+          // parseData();
+        }
+        }>Get Directory</Button>
       </Panel>
     </ReactFlow>
   );

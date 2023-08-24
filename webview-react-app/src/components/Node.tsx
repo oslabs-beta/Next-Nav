@@ -21,10 +21,9 @@ import { Background } from "reactflow";
 
 type Props = {
   props: FileNode;
-  direction: string;
 };
 
-const Node = ({ props, direction }: Props): JSX.Element => {
+const Node = ({ props }: Props): JSX.Element => {
   //deconstruct props here. Used let to account for undefined checking.
   let { contents, parentNode, folderName }: FileNode = props;
 

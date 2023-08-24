@@ -6,7 +6,7 @@ import { useVsCodeApi } from "./VsCodeApiContext";
 
 const App: React.FC = () => {
   const vscode = useVsCodeApi();
-
+  console.log('App Components has been reached');
   return (
     //Provides Charka library to the elements inside
     <ChakraProvider>
