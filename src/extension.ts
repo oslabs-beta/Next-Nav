@@ -3,9 +3,12 @@ import * as path from 'path';
 import treeMaker from './makeTree';
 import { promises as fs } from 'fs';
 
-
 //get the directory to send to the React
-async function sendUpdatedDirectory(webview: vscode.WebviewPanel, src: string, app: string): Promise<void> {
+async function sendUpdatedDirectory(
+  webview: vscode.WebviewPanel,
+  src: string,
+  app: string
+): Promise<void> {
   try {
     //tree maker builds it
     const result = await treeMaker(src, app);
@@ -13,85 +16,135 @@ async function sendUpdatedDirectory(webview: vscode.WebviewPanel, src: string, a
     webview.webview.postMessage({ command: 'sendString', data: sendString });
   } catch (error: any) {
     console.error('Error sending updated directory:', error.message);
-    vscode.window.showErrorMessage('Error sending updated directory: ' + error.message);
+    vscode.window.showErrorMessage(
+      'Error sending updated directory: ' + error.message
+    );
   }
 }
 
 export function activate(context: vscode.ExtensionContext) {
-  console.log('Congratulations, your extension "next-extension" is now active!');
+  console.log(
+    'Congratulations, your extension "next-extension" is now active!'
+  );
   //runs when extension is called every time
-  let disposable = vscode.commands.registerCommand('next-extension.helloWorld', async () => {
-    //create a webview to put React on
-    const webview = vscode.window.createWebviewPanel(
-      'reactWebview',
-      'React Webview',
-      vscode.ViewColumn.One,
-      {
-        enableScripts: true,
-        //make the extnsion persist on tab
-        retainContextWhenHidden: true
-      }
-    );
-    //When we get requests from React
-    webview.webview.onDidReceiveMessage(
-      async message => {
-        switch (message.command) {
-          //send directory to React
-          case 'getRequest':
-            await sendUpdatedDirectory(webview, message.src, message.app);
-            break;
-          // open a file in the extension
-          case 'open_file':
-            const filePath = message.filePath;
-            try {
-              const document = await vscode.workspace.openTextDocument(filePath);
-              await vscode.window.showTextDocument(document);
-              console.log(`Switched to tab with file: ${filePath}`);
-            } catch (err: any) {
-              vscode.window.showErrorMessage(`Error opening file: ${err.message}`);
-              console.error(`Error opening file: ${err}`);
-            }
-            break;
-          //add a new file in at specified path
-          case 'addFile':
-            try {
-              const filePath = path.join(message.path, message.fileName);
-              await fs.writeFile(filePath, 'This is your new file!');
-              //let the React know we added a file
-              webview.webview.postMessage({ command: 'added_addFile' });
-            } catch (error: any) {
-              console.error('Error creating file:', error.message);
-              vscode.window.showErrorMessage('Error creating file: ' + error.message);
-            }
-            break;
-          //delete a file at specified path
-          case 'deleteFile':
-            try {
-              const filePath = path.join(message.path, message.fileName);
-              if (await fs.stat(filePath)) {
-                await fs.unlink(filePath);
-              } else {
-                throw new Error('File does not exist');
-              }
-              //let the React know we deleted a file
-              webview.webview.postMessage({ command: 'added_deleteFile' });
-            } catch (error: any) {
-              console.error('Error deleting file:', error.message);
-              vscode.window.showErrorMessage('Error deleting file: ' + error.message);
-            }
-            break;
+  let disposable = vscode.commands.registerCommand(
+    'next-extension.helloWorld',
+    async () => {
+      //create a webview to put React on
+      const webview = vscode.window.createWebviewPanel(
+        'reactWebview',
+        'React Webview',
+        vscode.ViewColumn.One,
+        {
+          enableScripts: true,
+          //make the extension persist on tab
+          retainContextWhenHidden: true,
         }
-      },
-      undefined,
-      context.subscriptions
-    );
+      );
+      //When we get requests from React
+      webview.webview.onDidReceiveMessage(
+        async (message) => {
+          console.log('Received message:', message);
+          switch (message.command) {
+            //send directory to React
+            case 'getRequest':
+              await sendUpdatedDirectory(webview, message.src, message.app);
+              break;
+            // open a file in the extension
+            case 'open_file':
+              const filePath = message.filePath;
+              try {
+                const document = await vscode.workspace.openTextDocument(
+                  filePath
+                );
+                await vscode.window.showTextDocument(document);
+                console.log(`Switched to tab with file: ${filePath}`);
+              } catch (err: any) {
+                vscode.window.showErrorMessage(
+                  `Error opening file: ${err.message}`
+                );
+                console.error(`Error opening file: ${err}`);
+              }
+              break;
+            //add a new file in at specified path
+            case 'addFile':
+              try {
+                const filePath = message.filePath;
+                await fs.writeFile(filePath, '"This is your new file!"');
+                //let the React know we added a file
+                webview.webview.postMessage({ command: 'added_addFile' });
+              } catch (error: any) {
+                console.error('Error creating file:', error.message);
+                vscode.window.showErrorMessage(
+                  'Error creating file: ' + error.message
+                );
+              }
+              break;
+            //add a new folder at a specified path
+            case 'addFolder':
+              try {
+                const folderPath = message.filePath;
+                await fs.mkdir(folderPath);
+                webview.webview.postMessage({ command: 'added_addFolder' });
+              } catch (error: any) {
+                console.error('Error creating folder:', error.message);
+                vscode.window.showErrorMessage(
+                  'Error creating folder: ' + error.message
+                );
+              }
+              break;
 
-    try {
-      //bundle for react code
-      const bundlePath = path.join(context.extensionPath, 'webview-react-app', 'dist', 'bundle.js');
-      const bundleContent = await fs.readFile(bundlePath, 'utf-8');
-      //html in the webview to put our react code into
-      webview.webview.html = `
+            //delete a file at specified path
+            case 'deleteFile':
+              try {
+                const filePath = message.filePath;
+                if (await fs.stat(filePath)) {
+                  await fs.unlink(filePath);
+                } else {
+                  throw new Error('File does not exist');
+                }
+                //let the React know we deleted a file
+                webview.webview.postMessage({ command: 'added_deleteFile' });
+              } catch (error: any) {
+                console.error('Error deleting file:', error.message);
+                vscode.window.showErrorMessage(
+                  'Error deleting file: ' + error.message
+                );
+              }
+              break;
+            //delete a folder at specified path
+            case 'deleteFolder':
+              try {
+                console.log('deleting in backend', message.path);
+                const folderPath = message.filePath;
+                //delete folder and subfolders
+                await fs.rmdir(folderPath, { recursive: true });
+                // Let the React app know that we've successfully deleted a folder
+                webview.webview.postMessage({ command: 'added_deleteFolder' });
+              } catch (error: any) {
+                console.error('Error deleting folder:', error.message);
+                vscode.window.showErrorMessage(
+                  'Error deleting folder: ' + error.message
+                );
+              }
+              break;
+          }
+        },
+        undefined,
+        context.subscriptions
+      );
+
+      try {
+        //bundle for react code
+        const bundlePath = path.join(
+          context.extensionPath,
+          'webview-react-app',
+          'dist',
+          'bundle.js'
+        );
+        const bundleContent = await fs.readFile(bundlePath, 'utf-8');
+        //html in the webview to put our react code into
+        webview.webview.html = `
         <!DOCTYPE html>
         <html>
         <head>
@@ -105,12 +158,13 @@ export function activate(context: vscode.ExtensionContext) {
           </script>
         </body>
         </html>`;
-    } catch (err) {
-      console.error('Error reading bundle.js:', err);
-    }
+      } catch (err) {
+        console.error('Error reading bundle.js:', err);
+      }
 
-    vscode.window.showInformationMessage('Hello, World!');
-  });
+      vscode.window.showInformationMessage('Hello, World!');
+    }
+  );
 
   context.subscriptions.push(disposable);
 }
