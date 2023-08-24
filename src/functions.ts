@@ -1,66 +1,37 @@
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import * as vscode from 'vscode';
+import {Output} from './types';
 
-/** OLD WAY ***************************************************************/
-// export async function listFolders() {
-//     // Check if a workspace is opened
-//     console.log(JSON.stringify(vscode.workspace.workspaceFolders));
-//     if (vscode.workspace.workspaceFolders !== undefined) {
-//         // Get the path of the first workspace folder
-//         const workspacePath = vscode.workspace.workspaceFolders[0].uri.fsPath;
-//         console.log(workspacePath);
-//         // Read the contents of the workspace directory
-//         const output = await fs.readdir(workspacePath, { withFileTypes: true });
-//             const entries = output.filter(entry => entry.name==='src');
-//             console.log(entries);
-//             return entries;
-        
-
-//     } else {
-//         return 'No workspace folder opened.';
-//     }
-// }
-/************************************************************************ */
-
-export async function findDir(): Promise<any> {
-    // Check if a workspace is opened
-    //console.log(JSON.stringify(vscode.workspace.workspaceFolders));
-    if (vscode.workspace.workspaceFolders !== undefined) {
-        // Get the path of the first workspace folder
+//find directory of src and app
+export async function findDir(srcDirName: string, appDirName: string): Promise<Output> {
+    //if we have a workspace
+    if (!!vscode.workspace.workspaceFolders) {
         const workspacePath = vscode.workspace.workspaceFolders[0].uri.fsPath;
-        // console.log(workspacePath);
         try {
-            // Read the contents of the workspace directory
+            //read from workspace
             const entries = await fs.readdir(workspacePath, { withFileTypes: true });
-            
-            // Check if the 'src' directory exists
-            const srcDir = entries.find(entry => entry.isDirectory() && entry.name === 'src');
+            //find src folder in the main directory
+            const srcDir = entries.find(entry => entry.isDirectory() && entry.name === srcDirName);
             if (!srcDir) {
-                return 'No src directory found.';
+                return { status: 'error', message: `No ${srcDirName} directory found.` };
             }
-            
-            // Read the contents of the 'src' directory
-            const srcPath = path.join(workspacePath, 'src');
+
+            const srcPath = path.join(workspacePath, srcDirName);
             const srcEntries = await fs.readdir(srcPath, { withFileTypes: true });
-
-            // Check if the 'app' directory exists inside the 'src' directory
-            const appDir = srcEntries.find(entry => entry.isDirectory() && entry.name === 'app');
+            //find app folder in src directory
+            const appDir = srcEntries.find(entry => entry.isDirectory() && entry.name === appDirName);
             if (!appDir) {
-                return 'No app directory found in src.';
+                return { status: 'error', message: `No ${appDirName} directory found in ${srcDirName}.` };
             }
 
-            // Return the 'app' directory
-            // console.log(appDir);
             const appPath = path.join(srcPath, appDir.name);
-            // console.log(appPath);
-            return appPath;
-           
+            return { status: 'success', data: appPath };
         } catch (err: any) {
             console.log('error');
-            return 'Error reading workspace: ' + err.message;
+            return { status: 'error', message: 'Error reading workspace: ' + err.message };
         }
     } else {
-        return 'No workspace folder opened.';
+        return { status: 'error', message: 'No workspace folder opened.' };
     }
 }
