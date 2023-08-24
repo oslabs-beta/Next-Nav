@@ -65,9 +65,16 @@ const Node = ({ props }: Props): JSX.Element => {
     onOpen: addOnOpen,
     onClose: addOnClose,
   } = useDisclosure();
+  const {
+    isOpen: deleteIsOpen,
+    onOpen: deleteOnOpen,
+    onClose: deleteOnClose,
+  } = useDisclosure();
+
   const [overlay, setOverlay] = React.useState(<OverlayOne />);
 
   const [addFolderValue, setAddFolderValue] = useState('');
+  const [deleteFolderValue, setDeleteFolderValue] = useState('');
   const [addFileValue, setAddFileValue] = useState('');
 
   //ensures obj.contents is never undefined
@@ -121,6 +128,16 @@ const Node = ({ props }: Props): JSX.Element => {
   ) => void = (filePath, event) => {
     vscode.postMessage({
       command: 'deleteFile',
+      filePath: filePath,
+    });
+  };
+
+  const handleDeleteFolder: (
+    filePath: string,
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => void = (filePath, event) => {
+    vscode.postMessage({
+      command: 'deleteFolder',
       filePath: filePath,
     });
   };
@@ -245,6 +262,31 @@ const Node = ({ props }: Props): JSX.Element => {
       >
         +
       </Button>
+      
+      { parentNode !== null && <Button
+        position="absolute"
+        bgColor="#050505"
+        textColor="#050505"
+        padding="0"
+        right="left"
+        bottom="0"
+        h="100%"
+        borderRadius="15px 0 0 15px"
+        // linear-gradient(90deg, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)
+        _hover={{
+          bg: `linear-gradient(270deg, #050505 0%, ${parentNode === null ? '#24FF00' : '#FFF616'
+            } 100%)`,
+        }}
+        // _hover={{boxShadow: `0px 0px 7px 1px ${
+        //   parentNode === null ? "#24FF00" : "#FFF616"
+        // }`, textColor: 'white'}}
+        onClick={() => {
+          setOverlay(<OverlayOne />);
+          deleteOnOpen();
+        }}
+      >
+        -
+      </Button>}
 
       {/* node modal */}
       <Modal isCentered isOpen={nodeIsOpen} onClose={nodeOnClose}>
@@ -321,6 +363,48 @@ const Node = ({ props }: Props): JSX.Element => {
                 onClick={(e) => {
                   handleAddFolder(path.concat('/', addFolderValue), e);
                   addOnClose();
+                }}
+              >
+                Submit
+              </Button>
+            </FormControl>
+          </ModalBody>
+          <ModalFooter></ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      {/* folder delete modal */}
+      <Modal isCentered isOpen={deleteIsOpen} onClose={deleteOnClose}>
+        {overlay}
+        <ModalContent
+          //style modal here:
+          boxShadow="2xl"
+          bgColor="#454545"
+          textColor="#FFFFFF"
+          borderRadius="10px"
+        >
+          <ModalHeader>Delete Folder</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <FormControl isInvalid={deleteFolderValue !== folderName}>
+              <FormLabel>Type folder name to confirm:</FormLabel>
+              <Input
+                id="folderName"
+                type="text"
+                bgColor="#121212"
+                placeholder={`${folderName}`}
+                onChange={(e) => {
+                  setDeleteFolderValue(e.currentTarget.value);
+                }}
+                value={deleteFolderValue}
+              />
+              <FormErrorMessage>Input must match folder name</FormErrorMessage>
+              <Button
+                bgColor="#010101"
+                color="white"
+                onClick={(e) => {
+                  handleDeleteFolder(path, e);
+                  deleteOnClose();
                 }}
               >
                 Submit
