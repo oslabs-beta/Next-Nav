@@ -139,6 +139,15 @@ export default function TreeContainer() {
         console.log('file deleted');
         handleRequestDirectory(srcDirRef, appDirRef);
         break;
+        //folder was just added we need to get directory again
+      case 'added_addFolder':
+        console.log('folder added');
+        handleRequestDirectory(srcDirRef, appDirRef);
+        break;
+      //folder was just deleted we need to get directory again
+      case 'added_deleteFolder':
+        console.log('folder deleted');
+        handleRequestDirectory(srcDirRef, appDirRef);
     }
   };
 
