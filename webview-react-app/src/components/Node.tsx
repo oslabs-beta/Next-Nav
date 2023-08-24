@@ -68,6 +68,7 @@ const Node = ({ props }: Props): JSX.Element => {
   const [overlay, setOverlay] = React.useState(<OverlayOne />);
 
   const [addFolderValue, setAddFolderValue] = useState('');
+  const [addFileValue, setAddFileValue] = useState('');
 
   //ensures obj.contents is never undefined
   if (!contents) {
@@ -90,15 +91,37 @@ const Node = ({ props }: Props): JSX.Element => {
     });
   };
 
+  //add a file need path and filename.extension
+  const handleAddFile: (
+    filePath: string,
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => void = (filePath, event) => {
+    console.log(path);
+    vscode.postMessage({
+      command: 'addFile',
+      filePath: filePath,
+    });
+  };
+
+  const handleAddFolder: (
+    filePath: string,
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => void = (filePath, event) => {
+    console.log(path);
+    vscode.postMessage({
+      command: 'addFolder',
+      filePath: filePath,
+    });
+  };
+
   //delete a file need path and filename.extension
   const handleDeleteFile: (
-    fileName: string,
+    filePath: string,
     event: React.MouseEvent<HTMLButtonElement>
-  ) => void = (fileName, event) => {
+  ) => void = (filePath, event) => {
     vscode.postMessage({
       command: 'deleteFile',
-      path: path,
-      fileName: fileName,
+      filePath: filePath,
     });
   };
 
@@ -126,6 +149,9 @@ const Node = ({ props }: Props): JSX.Element => {
           <Button
             size="sm"
             variant="outline"
+            bgColor="#010101"
+            color="white"
+            _hover={{ bg: 'white', textColor: 'black' }}
             leftIcon={<Icon as={PiFileCodeFill} />}
             onClick={(e) => {
               handleOpenTab(path.concat('/', contents[i]), e);
@@ -143,7 +169,7 @@ const Node = ({ props }: Props): JSX.Element => {
             aria-label="Done"
             icon={<Icon as={PiTrashFill} />}
             onClick={(e) => {
-              handleDeleteFile(contents[i], e);
+              handleDeleteFile(path.concat('/', contents[i]), e);
             }}
           />
         </Flex>
@@ -223,15 +249,44 @@ const Node = ({ props }: Props): JSX.Element => {
       {/* node modal */}
       <Modal isCentered isOpen={nodeIsOpen} onClose={nodeOnClose}>
         {overlay}
-        <ModalContent>
+        <ModalContent
+          boxShadow="2xl"
+          bgColor="#454545"
+          textColor="#FFFFFF"
+          borderRadius="10px"
+        >
           <ModalHeader>{folderName}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Stack>{modalFiles}</Stack>
           </ModalBody>
-          <ModalFooter>
-            <Spacer />
-            <Button onClick={nodeOnClose}>Close</Button>
+          <ModalFooter display="flex" flexDir="column">
+            {/* input form */}
+            <FormControl>
+              <Input
+                id="fileName"
+                type="text"
+                bgColor="#121212"
+                placeholder="new file name"
+                onChange={(e) => {
+                  setAddFileValue(e.currentTarget.value);
+                }}
+                value={addFileValue}
+              />
+            </FormControl>
+
+            <Button
+              bgColor="#010101"
+              color="white"
+              justifySelf="bottom"
+              _hover={{ bg: 'white', textColor: 'black' }}
+              onClick={(e) => {
+                console.log(addFileValue);
+                handleAddFile(path.concat('/', addFileValue), e);
+              }}
+            >
+              Submit
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
@@ -260,20 +315,19 @@ const Node = ({ props }: Props): JSX.Element => {
                 }}
                 value={addFolderValue}
               />
+              <Button
+                bgColor="#010101"
+                color="white"
+                onClick={(e) => {
+                  handleAddFolder(path.concat('/', addFolderValue), e);
+                  addOnClose();
+                }}
+              >
+                Submit
+              </Button>
             </FormControl>
           </ModalBody>
-          <ModalFooter>
-            <Button
-              bgColor="#010101"
-              color="white"
-              onClick={() => {
-                console.log(addFolderValue);
-                addOnClose();
-              }}
-            >
-              Submit
-            </Button>
-          </ModalFooter>
+          <ModalFooter></ModalFooter>
         </ModalContent>
       </Modal>
     </div>
