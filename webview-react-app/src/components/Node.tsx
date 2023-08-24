@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FileNode } from "./TreeContainer";
 import {
   Card,
@@ -16,6 +16,12 @@ import {
   ModalBody,
   ModalCloseButton,
   useDisclosure,
+  transition,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  FormHelperText,
+  Input,
 } from "@chakra-ui/react";
 import { Background } from "reactflow";
 
@@ -37,6 +43,8 @@ const Node = ({ props }: Props): JSX.Element => {
   const { isOpen: nodeIsOpen, onOpen: nodeOnOpen, onClose: nodeOnClose } = useDisclosure();
   const { isOpen: addIsOpen, onOpen: addOnOpen, onClose: addOnClose } = useDisclosure();
   const [overlay, setOverlay] = React.useState(<OverlayOne />);
+
+  const [addFolderValue, setAddFolderValue] = useState('');
 
   //ensures obj.contents is never undefined
   if (!contents) {
@@ -107,7 +115,16 @@ const Node = ({ props }: Props): JSX.Element => {
         right="0"
         bottom="0"
         h="100%"
-        borderRadius="15px"
+        borderRadius="0 15px 15px 0"
+        // linear-gradient(90deg, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)
+        _hover={{
+          bg: `linear-gradient(90deg, #050505 0%, ${
+          parentNode === null ? "#24FF00" : "#FFF616"
+        } 100%)`,
+        }}
+        // _hover={{boxShadow: `0px 0px 7px 1px ${
+        //   parentNode === null ? "#24FF00" : "#FFF616"
+        // }`, textColor: 'white'}}
         onClick={
           () => {
             setOverlay(<OverlayOne />);
@@ -117,6 +134,7 @@ const Node = ({ props }: Props): JSX.Element => {
         +
       </Button>
 
+        {/* node modal */}
       <Modal isCentered isOpen={nodeIsOpen} onClose={nodeOnClose}>
         {overlay}
         <ModalContent>
@@ -131,18 +149,44 @@ const Node = ({ props }: Props): JSX.Element => {
         </ModalContent>
       </Modal>
 
-      <Modal isCentered isOpen={addIsOpen} onClose={addOnClose}>
-        {overlay}
-        <ModalContent>
-          <ModalHeader>Test</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Text>Test</Text>
-          </ModalBody>
-          <ModalFooter>
-            <Button onClick={addOnClose}>Close</Button>
-          </ModalFooter>
-        </ModalContent>
+        {/* folder add modal */}
+      <Modal 
+        isCentered isOpen={addIsOpen} 
+        onClose={addOnClose}
+
+      >
+          {overlay}
+        <ModalContent
+          //style modal here:
+          boxShadow='2xl'
+          bgColor="#454545"
+          textColor='#FFFFFF'
+          borderRadius="10px"
+        >
+            <ModalHeader>Add Folder</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <FormControl>
+                <FormLabel>new folder name:</FormLabel>
+                <Input
+                  id='folderName'
+                  type='text'
+                  bgColor='#121212'
+                  onChange={(e) => { setAddFolderValue(e.currentTarget.value); }}
+                  value={addFolderValue} />
+              </FormControl>
+            </ModalBody>
+            <ModalFooter>
+            <Button
+              bgColor="#010101"
+              color="white"
+              onClick={() => {
+                  console.log(addFolderValue);
+                  addOnClose();
+                }
+              }>Submit</Button>
+            </ModalFooter>
+          </ModalContent>
       </Modal>
     </div>
   );
