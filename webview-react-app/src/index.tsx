@@ -1,13 +1,14 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import App from "./App";
-import { VsCodeApiProvider } from "./VsCodeApiContext"; // Make sure you import it from the correct file
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
+import { VsCodeApiProvider } from './VsCodeApiContext'; // Make sure you import it from the correct file
 
+//wrap app in VsCodeApiProvider component
 ReactDOM.render(
-  <React.StrictMode>
-    <VsCodeApiProvider>
+  <VsCodeApiProvider>
+    <React.StrictMode>
       <App />
-    </VsCodeApiProvider>
-  </React.StrictMode>,
-  document.getElementById("root")
+    </React.StrictMode>
+  </VsCodeApiProvider>,
+  document.getElementById('root')
 );
