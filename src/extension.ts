@@ -35,6 +35,7 @@ export function activate(context: vscode.ExtensionContext) {
     //When we get requests from React
     webview.webview.onDidReceiveMessage(
       async message => {
+        console.log("Received message:", message);
         switch (message.command) {
           //send directory to React
           case 'getRequest':
@@ -55,8 +56,8 @@ export function activate(context: vscode.ExtensionContext) {
           //add a new file in at specified path
           case 'addFile':
             try {
-              const filePath = path.join(message.path, message.fileName);
-              await fs.writeFile(filePath, 'This is your new file!');
+              const filePath = message.filePath;
+              await fs.writeFile(filePath, '"This is your new file!"');
               //let the React know we added a file
               webview.webview.postMessage({ command: 'added_addFile' });
             } catch (error: any) {
@@ -64,10 +65,22 @@ export function activate(context: vscode.ExtensionContext) {
               vscode.window.showErrorMessage('Error creating file: ' + error.message);
             }
             break;
+          //add a new folder at a specified path
+          case 'addFolder':
+            try {
+              const folderPath = message.filePath;
+              await fs.mkdir(folderPath);
+              webview.webview.postMessage({ command: 'added_addFolder' });
+            } catch (error: any) {
+              console.error('Error creating folder:', error.message);
+              vscode.window.showErrorMessage('Error creating folder: ' + error.message);
+            }
+            break;
+
           //delete a file at specified path
           case 'deleteFile':
             try {
-              const filePath = path.join(message.path, message.fileName);
+              const filePath = message.filePath;
               if (await fs.stat(filePath)) {
                 await fs.unlink(filePath);
               } else {
@@ -80,6 +93,20 @@ export function activate(context: vscode.ExtensionContext) {
               vscode.window.showErrorMessage('Error deleting file: ' + error.message);
             }
             break;
+            //delete a folder at specified path
+            case 'deleteFolder':
+              try {
+                console.log('deleting in backend', message.path);
+                const folderPath = message.filePath;
+                //delete folder and subfolders
+                await fs.rmdir(folderPath, { recursive: true });
+                // Let the React app know that we've successfully deleted a folder
+                webview.webview.postMessage({ command: 'added_deleteFolder' });
+              } catch (error: any) {
+                console.error('Error deleting folder:', error.message);
+                vscode.window.showErrorMessage('Error deleting folder: ' + error.message);
+              }
+              break;
         }
       },
       undefined,

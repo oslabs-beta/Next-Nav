@@ -8,6 +8,8 @@ const App: React.FC = () => {
   const [filePath, setFilePath] = useState('');
   const [addFileName, setAddFileName] = useState('');
   const [deleteFileName, setDeleteFileName] = useState('');
+  const [addFolderName, setAddFolderName] = useState('');
+  const [deleteFolderName, setDeleteFolderName] = useState('');
   const srcDirRef = useRef('');
   const appDirRef = useRef('');
   const vscode = useVsCodeApi();
@@ -40,11 +42,21 @@ const App: React.FC = () => {
         console.log('file added');
         handleRequestDirectory();
         break;
+      //folder was just added we need to get directory again
+      case 'added_addFolder':
+        console.log('folder added');
+        handleRequestDirectory();
+        break;
       //file was just deleted we need to get directory again
       case 'added_deleteFile':
         console.log('file deleted');
         handleRequestDirectory();
         break;
+
+      //folder was just deleted we need to get directory again
+      case 'added_deleteFolder':
+        console.log('folder deleted');
+        handleRequestDirectory();
     }
   };
 
@@ -58,32 +70,51 @@ const App: React.FC = () => {
     });
   };
 
-  //open a tab
-  const handleOpenFile = () => {
+    // Open a tab
+  const handleOpenFile = (fullFilePath: string) => {
+    console.log('Opening file:', fullFilePath);
     vscode.postMessage({
       command: 'open_file',
-      filePath: filePath
+      filePath: fullFilePath
     });
   };
 
-  //add a file need path and filename.extension
-  const handleAddFile = () => {
-    console.log(filePath);
+  // Add a file
+  const handleAddFile = (fullFilePath: string) => {
+    console.log('Adding file:', fullFilePath);
     vscode.postMessage({
       command: 'addFile',
-      path: filePath,
-      fileName: addFileName
+      filePath: fullFilePath
     });
   };
 
-  //delete a file need path and filename.extension
-  const handleDeleteFile = () => {
+  // Add a folder
+  const handleAddFolder = (fullFolderPath: string) => {
+    console.log('Adding folder:', fullFolderPath);
     vscode.postMessage({
-      command: 'deleteFile',
-      path: filePath,
-      fileName: deleteFileName
+      command: 'addFolder',
+      filePath: fullFolderPath
     });
   };
+
+  // Delete a file
+  const handleDeleteFile = (fullFilePath: string) => {
+    console.log('Deleting file:', fullFilePath);
+    vscode.postMessage({
+      command: 'deleteFile',
+      filePath: fullFilePath
+    });
+  };
+
+  // Delete a folder
+  const handleDeleteFolder = (fullFolderPath: string) => {
+    console.log('Deleting folder:', fullFolderPath);
+    vscode.postMessage({
+      command: 'deleteFolder',
+      filePath: fullFolderPath
+    });
+  };
+
 
   return (
     <div>
@@ -108,7 +139,7 @@ const App: React.FC = () => {
         value={filePath}
         onChange={(e) => setFilePath(e.target.value)}
       />
-      <button onClick={handleOpenFile}>Open File</button>
+      <button onClick={()=>handleOpenFile(filePath)}>Open File</button>
       <br />
       <input
         type="text"
@@ -116,7 +147,7 @@ const App: React.FC = () => {
         value={addFileName}
         onChange={(e) => setAddFileName(e.target.value)}
       />
-      <button onClick={handleAddFile}>Add</button>
+      <button onClick={()=>handleAddFile(addFileName)}>Add</button>
       <br />
       <input
         type="text"
@@ -124,7 +155,23 @@ const App: React.FC = () => {
         value={deleteFileName}
         onChange={(e) => setDeleteFileName(e.target.value)}
       />
-      <button onClick={handleDeleteFile}>Delete</button>
+      <button onClick={()=>handleDeleteFile(deleteFileName)}>Delete</button>
+      <br />
+      <input
+        type="text"
+        placeholder="Enter folder name to add"
+        value={addFolderName}
+        onChange={(e) => setAddFolderName(e.target.value)}
+      />
+      <button onClick={()=>handleAddFolder(addFolderName)}>Add Folder</button>
+      <br />
+      <input
+        type="text"
+        placeholder="Enter folder name to delete"
+        value={deleteFolderName}
+        onChange={(e) => setDeleteFolderName(e.target.value)}
+      />
+      <button onClick={()=>handleDeleteFolder(deleteFolderName)}>Delete Folder</button>
       <br />
       <p>This is a simple React component running inside a VS Code extension.</p>
       <pre>Directory list: {directory} </pre>
