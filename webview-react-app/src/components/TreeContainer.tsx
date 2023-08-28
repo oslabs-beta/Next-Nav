@@ -77,6 +77,10 @@ export default function TreeContainer() {
   const srcDirRef = useRef('src');
   const appDirRef = useRef('app');
 
+  //state for managing path input
+  const [validDir, setValidDir] = useState(false);
+  const [dirFormValue, setDirFormValue] = useState('');
+
   // Update the refs whenever srcDir or appDir changes
   useEffect(() => {
     srcDirRef.current = srcDir;
@@ -139,7 +143,7 @@ export default function TreeContainer() {
         console.log('file deleted');
         handleRequestDirectory(srcDirRef, appDirRef);
         break;
-        //folder was just added we need to get directory again
+      //folder was just added we need to get directory again
       case 'added_addFolder':
         console.log('folder added');
         handleRequestDirectory(srcDirRef, appDirRef);
@@ -148,6 +152,13 @@ export default function TreeContainer() {
       case 'added_deleteFolder':
         console.log('folder deleted');
         handleRequestDirectory(srcDirRef, appDirRef);
+        break;
+      case 'submitDirResponse':
+        console.log('recieved', message);
+        setValidDir(message.result);
+        if (message.result) {
+          handleRequestDirectory(srcDirRef, appDirRef);
+        }
     }
   };
 
@@ -208,6 +219,9 @@ export default function TreeContainer() {
               handleRequestDir={() => {
                 handleRequestDirectory(srcDir, appDir);
               }}
+              validDir={validDir}
+              dirFormValue={dirFormValue}
+              setDirFormValue={setDirFormValue}
             />
           </ReactFlowProvider>
         </div>

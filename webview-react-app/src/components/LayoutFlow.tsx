@@ -1,6 +1,11 @@
 // import { initialNodes, initialEdges } from './nodes-edges.tsx';
 import ELK, { ElkNode } from 'elkjs/lib/elk.bundled.js';
-import React, { useState, useCallback, useLayoutEffect } from 'react';
+import React, {
+  useState,
+  useCallback,
+  useLayoutEffect,
+  useEffect,
+} from 'react';
 import ReactFlow, {
   ReactFlowProvider,
   addEdge,
@@ -11,7 +16,25 @@ import ReactFlow, {
   Edge,
   Connection,
 } from 'reactflow';
-import { Card, Button, Heading } from '@chakra-ui/react';
+import {
+  Card,
+  Button,
+  Heading,
+  FormControl,
+  FormLabel,
+  Input,
+  FormErrorMessage,
+  FormHelperText,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverHeader,
+  PopoverBody,
+  PopoverFooter,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverAnchor,
+} from '@chakra-ui/react';
 import { VsCodeApiProvider, useVsCodeApi } from '../VsCodeApiContext';
 
 export type FileNode = {
@@ -118,6 +141,9 @@ type props = {
   appDir: string;
   parseData: () => void;
   handleRequestDir: () => void;
+  validDir: boolean;
+  dirFormValue: string;
+  setDirFormValue: (string: string) => void;
 };
 
 export default function LayoutFlow({
@@ -125,6 +151,9 @@ export default function LayoutFlow({
   initialEdges,
   parseData,
   handleRequestDir,
+  validDir,
+  dirFormValue,
+  setDirFormValue,
 }: props) {
   // console.log('component rendered');
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
@@ -183,6 +212,15 @@ export default function LayoutFlow({
     background: 'linear-gradient(#212121, #000000)',
   };
 
+  const handleSubmitDir = () => {
+    console.log(vscode);
+    console.log('Sending directory', dirFormValue);
+    vscode.postMessage({
+      command: 'submitDir',
+      folderName: dirFormValue,
+    });
+  };
+
   return (
     <ReactFlow
       nodes={nodes}
@@ -206,14 +244,21 @@ export default function LayoutFlow({
           boxShadow="2xl"
           bgColor="#454545"
         >
-          <Button
-            fontSize="10px"
-            bgColor="#010101"
-            color="white"
-            onClick={parseData}
-          >
-            Refresh
-          </Button>
+          {validDir ? (
+            <Button
+              fontSize="10px"
+              bgColor="#010101"
+              color="white"
+              onClick={() => {
+                handleRequestDir();
+                parseData();
+              }}
+            >
+              Refresh
+            </Button>
+          ) : (
+            ''
+          )}
           <Button
             bgColor="#010101"
             color="white"
@@ -237,13 +282,36 @@ export default function LayoutFlow({
         </Card>
       </Panel>
       <Panel position="top-left">
-        <Button
-          onClick={() => {
-            handleRequestDir();
-          }}
-        >
-          Import
-        </Button>
+        <Popover>
+          <PopoverTrigger>
+            <Button>Select File</Button>
+          </PopoverTrigger>
+          <PopoverContent>
+            <PopoverBody>
+              <FormControl>
+                <FormLabel>Paste your app path here</FormLabel>
+                <Input
+                  value={dirFormValue}
+                  onChange={(e) => {
+                    setDirFormValue(e.target.value);
+                  }}
+                />
+                <FormHelperText>
+                  To find path, right click on the app folder and click copy
+                  path
+                </FormHelperText>
+                <Button
+                  onClick={() => {
+                    handleSubmitDir();
+                    setDirFormValue('');
+                  }}
+                >
+                  Submit
+                </Button>
+              </FormControl>
+            </PopoverBody>
+          </PopoverContent>
+        </Popover>
       </Panel>
     </ReactFlow>
   );
