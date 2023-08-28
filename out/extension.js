@@ -5,11 +5,13 @@ const vscode = require("vscode");
 const path = require("path");
 const makeTree_1 = require("./makeTree");
 const fs_1 = require("fs");
+const functions_1 = require("./functions");
+let lastSubmittedDir = null; // directory user gave
 //get the directory to send to the React
-async function sendUpdatedDirectory(webview, src, app) {
+async function sendUpdatedDirectory(webview, dirName) {
     try {
-        //tree maker builds it
-        const result = await (0, makeTree_1.default)(src, app);
+        // Call treeMaker with only one folder name
+        const result = await (0, makeTree_1.default)(dirName);
         const sendString = JSON.stringify(result);
         webview.webview.postMessage({ command: 'sendString', data: sendString });
     }
@@ -25,16 +27,35 @@ function activate(context) {
         //create a webview to put React on
         const webview = vscode.window.createWebviewPanel('reactWebview', 'React Webview', vscode.ViewColumn.One, {
             enableScripts: true,
-            //make the extension persist on tab
-            retainContextWhenHidden: true,
+            //make the extnsion persist on tab
+            retainContextWhenHidden: true
         });
         //When we get requests from React
         webview.webview.onDidReceiveMessage(async (message) => {
-            console.log('Received message:', message);
+            console.log("Received message:", message);
             switch (message.command) {
+                //save directory for future use
+                case 'submitDir':
+                    const folderLocation = await (0, functions_1.getValidDirectoryPath)(message.folderName);
+                    if (folderLocation) {
+                        lastSubmittedDir = folderLocation;
+                        vscode.window.showInformationMessage("Directory is now " + lastSubmittedDir);
+                        webview.webview.postMessage({ command: 'submitDirResponse', result: true });
+                    }
+                    else {
+                        vscode.window.showErrorMessage("Invalid directory: " + message.folderName);
+                        webview.webview.postMessage({ command: 'submitDirResponse', result: false });
+                    }
+                    break;
                 //send directory to React
                 case 'getRequest':
-                    await sendUpdatedDirectory(webview, message.src, message.app);
+                    if (lastSubmittedDir) {
+                        await sendUpdatedDirectory(webview, lastSubmittedDir);
+                    }
+                    else {
+                        console.error("No directory has been submitted yet.");
+                        vscode.window.showErrorMessage("No directory has been submitted yet.");
+                    }
                     break;
                 // open a file in the extension
                 case 'open_file':
@@ -78,8 +99,9 @@ function activate(context) {
                 case 'deleteFile':
                     try {
                         const filePath = message.filePath;
+                        const uri = vscode.Uri.file(filePath);
                         if (await fs_1.promises.stat(filePath)) {
-                            await fs_1.promises.unlink(filePath);
+                            await vscode.workspace.fs.delete(uri, { useTrash: true });
                         }
                         else {
                             throw new Error('File does not exist');
@@ -97,8 +119,14 @@ function activate(context) {
                     try {
                         console.log('deleting in backend', message.path);
                         const folderPath = message.filePath;
+                        const uri = vscode.Uri.file(folderPath);
                         //delete folder and subfolders
-                        await fs_1.promises.rmdir(folderPath, { recursive: true });
+                        if (await fs_1.promises.stat(folderPath)) {
+                            await vscode.workspace.fs.delete(uri, { recursive: true, useTrash: true });
+                        }
+                        else {
+                            throw new Error('Folder does not exist');
+                        }
                         // Let the React app know that we've successfully deleted a folder
                         webview.webview.postMessage({ command: 'added_deleteFolder' });
                     }
