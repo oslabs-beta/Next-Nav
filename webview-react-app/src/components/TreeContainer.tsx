@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
-import LayoutFlow from './LayoutFlow';
-import { ReactFlowProvider } from 'reactflow';
-import Node from './Node';
+import React, { useEffect, useRef, useState } from "react";
+import LayoutFlow from "./LayoutFlow";
+import { ReactFlowProvider } from "reactflow";
+import Node from "./Node";
 // import { handleReceivedMessage, handleRequestDirectory } from "../functions";
-import { useVsCodeApi } from '../VsCodeApiContext';
+import { useVsCodeApi } from "../VsCodeApiContext";
 
 export type FileNode = {
   id: number;
@@ -19,45 +19,45 @@ export type Tree = FileNode[];
 const initNodes: Tree = [
   {
     id: 0,
-    folderName: 'Root',
+    folderName: "Root",
     parentNode: null,
-    contents: ['globals.css', 'layout.js', 'page.jsx', 'page.module.css'],
-    path: '',
+    contents: ["globals.css", "layout.js", "page.jsx", "page.module.css"],
+    path: "",
   },
   {
     id: 1,
-    folderName: 'Child',
+    folderName: "Child",
     parentNode: 0,
-    contents: ['page.jsx', 'page.module.css'],
-    path: '',
+    contents: ["page.jsx", "page.module.css"],
+    path: "",
   },
   {
     id: 2,
-    folderName: 'Child',
+    folderName: "Child",
     parentNode: 0,
-    contents: ['page.jsx', 'page.module.css'],
-    path: '',
+    contents: ["page.jsx", "page.module.css"],
+    path: "",
   },
   {
     id: 3,
-    folderName: 'Sub-Child',
+    folderName: "Sub-Child",
     parentNode: 2,
-    contents: ['page.jsx', 'page.module.css'],
-    path: '',
+    contents: ["page.jsx", "page.module.css"],
+    path: "",
   },
   {
     id: 4,
-    folderName: 'Sub-Child',
+    folderName: "Sub-Child",
     parentNode: 2,
-    contents: ['page.jsx', 'page.module.css'],
-    path: '',
+    contents: ["page.jsx", "page.module.css"],
+    path: "",
   },
   {
     id: 5,
-    folderName: 'Child',
+    folderName: "Child",
     parentNode: 0,
-    contents: ['loading.jsx', 'page.jsx', 'page.module.css'],
-    path: '',
+    contents: ["loading.jsx", "page.jsx", "page.module.css"],
+    path: "",
   },
 ];
 
@@ -72,16 +72,20 @@ export default function TreeContainer() {
   const vscode = useVsCodeApi();
 
   //state for communicating with "backend"
-  const [srcDir, setSrcDir] = useState('src');
-  const [appDir, setAppDir] = useState('app');
-  const srcDirRef = useRef('src');
-  const appDirRef = useRef('app');
+  const [srcDir, setSrcDir] = useState("src");
+  const [appDir, setAppDir] = useState("app");
+  const srcDirRef = useRef("src");
+  const appDirRef = useRef("app");
+
+  //state for managing path input
+  const [validDir, setValidDir] = useState(false);
+  const [dirFormValue, setDirFormValue] = useState("");
 
   // Update the refs whenever srcDir or appDir changes
   useEffect(() => {
     srcDirRef.current = srcDir;
     appDirRef.current = appDir;
-    window.addEventListener('message', (e) =>
+    window.addEventListener("message", (e) =>
       handleReceivedMessage(
         e,
         setDirectory,
@@ -90,7 +94,7 @@ export default function TreeContainer() {
       )
     );
     return () => {
-      window.removeEventListener('message', (e) =>
+      window.removeEventListener("message", (e) =>
         handleReceivedMessage(
           e,
           setDirectory,
@@ -102,12 +106,12 @@ export default function TreeContainer() {
   }, [srcDir, appDir]);
 
   const handleRequestDirectory = (srcDirRef: string, appDirRef: string) => {
-    console.log('srcDir: ', srcDirRef, ' appDir: ', appDirRef);
-    console.log('asking for directory');
+    console.log("srcDir: ", srcDirRef, " appDir: ", appDirRef);
+    console.log("asking for directory");
     vscode.postMessage({
-      command: 'getRequest',
-      src: srcDirRef || 'src',
-      app: appDirRef || 'app',
+      command: "getRequest",
+      src: srcDirRef || "src",
+      app: appDirRef || "app",
     });
   };
 
@@ -120,8 +124,8 @@ export default function TreeContainer() {
     const message = event.data;
     switch (message.command) {
       //get directory
-      case 'sendString':
-        console.log('getting directory');
+      case "sendString":
+        console.log("getting directory");
         const formattedDirectory = JSON.stringify(
           JSON.parse(message.data),
           null,
@@ -130,24 +134,28 @@ export default function TreeContainer() {
         setDirectory(formattedDirectory);
         break;
       //file was just added we need to get directory again
-      case 'added_addFile':
-        console.log('file added');
+      case "added_addFile":
+        console.log("file added");
         handleRequestDirectory(srcDirRef, appDirRef);
         break;
       //file was just deleted we need to get directory again
-      case 'added_deleteFile':
-        console.log('file deleted');
+      case "added_deleteFile":
+        console.log("file deleted");
         handleRequestDirectory(srcDirRef, appDirRef);
         break;
-        //folder was just added we need to get directory again
-      case 'added_addFolder':
-        console.log('folder added');
+      //folder was just added we need to get directory again
+      case "added_addFolder":
+        console.log("folder added");
         handleRequestDirectory(srcDirRef, appDirRef);
         break;
       //folder was just deleted we need to get directory again
-      case 'added_deleteFolder':
-        console.log('folder deleted');
+      case "added_deleteFolder":
+        console.log("folder deleted");
         handleRequestDirectory(srcDirRef, appDirRef);
+        break;
+      case "submitDirResponse":
+        console.log("recieved", message);
+        setValidDir(message.result);
     }
   };
 
@@ -172,7 +180,7 @@ export default function TreeContainer() {
           id: `${obj.parentNode}_${obj.id}`,
           source: `${obj.parentNode}`, //this is the parents id
           target: `${obj.id}`,
-          type: 'smoothstep', //determines the line style
+          type: "smoothstep", //determines the line style
           animated: true, //displays marching ants
         });
       }
@@ -194,7 +202,7 @@ export default function TreeContainer() {
     <div>
       {isParsed ? (
         //this outer div is required to give the size of the ReactFlow window
-        <div style={{ width: '100vw', height: '100vh', display: 'flex' }}>
+        <div style={{ width: "100vw", height: "100vh", display: "flex" }}>
           {/* Must Wrap the Layout flow in the ReactFlow component imported from ReactFLOW */}
           <ReactFlowProvider>
             <LayoutFlow
@@ -208,6 +216,9 @@ export default function TreeContainer() {
               handleRequestDir={() => {
                 handleRequestDirectory(srcDir, appDir);
               }}
+              validDir={validDir}
+              dirFormValue={dirFormValue}
+              setDirFormValue={setDirFormValue}
             />
           </ReactFlowProvider>
         </div>

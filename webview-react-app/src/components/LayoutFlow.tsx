@@ -1,6 +1,6 @@
 // import { initialNodes, initialEdges } from './nodes-edges.tsx';
 import ELK, { ElkNode } from "elkjs/lib/elk.bundled.js";
-import React, { useState, useCallback, useLayoutEffect } from "react";
+import React, { useState, useCallback, useLayoutEffect, useEffect } from "react";
 import ReactFlow, {
   ReactFlowProvider,
   addEdge,
@@ -11,7 +11,25 @@ import ReactFlow, {
   Edge,
   Connection,
 } from "reactflow";
-import {Card, Button, Heading} from '@chakra-ui/react';
+import {
+  Card,
+  Button,
+  Heading,
+  FormControl,
+  FormLabel,
+  Input,
+  FormErrorMessage,
+  FormHelperText,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverHeader,
+  PopoverBody,
+  PopoverFooter,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverAnchor,
+} from "@chakra-ui/react";
 import { VsCodeApiProvider, useVsCodeApi } from '../VsCodeApiContext';
 
 
@@ -118,10 +136,13 @@ type props = {
   srcDir: string;
   appDir: string;
   parseData: () => void;
-  handleRequestDir: () => void
+  handleRequestDir: () => void;
+  validDir: boolean;
+  dirFormValue: string;
+  setDirFormValue: (string: string) => void;
 };
 
-export default function LayoutFlow({ initialNodes, initialEdges, parseData, handleRequestDir }: props) {
+export default function LayoutFlow({ initialNodes, initialEdges, parseData, handleRequestDir, validDir, dirFormValue, setDirFormValue }: props) {
   // console.log('component rendered');
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -174,67 +195,96 @@ export default function LayoutFlow({ initialNodes, initialEdges, parseData, hand
     onLayout({ direction: "RIGHT", useInitialNodes: true });
   }, [initialNodes]);
 
+
   //BACKGROUND OF THE APP
   const reactFlowStyle = {
     background: "linear-gradient(#212121, #000000)",
   };
 
-  return (
-    <ReactFlow
-      nodes={nodes}
-      edges={edges}
-      onConnect={onConnect}
-      onNodesChange={onNodesChange}
-      onEdgesChange={onEdgesChange}
-      style={reactFlowStyle}
-      minZoom={0.1} //Required to show the full tree and allow user to zoom out more. 
-    >
-      {/*Stores the buttons in the top right*/}
-      <Panel position="top-right">
-        <Heading color='#FFFFFF'>Next.Nav</Heading>
-        <Card
-          flexDir="column"
-          gap="1.5rem"
-          padding="2vh 20px"
-          borderRadius="10px"
-          mr="10px"
-          mt="10px"
-          boxShadow='2xl'
-          bgColor="#454545">
-          <Button
-            fontSize="10px"
-            bgColor="#010101"
-            color="white"
-            onClick={parseData}
-          >
-            Refresh
-          </Button>
-          <Button
-            bgColor="#010101"
-            color="white"
-            fontSize="10px"
-            onClick={() => {
-              onLayout({ direction: "DOWN" });
-            }}>
-            vertical layout
-          </Button>
-          <Button
-            bgColor="#010101"
-            color="white"
-            fontSize="10px"
-            onClick={() => {
-              onLayout({ direction: "RIGHT" });
-            }}>
-            horizontal layout
-          </Button>
-        </Card>
-      </Panel>
-      <Panel position="top-left">
-        <Button onClick={() => {
-          handleRequestDir();
-        }
-        }>Import</Button>
-      </Panel>
-    </ReactFlow>
-  );
-}
+  const handleSubmitDir = () => {
+    console.log(vscode);
+    console.log("Sending directory", dirFormValue);
+    vscode.postMessage({
+      command: "submitDir",
+      folderName: dirFormValue,
+    });
+  };
+
+    return (
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onConnect={onConnect}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        style={reactFlowStyle}
+        minZoom={0.1} //Required to show the full tree and allow user to zoom out more. 
+      >
+        {/*Stores the buttons in the top right*/}
+        <Panel position="top-right">
+          <Heading color='#FFFFFF'>Next.Nav</Heading>
+          <Card
+            flexDir="column"
+            gap="1.5rem"
+            padding="2vh 20px"
+            borderRadius="10px"
+            mr="10px"
+            mt="10px"
+            boxShadow='2xl'
+            bgColor="#454545">
+            {validDir ? <Button
+              fontSize="10px"
+              bgColor="#010101"
+              color="white"
+              onClick={() => {
+                handleRequestDir();
+                parseData();
+              }}
+            >
+              Refresh
+            </Button> : ''}
+            <Button
+              bgColor="#010101"
+              color="white"
+              fontSize="10px"
+              onClick={() => {
+                onLayout({ direction: "DOWN" });
+              }}>
+              vertical layout
+            </Button>
+            <Button
+              bgColor="#010101"
+              color="white"
+              fontSize="10px"
+              onClick={() => {
+                onLayout({ direction: "RIGHT" });
+              }}>
+              horizontal layout
+            </Button>
+          </Card>
+        </Panel>
+        <Panel position="top-left">
+          <Popover>
+            <PopoverTrigger>
+              <Button>Select File</Button>
+            </PopoverTrigger>
+            <PopoverContent>
+              <PopoverBody>
+                <FormControl>
+                  <FormLabel>
+                    Paste your app path here
+                  </FormLabel>
+                  <Input value={dirFormValue} onChange={(e) => { setDirFormValue(e.target.value) }} />
+                  <FormHelperText>To find path, right click on the app folder and click copy path</FormHelperText>
+                  <Button onClick={() => {
+                    handleSubmitDir();
+                    setDirFormValue('');
+                  }}>Submit</Button>
+                </FormControl>
+              </PopoverBody>
+            </PopoverContent>
+          </Popover>
+        </Panel>
+      </ReactFlow>
+    );
+  }

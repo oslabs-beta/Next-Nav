@@ -1,40 +1,38 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.findDir = void 0;
+exports.getValidDirectoryPath = void 0;
 const fs = require("fs/promises");
 const path = require("path");
 const vscode = require("vscode");
-//find directory of src and app
-async function findDir(srcDirName, appDirName) {
-    //if we have a workspace
-    if (!!vscode.workspace.workspaceFolders) {
-        const workspacePath = vscode.workspace.workspaceFolders[0].uri.fsPath;
-        try {
-            //read from workspace
-            const entries = await fs.readdir(workspacePath, { withFileTypes: true });
-            //find src folder in the main directory
-            const srcDir = entries.find(entry => entry.isDirectory() && entry.name === srcDirName);
-            if (!srcDir) {
-                return { status: 'error', message: `No ${srcDirName} directory found.` };
-            }
-            const srcPath = path.join(workspacePath, srcDirName);
-            const srcEntries = await fs.readdir(srcPath, { withFileTypes: true });
-            //find app folder in src directory
-            const appDir = srcEntries.find(entry => entry.isDirectory() && entry.name === appDirName);
-            if (!appDir) {
-                return { status: 'error', message: `No ${appDirName} directory found in ${srcDirName}.` };
-            }
-            const appPath = path.join(srcPath, appDir.name);
-            return { status: 'success', data: appPath };
+async function getValidDirectoryPath(dirPath) {
+    try {
+        if (!vscode.workspace.workspaceFolders) {
+            console.log('No workspace folders found.');
+            return '';
         }
-        catch (err) {
-            console.log('error');
-            return { status: 'error', message: 'Error reading workspace: ' + err.message };
+        const workspaceDir = vscode.workspace.workspaceFolders[0].uri.fsPath;
+        console.log('Workspace Directory:', workspaceDir);
+        // Convert to absolute path if it is a relative path
+        const absoluteDirPath = path.isAbsolute(dirPath) ? dirPath : path.join(workspaceDir, dirPath);
+        console.log('Absolute Directory Path:', absoluteDirPath);
+        // Validate if this path is within the workspace directory
+        if (!absoluteDirPath.startsWith(workspaceDir)) {
+            console.log('Directory path is not in workspace directory.');
+            return '';
         }
+        // Check if the directory actually exists
+        const stat = await fs.stat(absoluteDirPath);
+        if (!stat.isDirectory()) {
+            console.log('Not a directory.');
+            return '';
+        }
+        console.log('Directory exists.');
+        return absoluteDirPath; // Return the validated absolute directory path
     }
-    else {
-        return { status: 'error', message: 'No workspace folder opened.' };
+    catch (err) {
+        console.log('Error:', err);
+        return '';
     }
 }
-exports.findDir = findDir;
+exports.getValidDirectoryPath = getValidDirectoryPath;
 //# sourceMappingURL=functions.js.map
