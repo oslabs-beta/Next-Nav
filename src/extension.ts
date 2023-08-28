@@ -2,13 +2,14 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import treeMaker from './makeTree';
 import { promises as fs } from 'fs';
+import { getValidDirectoryPath } from './functions';
 
-
+let lastSubmittedDir: string | null = null; // directory user gave
 //get the directory to send to the React
-async function sendUpdatedDirectory(webview: vscode.WebviewPanel, src: string, app: string): Promise<void> {
+async function sendUpdatedDirectory(webview: vscode.WebviewPanel, dirName: string): Promise<void> {
   try {
-    //tree maker builds it
-    const result = await treeMaker(src, app);
+    // Call treeMaker with only one folder name
+    const result = await treeMaker(dirName);
     const sendString = JSON.stringify(result);
     webview.webview.postMessage({ command: 'sendString', data: sendString });
   } catch (error: any) {
@@ -37,9 +38,26 @@ export function activate(context: vscode.ExtensionContext) {
       async message => {
         console.log("Received message:", message);
         switch (message.command) {
+          //save directory for future use
+          case 'submitDir':
+            const folderLocation = await getValidDirectoryPath(message.folderName);
+            if (folderLocation) {
+              lastSubmittedDir = folderLocation;
+              vscode.window.showInformationMessage("Directory is now " + lastSubmittedDir);
+              webview.webview.postMessage({ command: 'submitDirResponse', result: true });
+            } else {
+              vscode.window.showErrorMessage("Invalid directory: " + message.folderName);
+              webview.webview.postMessage({ command: 'submitDirResponse', result: false });
+            }
+            break;
           //send directory to React
           case 'getRequest':
-            await sendUpdatedDirectory(webview, message.src, message.app);
+            if (lastSubmittedDir) {
+              await sendUpdatedDirectory(webview, lastSubmittedDir);
+            } else {
+              console.error("No directory has been submitted yet.");
+              vscode.window.showErrorMessage("No directory has been submitted yet.");
+            }
             break;
           // open a file in the extension
           case 'open_file':
@@ -81,8 +99,9 @@ export function activate(context: vscode.ExtensionContext) {
           case 'deleteFile':
             try {
               const filePath = message.filePath;
+              const uri = vscode.Uri.file(filePath);
               if (await fs.stat(filePath)) {
-                await fs.unlink(filePath);
+                await vscode.workspace.fs.delete(uri, { useTrash: true });
               } else {
                 throw new Error('File does not exist');
               }
@@ -98,8 +117,14 @@ export function activate(context: vscode.ExtensionContext) {
               try {
                 console.log('deleting in backend', message.path);
                 const folderPath = message.filePath;
+                const uri = vscode.Uri.file(folderPath);
+
                 //delete folder and subfolders
-                await fs.rmdir(folderPath, { recursive: true });
+                if (await fs.stat(folderPath)) {
+                  await vscode.workspace.fs.delete(uri, { recursive: true, useTrash: true });
+                } else {
+                  throw new Error('Folder does not exist');
+                }
                 // Let the React app know that we've successfully deleted a folder
                 webview.webview.postMessage({ command: 'added_deleteFolder' });
               } catch (error: any) {

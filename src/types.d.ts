@@ -7,9 +7,9 @@ export interface Directory {
     contents: (string | Directory)[];
   }
 
-  //for finding a directory
-  export interface Output {
-    status: string,
-    message?: string,
-    data?: string,
-  }
+  // //for finding a directory
+  // export interface Output {
+  //   status: string,
+  //   message?: string,
+  //   data?: string,
+  // }

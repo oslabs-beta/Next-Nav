@@ -4,21 +4,19 @@ import { useVsCodeApi } from './VsCodeApiContext';
 const App: React.FC = () => {
   const [directory, setDirectory] = useState('nothing here');
   const [srcDir, setSrcDir] = useState('');
-  const [appDir, setAppDir] = useState('');
   const [filePath, setFilePath] = useState('');
   const [addFileName, setAddFileName] = useState('');
   const [deleteFileName, setDeleteFileName] = useState('');
   const [addFolderName, setAddFolderName] = useState('');
   const [deleteFolderName, setDeleteFolderName] = useState('');
+  const [validFolder, setValidFolder] = useState(false);
   const srcDirRef = useRef('');
-  const appDirRef = useRef('');
   const vscode = useVsCodeApi();
 
   // Update the refs whenever srcDir or appDir changes
   useEffect(() => {
     srcDirRef.current = srcDir;
-    appDirRef.current = appDir;
-  }, [srcDir, appDir]);
+  }, [srcDir]);
 
   //add listener for messages from backend
   useEffect(() => {
@@ -52,7 +50,10 @@ const App: React.FC = () => {
         console.log('file deleted');
         handleRequestDirectory();
         break;
-
+      case 'submitDirResponse':
+        console.log('got response from submit folder. it is :' + message.result);
+        setValidFolder(message.result);
+        break;
       //folder was just deleted we need to get directory again
       case 'added_deleteFolder':
         console.log('folder deleted');
@@ -62,11 +63,17 @@ const App: React.FC = () => {
 
   //get directory
   const handleRequestDirectory = () => {
-    console.log('srcDir: ', srcDirRef.current, ' appDir: ', appDirRef.current);
     vscode.postMessage({
       command: 'getRequest',
-      src: srcDirRef.current || 'src',
-      app: appDirRef.current || 'app',
+    });
+  };
+
+  //submit directory
+  const handleSubmitDirectory = () => {
+    console.log('submitting directory');
+    vscode.postMessage({
+      command: 'submitDir',
+      folderName: srcDirRef.current
     });
   };
 
@@ -125,13 +132,10 @@ const App: React.FC = () => {
         value={srcDir}
         onChange={(e) => setSrcDir(e.target.value)}
       />
-      <input
-        type="text"
-        placeholder="Enter app directory"
-        value={appDir}
-        onChange={(e) => setAppDir(e.target.value)}
-      />
-      <button onClick={handleRequestDirectory}>Request Directory</button>
+      <button onClick={handleSubmitDirectory}>Submit Directory</button>
+      <br />
+
+      {validFolder && <button onClick={handleRequestDirectory}>Request Directory</button>}
       <br />
       <input
         type="text"
