@@ -1,6 +1,6 @@
 // import { initialNodes, initialEdges } from './nodes-edges.tsx';
-import ELK, { ElkNode } from "elkjs/lib/elk.bundled.js";
-import React, { useState, useCallback, useLayoutEffect } from "react";
+import ELK, { ElkNode } from 'elkjs/lib/elk.bundled.js';
+import React, { useState, useCallback, useLayoutEffect } from 'react';
 import ReactFlow, {
   ReactFlowProvider,
   addEdge,
@@ -10,10 +10,9 @@ import ReactFlow, {
   useReactFlow,
   Edge,
   Connection,
-} from "reactflow";
-import {Card, Button, Heading} from '@chakra-ui/react';
+} from 'reactflow';
+import { Card, Button, Heading } from '@chakra-ui/react';
 import { VsCodeApiProvider, useVsCodeApi } from '../VsCodeApiContext';
-
 
 export type FileNode = {
   id: number;
@@ -26,10 +25,10 @@ export type FileNode = {
 export type Tree = FileNode[];
 
 //import the empty styles from reactflow to allow for other styles
-import "reactflow/dist/base.css";
+import 'reactflow/dist/base.css';
 //import styles from NextNav style.css file.
 //This import is required to remove ReactFlow borders
-import "../../style.css";
+import '../../style.css';
 
 const elk = new ELK();
 
@@ -39,9 +38,9 @@ const elk = new ELK();
 // - https://www.eclipse.org/elk/reference/algorithms.html
 // - https://www.eclipse.org/elk/reference/options.html
 const elkOptions = {
-  "elk.algorithm": "layered",
-  "elk.layered.spacing.nodeNodeBetweenLayers": "200",
-  "elk.spacing.nodeNode": "100",
+  'elk.algorithm': 'layered',
+  'elk.layered.spacing.nodeNodeBetweenLayers': '200',
+  'elk.spacing.nodeNode': '100',
 };
 
 //---For Update the types later--??
@@ -65,22 +64,22 @@ const elkOptions = {
 const getLayoutedElements = async (
   nodes: any[],
   edges: any[],
-  options = { ["elk.direction"]: "RIGHT" }
+  options = { ['elk.direction']: 'RIGHT' }
 ): Promise<any> => {
   //Changes the Direction of the graph based on the input
   const isHorizontal: boolean =
-    options["elk.direction"] === "DOWN" ? false : true;
-  
+    options['elk.direction'] === 'DOWN' ? false : true;
+
   //Forms data to pass to ELK function
   const graph: ElkNode = {
-    id: "root",
+    id: 'root',
     layoutOptions: options,
     children: nodes.map((node) => ({
       ...node,
       // Adjust the target and source handle positions based on the layout
       // direction.
-      targetPosition: isHorizontal ? "left" : "top",
-      sourcePosition: isHorizontal ? "right" : "bottom",
+      targetPosition: isHorizontal ? 'left' : 'top',
+      sourcePosition: isHorizontal ? 'right' : 'bottom',
 
       // Hardcode a width and height for elk to use when layouting.
       //Adjust this to change the spacing between nodes
@@ -96,7 +95,7 @@ const getLayoutedElements = async (
       elkGraph.children = []; //prevents elkGraph.children from being undefined
     }
 
-    console.log("elkGraph", elkGraph);
+    console.log('elkGraph', elkGraph);
     return {
       nodes: elkGraph.children.map((node) => ({
         ...node,
@@ -108,7 +107,7 @@ const getLayoutedElements = async (
     };
   } catch (error) {
     //Displayed when the wrong data is passed to elk.layout
-    console.log("catch block failed: ", error);
+    console.log('catch block failed: ', error);
   }
 };
 
@@ -118,10 +117,15 @@ type props = {
   srcDir: string;
   appDir: string;
   parseData: () => void;
-  handleRequestDir: () => void
+  handleRequestDir: () => void;
 };
 
-export default function LayoutFlow({ initialNodes, initialEdges, parseData, handleRequestDir }: props) {
+export default function LayoutFlow({
+  initialNodes,
+  initialEdges,
+  parseData,
+  handleRequestDir,
+}: props) {
   // console.log('component rendered');
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -136,7 +140,7 @@ export default function LayoutFlow({ initialNodes, initialEdges, parseData, hand
 
   //Caches a function that retrieves the positions from the nodes from getLayoutedElements
   //This funciton persists between loads, unless one of the dependencies change.
-  //All variables associated with this funciton are cached as well. 
+  //All variables associated with this funciton are cached as well.
   const onLayout = useCallback(
     async ({
       direction,
@@ -145,16 +149,16 @@ export default function LayoutFlow({ initialNodes, initialEdges, parseData, hand
       direction: string;
       useInitialNodes?: boolean;
     }): Promise<any> => {
-      const opts = { "elk.direction": direction, ...elkOptions };
+      const opts = { 'elk.direction': direction, ...elkOptions };
       const ns = useInitialNodes ? initialNodes : nodes;
-      console.log("OnLayout-nodes", ns);
+      console.log('OnLayout-nodes', ns);
 
       const es = useInitialNodes ? initialEdges : edges;
-      console.log("OnLayout-edges", es);
+      console.log('OnLayout-edges', es);
 
       //gets the new nodes from the result of getLayoutedElements
       const layoutedElms = await getLayoutedElements(ns, es, opts);
-      console.log("layouted", layoutedElms);
+      console.log('layouted', layoutedElms);
 
       setNodes(layoutedElms.nodes);
       setEdges(layoutedElms.edges);
@@ -168,15 +172,15 @@ export default function LayoutFlow({ initialNodes, initialEdges, parseData, hand
 
   // Calculate the initial layout on mount.
   useLayoutEffect(() => {
-    console.log("initNodes", initialNodes);
+    console.log('initNodes', initialNodes);
 
     //sets the initial direction of the graph:
-    onLayout({ direction: "RIGHT", useInitialNodes: true });
+    onLayout({ direction: 'RIGHT', useInitialNodes: true });
   }, [initialNodes]);
 
   //BACKGROUND OF THE APP
   const reactFlowStyle = {
-    background: "linear-gradient(#212121, #000000)",
+    background: 'linear-gradient(#212121, #000000)',
   };
 
   return (
@@ -187,11 +191,11 @@ export default function LayoutFlow({ initialNodes, initialEdges, parseData, hand
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
       style={reactFlowStyle}
-      minZoom={0.1} //Required to show the full tree and allow user to zoom out more. 
+      minZoom={0.1} //Required to show the full tree and allow user to zoom out more.
     >
       {/*Stores the buttons in the top right*/}
       <Panel position="top-right">
-        <Heading color='#FFFFFF'>Next.Nav</Heading>
+        <Heading color="#FFFFFF">Next.Nav</Heading>
         <Card
           flexDir="column"
           gap="1.5rem"
@@ -199,8 +203,9 @@ export default function LayoutFlow({ initialNodes, initialEdges, parseData, hand
           borderRadius="10px"
           mr="10px"
           mt="10px"
-          boxShadow='2xl'
-          bgColor="#454545">
+          boxShadow="2xl"
+          bgColor="#454545"
+        >
           <Button
             fontSize="10px"
             bgColor="#010101"
@@ -214,8 +219,9 @@ export default function LayoutFlow({ initialNodes, initialEdges, parseData, hand
             color="white"
             fontSize="10px"
             onClick={() => {
-              onLayout({ direction: "DOWN" });
-            }}>
+              onLayout({ direction: 'DOWN' });
+            }}
+          >
             vertical layout
           </Button>
           <Button
@@ -223,17 +229,21 @@ export default function LayoutFlow({ initialNodes, initialEdges, parseData, hand
             color="white"
             fontSize="10px"
             onClick={() => {
-              onLayout({ direction: "RIGHT" });
-            }}>
+              onLayout({ direction: 'RIGHT' });
+            }}
+          >
             horizontal layout
           </Button>
         </Card>
       </Panel>
       <Panel position="top-left">
-        <Button onClick={() => {
-          handleRequestDir();
-        }
-        }>Import</Button>
+        <Button
+          onClick={() => {
+            handleRequestDir();
+          }}
+        >
+          Import
+        </Button>
       </Panel>
     </ReactFlow>
   );
