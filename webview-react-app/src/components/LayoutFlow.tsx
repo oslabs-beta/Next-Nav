@@ -1,11 +1,11 @@
 // import { initialNodes, initialEdges } from './nodes-edges.tsx';
-import ELK, { ElkNode } from 'elkjs/lib/elk.bundled.js';
+import ELK, { ElkNode } from "elkjs/lib/elk.bundled.js";
 import React, {
   useState,
   useCallback,
   useLayoutEffect,
   useEffect,
-} from 'react';
+} from "react";
 import ReactFlow, {
   ReactFlowProvider,
   addEdge,
@@ -15,7 +15,7 @@ import ReactFlow, {
   useReactFlow,
   Edge,
   Connection,
-} from 'reactflow';
+} from "reactflow";
 import {
   Card,
   Button,
@@ -34,8 +34,8 @@ import {
   PopoverArrow,
   PopoverCloseButton,
   PopoverAnchor,
-} from '@chakra-ui/react';
-import { VsCodeApiProvider, useVsCodeApi } from '../VsCodeApiContext';
+} from "@chakra-ui/react";
+import { VsCodeApiProvider, useVsCodeApi } from "../VsCodeApiContext";
 
 export type FileNode = {
   id: number;
@@ -48,10 +48,10 @@ export type FileNode = {
 export type Tree = FileNode[];
 
 //import the empty styles from reactflow to allow for other styles
-import 'reactflow/dist/base.css';
+import "reactflow/dist/base.css";
 //import styles from NextNav style.css file.
 //This import is required to remove ReactFlow borders
-import '../../style.css';
+import "../../style.css";
 
 const elk = new ELK();
 
@@ -61,9 +61,9 @@ const elk = new ELK();
 // - https://www.eclipse.org/elk/reference/algorithms.html
 // - https://www.eclipse.org/elk/reference/options.html
 const elkOptions = {
-  'elk.algorithm': 'layered',
-  'elk.layered.spacing.nodeNodeBetweenLayers': '200',
-  'elk.spacing.nodeNode': '100',
+  "elk.algorithm": "layered",
+  "elk.layered.spacing.nodeNodeBetweenLayers": "200",
+  "elk.spacing.nodeNode": "100",
 };
 
 //---For Update the types later--??
@@ -87,22 +87,22 @@ const elkOptions = {
 const getLayoutedElements = async (
   nodes: any[],
   edges: any[],
-  options = { ['elk.direction']: 'RIGHT' }
+  options = { ["elk.direction"]: "RIGHT" }
 ): Promise<any> => {
   //Changes the Direction of the graph based on the input
   const isHorizontal: boolean =
-    options['elk.direction'] === 'DOWN' ? false : true;
+    options["elk.direction"] === "DOWN" ? false : true;
 
   //Forms data to pass to ELK function
   const graph: ElkNode = {
-    id: 'root',
+    id: "root",
     layoutOptions: options,
     children: nodes.map((node) => ({
       ...node,
       // Adjust the target and source handle positions based on the layout
       // direction.
-      targetPosition: isHorizontal ? 'left' : 'top',
-      sourcePosition: isHorizontal ? 'right' : 'bottom',
+      targetPosition: isHorizontal ? "left" : "top",
+      sourcePosition: isHorizontal ? "right" : "bottom",
 
       // Hardcode a width and height for elk to use when layouting.
       //Adjust this to change the spacing between nodes
@@ -118,7 +118,7 @@ const getLayoutedElements = async (
       elkGraph.children = []; //prevents elkGraph.children from being undefined
     }
 
-    console.log('elkGraph', elkGraph);
+    console.log("elkGraph", elkGraph);
     return {
       nodes: elkGraph.children.map((node) => ({
         ...node,
@@ -130,7 +130,7 @@ const getLayoutedElements = async (
     };
   } catch (error) {
     //Displayed when the wrong data is passed to elk.layout
-    console.log('catch block failed: ', error);
+    console.log("catch block failed: ", error);
   }
 };
 
@@ -178,16 +178,16 @@ export default function LayoutFlow({
       direction: string;
       useInitialNodes?: boolean;
     }): Promise<any> => {
-      const opts = { 'elk.direction': direction, ...elkOptions };
+      const opts = { "elk.direction": direction, ...elkOptions };
       const ns = useInitialNodes ? initialNodes : nodes;
-      console.log('OnLayout-nodes', ns);
+      console.log("OnLayout-nodes", ns);
 
       const es = useInitialNodes ? initialEdges : edges;
-      console.log('OnLayout-edges', es);
+      console.log("OnLayout-edges", es);
 
       //gets the new nodes from the result of getLayoutedElements
       const layoutedElms = await getLayoutedElements(ns, es, opts);
-      console.log('layouted', layoutedElms);
+      console.log("layouted", layoutedElms);
 
       setNodes(layoutedElms.nodes);
       setEdges(layoutedElms.edges);
@@ -201,22 +201,22 @@ export default function LayoutFlow({
 
   // Calculate the initial layout on mount.
   useLayoutEffect(() => {
-    console.log('initNodes', initialNodes);
+    console.log("initNodes", initialNodes);
 
     //sets the initial direction of the graph:
-    onLayout({ direction: 'RIGHT', useInitialNodes: true });
+    onLayout({ direction: "RIGHT", useInitialNodes: true });
   }, [initialNodes]);
 
   //BACKGROUND OF THE APP
   const reactFlowStyle = {
-    background: 'linear-gradient(#212121, #000000)',
+    background: "linear-gradient(#212121, #000000)",
   };
 
   const handleSubmitDir = () => {
     console.log(vscode);
-    console.log('Sending directory', dirFormValue);
+    console.log("Sending directory", dirFormValue);
     vscode.postMessage({
-      command: 'submitDir',
+      command: "submitDir",
       folderName: dirFormValue,
     });
   };
@@ -228,6 +228,7 @@ export default function LayoutFlow({
       onConnect={onConnect}
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
+      deleteKeyCode={null}
       style={reactFlowStyle}
       minZoom={0.1} //Required to show the full tree and allow user to zoom out more.
     >
@@ -242,8 +243,7 @@ export default function LayoutFlow({
           mr="10px"
           mt="10px"
           boxShadow="2xl"
-          bgColor="#454545"
-        >
+          bgColor="#454545">
           {validDir ? (
             <Button
               fontSize="10px"
@@ -252,21 +252,19 @@ export default function LayoutFlow({
               onClick={() => {
                 handleRequestDir();
                 parseData();
-              }}
-            >
+              }}>
               Refresh
             </Button>
           ) : (
-            ''
+            ""
           )}
           <Button
             bgColor="#010101"
             color="white"
             fontSize="10px"
             onClick={() => {
-              onLayout({ direction: 'DOWN' });
-            }}
-          >
+              onLayout({ direction: "DOWN" });
+            }}>
             vertical layout
           </Button>
           <Button
@@ -274,9 +272,8 @@ export default function LayoutFlow({
             color="white"
             fontSize="10px"
             onClick={() => {
-              onLayout({ direction: 'RIGHT' });
-            }}
-          >
+              onLayout({ direction: "RIGHT" });
+            }}>
             horizontal layout
           </Button>
         </Card>
@@ -303,9 +300,8 @@ export default function LayoutFlow({
                 <Button
                   onClick={() => {
                     handleSubmitDir();
-                    setDirFormValue('');
-                  }}
-                >
+                    setDirFormValue("");
+                  }}>
                   Submit
                 </Button>
               </FormControl>
