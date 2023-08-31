@@ -65,6 +65,7 @@ export function activate(context: vscode.ExtensionContext) {
             try {
               const document = await vscode.workspace.openTextDocument(filePath);
               await vscode.window.showTextDocument(document);
+              vscode.window.showInformationMessage(`Switched to tab with file: ${filePath}`);
               console.log(`Switched to tab with file: ${filePath}`);
             } catch (err: any) {
               vscode.window.showErrorMessage(`Error opening file: ${err.message}`);
@@ -77,6 +78,7 @@ export function activate(context: vscode.ExtensionContext) {
               const filePath = message.filePath;
               await fs.writeFile(filePath, '"This is your new file!"');
               //let the React know we added a file
+              vscode.window.showInformationMessage(`Added a new file at path: ${filePath}`);
               webview.webview.postMessage({ command: 'added_addFile' });
             } catch (error: any) {
               console.error('Error creating file:', error.message);
@@ -88,6 +90,7 @@ export function activate(context: vscode.ExtensionContext) {
             try {
               const folderPath = message.filePath;
               await fs.mkdir(folderPath);
+              vscode.window.showInformationMessage(`Added a new folder at path: ${folderPath}`);
               webview.webview.postMessage({ command: 'added_addFolder' });
             } catch (error: any) {
               console.error('Error creating folder:', error.message);
@@ -102,6 +105,7 @@ export function activate(context: vscode.ExtensionContext) {
               const uri = vscode.Uri.file(filePath);
               if (await fs.stat(filePath)) {
                 await vscode.workspace.fs.delete(uri, { useTrash: true });
+                vscode.window.showInformationMessage(`Deleted file at path: ${filePath}`);
               } else {
                 throw new Error('File does not exist');
               }
@@ -122,6 +126,7 @@ export function activate(context: vscode.ExtensionContext) {
                 //delete folder and subfolders
                 if (await fs.stat(folderPath)) {
                   await vscode.workspace.fs.delete(uri, { recursive: true, useTrash: true });
+                  vscode.window.showInformationMessage(`Deleted folder at path: ${folderPath}`);
                 } else {
                   throw new Error('Folder does not exist');
                 }
