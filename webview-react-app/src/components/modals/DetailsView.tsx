@@ -62,8 +62,8 @@ const DetailsView = ({ props, handlePostMessage, getIcon, isOpen, onClose }: Pro
             flexGrow="3"
             _hover={{ bg: 'white', textColor: 'black' }}
             leftIcon={<Icon as={icon[0]} />}
-            onClick={(e) => {
-              handlePostMessage(path.concat('/', contents[i]), 'open_file');
+            onClick={() => {
+              handlePostMessage(path.concat("/", contents[i]), "open_file");
             }}
           >
             {' '}
@@ -111,7 +111,7 @@ const DetailsView = ({ props, handlePostMessage, getIcon, isOpen, onClose }: Pro
   }
 
   return (
-    <Modal isCentered isOpen={isOpen} onClose={onClose}>
+    <Modal isCentered isOpen={isOpen} onClose={onClose} trapFocus={false}>
       <ModalOverlay
         bg="blackAlpha.300"
         backdropFilter="blur(10px) hue-rotate(90deg)"
