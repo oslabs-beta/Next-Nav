@@ -1,5 +1,5 @@
-import React from "react";
-import { FileNode } from "./TreeContainer";
+import React from 'react';
+import { FileNode } from './TreeContainer';
 
 import {
   Card,
@@ -12,15 +12,15 @@ import {
   Icon,
   IconButton,
   Tooltip,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 
-import { IconType } from "react-icons";
-import { PiFileCodeFill } from "react-icons/pi";
-import { SiCss3, SiReact, SiJavascript, SiTypescript } from "react-icons/si";
+import { IconType } from 'react-icons';
+import { PiFileCodeFill } from 'react-icons/pi';
+import { SiCss3, SiReact, SiJavascript, SiTypescript } from 'react-icons/si';
 
-import DetailsView from "./modals/DetailsView";
-import FolderAdd from "./modals/FolderAdd";
-import FolderDelete from "./modals/FolderDelete";
+import DetailsView from './modals/DetailsView';
+import FolderAdd from './modals/FolderAdd';
+import FolderDelete from './modals/FolderDelete';
 
 type Props = {
   data: FileNode;
@@ -46,19 +46,19 @@ const Node = ({ data, handlePostMessage }: Props): JSX.Element => {
     contents = [];
   }
   if (!path) {
-    path = "";
+    path = '';
   }
 
   // selects an icon to use based on a file name
   const getIcon = (fileString: string): [IconType, string] => {
     // store of file extensions and their respective icons and icon background color
     const iconStore: { [index: string]: [IconType, string] } = {
-      default: [PiFileCodeFill, "white"],
-      css: [SiCss3, "#264de4"],
-      jsx: [SiReact, "#61DBFB"],
-      js: [SiJavascript, "#f7df1e"],
-      ts: [SiTypescript, "#007acc"],
-      tsx: [SiReact, "#007acc"],
+      default: [PiFileCodeFill, 'white'],
+      css: [SiCss3, '#264de4'],
+      jsx: [SiReact, '#61DBFB'],
+      js: [SiJavascript, '#f7df1e'],
+      ts: [SiTypescript, '#007acc'],
+      tsx: [SiReact, '#007acc'],
     };
     // finds files extension type with regEx matching
     const ext: RegExpMatchArray | null = fileString.match(/[^.]*$/); //['ts']
@@ -68,7 +68,7 @@ const Node = ({ data, handlePostMessage }: Props): JSX.Element => {
     }
     // converts extension to lowercase
     const extStr: string = ext[0].toLowerCase();
-    console.log("extension string", extStr);
+    console.log('extension string', extStr);
     if (iconStore.hasOwnProperty(extStr)) {
       return iconStore[extStr];
     } else {
@@ -85,12 +85,12 @@ const Node = ({ data, handlePostMessage }: Props): JSX.Element => {
         <IconButton
           aria-label="file icon"
           isRound={true}
-          variant={"solid"}
+          variant={'solid'}
           color="#050505"
           backgroundColor={icon[1]}
           icon={<Icon as={icon[0]} />}
           onClick={() => {
-            handlePostMessage(path.concat("/", contents[i]), "open_file");
+            handlePostMessage(path.concat('/', contents[i]), 'open_file');
           }}
         />
       </Tooltip>
@@ -101,9 +101,10 @@ const Node = ({ data, handlePostMessage }: Props): JSX.Element => {
     <div
       className="test"
       style={{
-        border: "none",
-        position: "relative",
-      }}>
+        border: 'none',
+        position: 'relative',
+      }}
+    >
       <Card
         onClick={() => {
           nodeOnOpen();
@@ -117,19 +118,18 @@ const Node = ({ data, handlePostMessage }: Props): JSX.Element => {
         borderRadius="15px"
         position="relative"
         boxShadow={`0px 0px 7px 1px ${
-          parentNode === null ? "#24FF00" : "#FFF616"
-        }`}>
+          parentNode === null ? '#FF9ED2' : '#9FFFCB'
+        }`}
+      >
         <CardHeader>
           <Heading size="lg" color="#FFFFFF">
             {folderName}
           </Heading>
         </CardHeader>
         <CardBody padding="0px 28px 0px 28px">
-
-          <HStack spacing="10px" wrap="wrap" justify={"center"}>
+          <HStack spacing="10px" wrap="wrap" justify={'center'}>
             {files}
           </HStack>
-
         </CardBody>
         <CardFooter></CardFooter>
       </Card>

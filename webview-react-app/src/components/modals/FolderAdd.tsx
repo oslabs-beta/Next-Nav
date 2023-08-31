@@ -1,4 +1,4 @@
-import React, { useState, SetStateAction} from 'react';
+import React, { useState, SetStateAction } from 'react';
 import {
   Button,
   FormControl,
@@ -12,13 +12,13 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  useDisclosure
+  useDisclosure,
 } from '@chakra-ui/react';
-import { PiFolderNotchPlusFill } from 'react-icons/pi';
+import { PiFolderNotchPlusFill, PiPlusCircleBold } from 'react-icons/pi';
 
 type Props = {
-  path: String,
-  parentNode: Number | null,
+  path: String;
+  parentNode: Number | null;
   handlePostMessage: (
     filePath: string,
     // event:
@@ -30,17 +30,16 @@ type Props = {
 };
 
 const FolderAdd = ({ path, parentNode, handlePostMessage }: Props) => {
-
   const OverlayOne = () => (
     <ModalOverlay
       bg="blackAlpha.300"
       backdropFilter="blur(10px) hue-rotate(90deg)"
     />
   );
-  
+
   const [overlay, setOverlay] = React.useState(<OverlayOne />);
   const [addFolderValue, setAddFolderValue] = useState('');
-  
+
   const {
     isOpen: addIsOpen,
     onOpen: addOnOpen,
@@ -49,10 +48,10 @@ const FolderAdd = ({ path, parentNode, handlePostMessage }: Props) => {
 
   return (
     <>
-    <Button
+      <Button
         position="absolute"
         bgColor="#050505"
-        textColor="#050505"
+        textColor="#fff"
         padding="0"
         right="0"
         bottom="0"
@@ -61,7 +60,7 @@ const FolderAdd = ({ path, parentNode, handlePostMessage }: Props) => {
         // linear-gradient(90deg, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)
         _hover={{
           bg: `linear-gradient(90deg, #050505 0%, ${
-            parentNode === null ? '#24FF00' : '#FFF616'
+            parentNode === null ? '#FF9ED2' : '#9FFFCB'
           } 100%)`,
         }}
         // _hover={{boxShadow: `0px 0px 7px 1px ${
@@ -72,11 +71,10 @@ const FolderAdd = ({ path, parentNode, handlePostMessage }: Props) => {
           addOnOpen();
         }}
       >
-        +
+        <Icon as={PiPlusCircleBold} />
       </Button>
 
-
-    <Modal isCentered isOpen={addIsOpen} onClose={addOnClose}>
+      <Modal isCentered isOpen={addIsOpen} onClose={addOnClose}>
         {overlay}
         <ModalContent
           //style modal here:
@@ -98,7 +96,10 @@ const FolderAdd = ({ path, parentNode, handlePostMessage }: Props) => {
                 textAlign="center"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
-                    handlePostMessage(path.concat('/', addFolderValue), 'addFolder');
+                    handlePostMessage(
+                      path.concat('/', addFolderValue),
+                      'addFolder'
+                    );
                     addOnClose();
                   }
                 }}
@@ -118,15 +119,19 @@ const FolderAdd = ({ path, parentNode, handlePostMessage }: Props) => {
                 colorScheme="green"
                 icon={<Icon as={PiFolderNotchPlusFill} />}
                 onClick={(e) => {
-                  handlePostMessage(path.concat('/', addFolderValue), 'addFolder', setAddFolderValue);
+                  handlePostMessage(
+                    path.concat('/', addFolderValue),
+                    'addFolder',
+                    setAddFolderValue
+                  );
                   addOnClose();
                 }}
               />
             </FormControl>
           </ModalBody>
-        <ModalFooter></ModalFooter>
-      </ModalContent>
-    </Modal>
+          <ModalFooter></ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 };

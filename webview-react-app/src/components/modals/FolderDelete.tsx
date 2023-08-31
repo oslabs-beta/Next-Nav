@@ -1,4 +1,4 @@
-import React, { useState, SetStateAction} from 'react';
+import React, { useState, SetStateAction } from 'react';
 import {
   Button,
   FormControl,
@@ -13,14 +13,14 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  useDisclosure
+  useDisclosure,
 } from '@chakra-ui/react';
-import { PiFolderNotchPlusFill } from 'react-icons/pi';
+import { PiMinusCircleBold } from 'react-icons/pi';
 
 type Props = {
-  path: string,
-  parentNode: Number | null,
-  folderName: String,
+  path: string;
+  parentNode: Number | null;
+  folderName: String;
   handlePostMessage: (
     filePath: string,
     // event:
@@ -31,18 +31,22 @@ type Props = {
   ) => void;
 };
 
-const FolderDelete = ({ path, parentNode, folderName, handlePostMessage }: Props) => {
-
+const FolderDelete = ({
+  path,
+  parentNode,
+  folderName,
+  handlePostMessage,
+}: Props) => {
   const OverlayOne = () => (
     <ModalOverlay
       bg="blackAlpha.300"
       backdropFilter="blur(10px) hue-rotate(90deg)"
     />
   );
-  
+
   const [overlay, setOverlay] = React.useState(<OverlayOne />);
   const [deleteFolderValue, setDeleteFolderValue] = useState('');
-  
+
   const {
     isOpen: deleteIsOpen,
     onOpen: deleteOnOpen,
@@ -51,11 +55,11 @@ const FolderDelete = ({ path, parentNode, folderName, handlePostMessage }: Props
 
   return (
     <>
-    {parentNode !== null && (
+      {parentNode !== null && (
         <Button
           position="absolute"
           bgColor="#050505"
-          textColor="#050505"
+          textColor="#fff"
           padding="0"
           right="left"
           bottom="0"
@@ -64,7 +68,7 @@ const FolderDelete = ({ path, parentNode, folderName, handlePostMessage }: Props
           // linear-gradient(90deg, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)
           _hover={{
             bg: `linear-gradient(270deg, #050505 0%, ${
-              parentNode === null ? '#24FF00' : '#FFF616'
+              parentNode === null ? '#FF9ED2' : '#9FFFCB'
             } 100%)`,
           }}
           // _hover={{boxShadow: `0px 0px 7px 1px ${
@@ -75,12 +79,11 @@ const FolderDelete = ({ path, parentNode, folderName, handlePostMessage }: Props
             deleteOnOpen();
           }}
         >
-          -
+          <Icon as={PiMinusCircleBold} />
         </Button>
       )}
 
-
-<Modal isCentered isOpen={deleteIsOpen} onClose={deleteOnClose}>
+      <Modal isCentered isOpen={deleteIsOpen} onClose={deleteOnClose}>
         {overlay}
         <ModalContent
           //style modal here:
@@ -105,7 +108,11 @@ const FolderDelete = ({ path, parentNode, folderName, handlePostMessage }: Props
                 placeholder={`${folderName}`}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
-                    handlePostMessage(path, 'deleteFolder', setDeleteFolderValue);
+                    handlePostMessage(
+                      path,
+                      'deleteFolder',
+                      setDeleteFolderValue
+                    );
                     deleteOnClose();
                   }
                 }}
