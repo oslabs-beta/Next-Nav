@@ -19,6 +19,7 @@ import { PiFolderNotchPlusFill } from 'react-icons/pi';
 type Props = {
   path: String,
   parentNode: Number | null,
+  render: string,
   handlePostMessage: (
     filePath: string,
     // event:
@@ -29,7 +30,7 @@ type Props = {
   ) => void;
 };
 
-const FolderAdd = ({ path, parentNode, handlePostMessage }: Props) => {
+const FolderAdd = ({ path, parentNode, render, handlePostMessage }: Props) => {
 
   const OverlayOne = () => (
     <ModalOverlay
@@ -47,9 +48,11 @@ const FolderAdd = ({ path, parentNode, handlePostMessage }: Props) => {
     onClose: addOnClose,
   } = useDisclosure();
 
+  const boxShadowColor = render === "client" ? "#ffcf9e" : "#9FFFCB";
+
   return (
     <>
-    <Button
+      <Button
         position="absolute"
         bgColor="#050505"
         textColor="#050505"
@@ -61,7 +64,7 @@ const FolderAdd = ({ path, parentNode, handlePostMessage }: Props) => {
         // linear-gradient(90deg, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)
         _hover={{
           bg: `linear-gradient(90deg, #050505 0%, ${
-            parentNode === null ? '#24FF00' : '#FFF616'
+            parentNode === null ? "#24FF00" : boxShadowColor
           } 100%)`,
         }}
         // _hover={{boxShadow: `0px 0px 7px 1px ${
@@ -70,21 +73,22 @@ const FolderAdd = ({ path, parentNode, handlePostMessage }: Props) => {
         onClick={() => {
           setOverlay(<OverlayOne />);
           addOnOpen();
-        }}
-      >
+        }}>
         +
       </Button>
 
-
-    <Modal isCentered isOpen={addIsOpen} onClose={addOnClose}>
+      <Modal
+        isCentered
+        isOpen={addIsOpen}
+        onClose={addOnClose}
+        trapFocus={false}>
         {overlay}
         <ModalContent
           //style modal here:
           boxShadow="2xl"
           bgColor="#454545"
           textColor="#FFFFFF"
-          borderRadius="10px"
-        >
+          borderRadius="10px">
           <ModalHeader>Add Folder</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
@@ -97,8 +101,11 @@ const FolderAdd = ({ path, parentNode, handlePostMessage }: Props) => {
                 flexGrow="3"
                 textAlign="center"
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    handlePostMessage(path.concat('/', addFolderValue), 'addFolder');
+                  if (e.key === "Enter") {
+                    handlePostMessage(
+                      path.concat("/", addFolderValue),
+                      "addFolder"
+                    );
                     addOnClose();
                   }
                 }}
@@ -118,15 +125,19 @@ const FolderAdd = ({ path, parentNode, handlePostMessage }: Props) => {
                 colorScheme="green"
                 icon={<Icon as={PiFolderNotchPlusFill} />}
                 onClick={(e) => {
-                  handlePostMessage(path.concat('/', addFolderValue), 'addFolder', setAddFolderValue);
+                  handlePostMessage(
+                    path.concat("/", addFolderValue),
+                    "addFolder",
+                    setAddFolderValue
+                  );
                   addOnClose();
                 }}
               />
             </FormControl>
           </ModalBody>
-        <ModalFooter></ModalFooter>
-      </ModalContent>
-    </Modal>
+          <ModalFooter></ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 };
