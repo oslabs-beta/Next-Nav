@@ -8,7 +8,7 @@ import { Directory } from './types';
 //function to make the tree
 export default async function treeMaker(validDir: string): Promise<Directory[] | {}> {
   let idCounter = 1;
-
+  const extensions = /\.(js|jsx|css|ts|tsx)$/;
   //directory to be put into the output structure, id of the directory will match its index in the structure
   const structure: Directory[] = [
     {
@@ -76,8 +76,7 @@ export default async function treeMaker(validDir: string): Promise<Directory[] |
     // Close the Readable Stream
     rl.close();
 
-    // Log the first non-comment text for debugging
-    console.log(`First non-comment text in ${filePath}: ${firstNonCommentText}`);
+
 
     // Check if the first non-comment text contains any form of "use client"
     const targetStrings = ['"use client"', "'use client'", '`use client`'];
@@ -105,7 +104,7 @@ export default async function treeMaker(validDir: string): Promise<Directory[] |
 
         structure.push(directoryData);
         await listFiles(fullPath, directoryData.id);
-      } else if (['page.jsx', 'page.tsx'].includes(entity.name)) {
+      } else if (extensions.test(entity.name)) {
         structure[parent].contents.push(entity.name);
 
         // Check if this file has the 'use client' directive
@@ -120,7 +119,7 @@ export default async function treeMaker(validDir: string): Promise<Directory[] |
     await listFiles(validDir, 0);
     return structure;
   } catch (err) {
-    console.error('Error building the tree:', err);
+
     return {};
   }
 }

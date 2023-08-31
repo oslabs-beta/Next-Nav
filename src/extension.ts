@@ -13,13 +13,11 @@ async function sendUpdatedDirectory(webview: vscode.WebviewPanel, dirName: strin
     const sendString = JSON.stringify(result);
     webview.webview.postMessage({ command: 'sendString', data: sendString });
   } catch (error: any) {
-    console.error('Error sending updated directory:', error.message);
     vscode.window.showErrorMessage('Error sending updated directory: ' + error.message);
   }
 }
 
 export function activate(context: vscode.ExtensionContext) {
-  console.log('Congratulations, your extension "next-extension" is now active!');
   //runs when extension is called every time
   let disposable = vscode.commands.registerCommand('next-extension.helloWorld', async () => {
     //create a webview to put React on
@@ -36,7 +34,6 @@ export function activate(context: vscode.ExtensionContext) {
     //When we get requests from React
     webview.webview.onDidReceiveMessage(
       async message => {
-        console.log("Received message:", message);
         switch (message.command) {
           //save directory for future use
           case 'submitDir':
@@ -55,7 +52,6 @@ export function activate(context: vscode.ExtensionContext) {
             if (lastSubmittedDir) {
               await sendUpdatedDirectory(webview, lastSubmittedDir);
             } else {
-              console.error("No directory has been submitted yet.");
               vscode.window.showErrorMessage("No directory has been submitted yet.");
             }
             break;
@@ -66,10 +62,8 @@ export function activate(context: vscode.ExtensionContext) {
               const document = await vscode.workspace.openTextDocument(filePath);
               await vscode.window.showTextDocument(document);
               vscode.window.showInformationMessage(`Switched to tab with file: ${filePath}`);
-              console.log(`Switched to tab with file: ${filePath}`);
             } catch (err: any) {
               vscode.window.showErrorMessage(`Error opening file: ${err.message}`);
-              console.error(`Error opening file: ${err}`);
             }
             break;
           //add a new file in at specified path
@@ -81,7 +75,6 @@ export function activate(context: vscode.ExtensionContext) {
               vscode.window.showInformationMessage(`Added a new file at path: ${filePath}`);
               webview.webview.postMessage({ command: 'added_addFile' });
             } catch (error: any) {
-              console.error('Error creating file:', error.message);
               vscode.window.showErrorMessage('Error creating file: ' + error.message);
             }
             break;
@@ -93,7 +86,6 @@ export function activate(context: vscode.ExtensionContext) {
               vscode.window.showInformationMessage(`Added a new folder at path: ${folderPath}`);
               webview.webview.postMessage({ command: 'added_addFolder' });
             } catch (error: any) {
-              console.error('Error creating folder:', error.message);
               vscode.window.showErrorMessage('Error creating folder: ' + error.message);
             }
             break;
@@ -112,14 +104,12 @@ export function activate(context: vscode.ExtensionContext) {
               //let the React know we deleted a file
               webview.webview.postMessage({ command: 'added_deleteFile' });
             } catch (error: any) {
-              console.error('Error deleting file:', error.message);
               vscode.window.showErrorMessage('Error deleting file: ' + error.message);
             }
             break;
             //delete a folder at specified path
             case 'deleteFolder':
               try {
-                console.log('deleting in backend', message.path);
                 const folderPath = message.filePath;
                 const uri = vscode.Uri.file(folderPath);
 
@@ -133,7 +123,6 @@ export function activate(context: vscode.ExtensionContext) {
                 // Let the React app know that we've successfully deleted a folder
                 webview.webview.postMessage({ command: 'added_deleteFolder' });
               } catch (error: any) {
-                console.error('Error deleting folder:', error.message);
                 vscode.window.showErrorMessage('Error deleting folder: ' + error.message);
               }
               break;
@@ -163,13 +152,9 @@ export function activate(context: vscode.ExtensionContext) {
         </body>
         </html>`;
     } catch (err) {
-      console.error('Error reading bundle.js:', err);
     }
-
     vscode.window.showInformationMessage('Hello, World!');
   });
-
   context.subscriptions.push(disposable);
 }
-
 export function deactivate() {}
