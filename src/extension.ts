@@ -19,7 +19,7 @@ async function sendUpdatedDirectory(webview: vscode.WebviewPanel, dirName: strin
 
 export function activate(context: vscode.ExtensionContext) {
   //runs when extension is called every time
-  let disposable = vscode.commands.registerCommand('next-extension.helloWorld', async () => {
+  let disposable = vscode.commands.registerCommand('next-extension.next-nav', async () => {
     //create a webview to put React on
     const webview = vscode.window.createWebviewPanel(
       'reactWebview',
@@ -51,6 +51,7 @@ export function activate(context: vscode.ExtensionContext) {
           case 'getRequest':
             if (lastSubmittedDir) {
               await sendUpdatedDirectory(webview, lastSubmittedDir);
+              vscode.window.showInformationMessage("Sent Directory for path: " + lastSubmittedDir);
             } else {
               vscode.window.showErrorMessage("No directory has been submitted yet.");
             }
@@ -70,7 +71,7 @@ export function activate(context: vscode.ExtensionContext) {
           case 'addFile':
             try {
               const filePath = message.filePath;
-              await fs.writeFile(filePath, '"This is your new file!"');
+              await fs.writeFile(filePath, '//This is your new file!');
               //let the React know we added a file
               vscode.window.showInformationMessage(`Added a new file at path: ${filePath}`);
               webview.webview.postMessage({ command: 'added_addFile' });
@@ -153,7 +154,7 @@ export function activate(context: vscode.ExtensionContext) {
         </html>`;
     } catch (err) {
     }
-    vscode.window.showInformationMessage('Hello, World!');
+    vscode.window.showInformationMessage('Welcome to Next-Nav!');
   });
   context.subscriptions.push(disposable);
 }

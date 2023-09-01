@@ -14,8 +14,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "next-extension.helloWorld",
-        "title": "Hello World"
+        "command": "next-extension.next-nav",
+        "title": "Next-Nav"
       }
     ]
   },

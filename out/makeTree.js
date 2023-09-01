@@ -65,8 +65,6 @@ async function treeMaker(validDir) {
         }
         // Close the Readable Stream
         rl.close();
-        // Log the first non-comment text for debugging
-        console.log(`First non-comment text in ${filePath}: ${firstNonCommentText}`);
         // Check if the first non-comment text contains any form of "use client"
         const targetStrings = ['"use client"', "'use client'", '`use client`'];
         return targetStrings.some(target => firstNonCommentText.includes(target));
@@ -102,7 +100,6 @@ async function treeMaker(validDir) {
         return structure;
     }
     catch (err) {
-        console.error('Error building the tree:', err);
         return {};
     }
 }
