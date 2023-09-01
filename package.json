@@ -15,7 +15,7 @@
     "commands": [
       {
         "command": "next-extension.helloWorld",
-        "title": "Next-Nav"
+        "title": "Next.Nav"
       }
     ]
   },

@@ -165,7 +165,7 @@ function activate(context) {
         catch (err) {
             console.error('Error reading bundle.js:', err);
         }
-        vscode.window.showInformationMessage('Hello, World!');
+        vscode.window.showInformationMessage('Welcome to Next.Nav');
     });
     context.subscriptions.push(disposable);
 }
