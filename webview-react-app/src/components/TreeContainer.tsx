@@ -11,6 +11,7 @@ export type FileNode = {
   parentNode: number | null;
   contents: string[];
   path: string;
+  render: string;
 };
 
 export type Tree = FileNode[];
@@ -23,6 +24,7 @@ const initNodes: Tree = [
     parentNode: null,
     contents: ["globals.css", "layout.js", "page.jsx", "page.module.css"],
     path: "",
+    render: "server",
   },
   {
     id: 1,
@@ -30,6 +32,7 @@ const initNodes: Tree = [
     parentNode: 0,
     contents: ["page.jsx", "page.module.css"],
     path: "",
+    render: "server",
   },
   {
     id: 2,
@@ -37,6 +40,7 @@ const initNodes: Tree = [
     parentNode: 0,
     contents: ["page.jsx", "page.module.css"],
     path: "",
+    render: "server",
   },
   {
     id: 3,
@@ -44,6 +48,7 @@ const initNodes: Tree = [
     parentNode: 2,
     contents: ["page.jsx", "page.module.css"],
     path: "",
+    render: "server",
   },
   {
     id: 4,
@@ -51,6 +56,7 @@ const initNodes: Tree = [
     parentNode: 2,
     contents: ["page.jsx", "page.module.css"],
     path: "",
+    render: "client",
   },
   {
     id: 5,
@@ -58,6 +64,7 @@ const initNodes: Tree = [
     parentNode: 0,
     contents: ["loading.jsx", "page.jsx", "page.module.css"],
     path: "",
+    render: "server",
   },
 ];
 
