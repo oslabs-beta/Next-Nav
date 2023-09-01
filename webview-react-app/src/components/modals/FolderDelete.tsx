@@ -1,4 +1,4 @@
-import React, { useState, SetStateAction} from 'react';
+import React, { useState, SetStateAction } from 'react';
 import {
   Button,
   FormControl,
@@ -13,15 +13,15 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  useDisclosure
+  useDisclosure,
 } from '@chakra-ui/react';
-import { PiFolderNotchPlusFill } from 'react-icons/pi';
+import { PiMinusCircleBold } from 'react-icons/pi';
 
 type Props = {
-  path: string,
-  parentNode: Number | null,
-  folderName: string,
-  render: string
+  path: string;
+  parentNode: Number | null;
+  folderName: string;
+  render: string;
   handlePostMessage: (
     filePath: string,
     // event:
@@ -32,25 +32,29 @@ type Props = {
   ) => void;
 };
 
-const FolderDelete = ({ path, parentNode, folderName, render, handlePostMessage }: Props) => {
-
+const FolderDelete = ({
+  path,
+  parentNode,
+  folderName,
+  render,
+  handlePostMessage,
+}: Props) => {
   const OverlayOne = () => (
     <ModalOverlay
       bg="blackAlpha.300"
       backdropFilter="blur(10px) hue-rotate(90deg)"
     />
   );
-  
+
   const [overlay, setOverlay] = React.useState(<OverlayOne />);
   const [deleteFolderValue, setDeleteFolderValue] = useState('');
-  
+
   const {
     isOpen: deleteIsOpen,
     onOpen: deleteOnOpen,
     onClose: deleteOnClose,
   } = useDisclosure();
-
-  const boxShadowColor = render === "client" ? "#ffcf9e" : "#9FFFCB";
+  const boxShadowColor = render === 'client' ? '#ffcf9e' : '#9FFFCB';
 
   return (
     <>
@@ -67,7 +71,7 @@ const FolderDelete = ({ path, parentNode, folderName, render, handlePostMessage 
           // linear-gradient(90deg, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)
           _hover={{
             bg: `linear-gradient(270deg, #050505 0%, ${
-              parentNode === null ? "#24FF00" : boxShadowColor
+              parentNode === null ? '#FF9ED2' : boxShadowColor
             } 100%)`,
           }}
           // _hover={{boxShadow: `0px 0px 7px 1px ${
@@ -76,8 +80,9 @@ const FolderDelete = ({ path, parentNode, folderName, render, handlePostMessage 
           onClick={() => {
             setOverlay(<OverlayOne />);
             deleteOnOpen();
-          }}>
-          -
+          }}
+        >
+          <Icon as={PiMinusCircleBold} />
         </Button>
       )}
 
@@ -85,20 +90,23 @@ const FolderDelete = ({ path, parentNode, folderName, render, handlePostMessage 
         isCentered
         isOpen={deleteIsOpen}
         onClose={deleteOnClose}
-        trapFocus={false}>
+        trapFocus={false}
+      >
         {overlay}
         <ModalContent
           //style modal here:
           boxShadow="2xl"
           bgColor="#454545"
           textColor="#FFFFFF"
-          borderRadius="10px">
+          borderRadius="10px"
+        >
           <ModalHeader>Delete Folder</ModalHeader>
           <ModalCloseButton />
           <ModalBody display="flex" gap="2" flexDir="row">
             <FormControl
               flexDir="column"
-              isInvalid={deleteFolderValue !== folderName}>
+              isInvalid={deleteFolderValue !== folderName}
+            >
               <Input
                 id="folderName"
                 type="text"
@@ -107,10 +115,10 @@ const FolderDelete = ({ path, parentNode, folderName, render, handlePostMessage 
                 flexGrow="3"
                 placeholder={`${folderName}`}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter") {
+                  if (e.key === 'Enter') {
                     handlePostMessage(
                       path,
-                      "deleteFolder",
+                      'deleteFolder',
                       setDeleteFolderValue
                     );
                     deleteOnClose();
@@ -129,9 +137,10 @@ const FolderDelete = ({ path, parentNode, folderName, render, handlePostMessage 
               isDisabled={deleteFolderValue !== folderName}
               colorScheme="red"
               onClick={(e) => {
-                handlePostMessage(path, "deleteFolder", setDeleteFolderValue);
+                handlePostMessage(path, 'deleteFolder', setDeleteFolderValue);
                 deleteOnClose();
-              }}>
+              }}
+            >
               Confirm
             </Button>
           </ModalBody>

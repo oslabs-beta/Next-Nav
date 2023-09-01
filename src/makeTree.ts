@@ -6,11 +6,11 @@ import * as path from 'path';
 import { Directory } from './types';
 
 //function to make the tree
-export default async function treeMaker(validDir: string): Promise<Directory[] | {}> {
+export default async function treeMaker(
+  validDir: string
+): Promise<Directory[] | {}> {
   let idCounter = 1;
-  //we only want files with these endings
   const extensions = /\.(js|jsx|css|ts|tsx)$/;
-
   //directory to be put into the output structure, id of the directory will match its index in the structure
   const structure: Directory[] = [
     {
@@ -19,20 +19,19 @@ export default async function treeMaker(validDir: string): Promise<Directory[] |
       parentNode: null,
       path: validDir,
       contents: [],
-      render: 'server'
-    }
+      render: 'server',
+    },
   ];
-
 
   // Function used to parse through file and check if its client side rendered
   async function checkForClientDirective(filePath: string): Promise<boolean> {
     // Create a Readable Stream to read the file
     const rl = createInterface({
-      input: createReadStream(filePath, { end: 999 }) // Read up to the first 1000 bytes assuming the client is in there dont want to read whole file
+      input: createReadStream(filePath, { end: 999 }), // Read up to the first 1000 bytes assuming the client is in there dont want to read whole file
     });
 
-    let firstNonCommentText = '';  // Store the first non-comment line of code
-    let inCommentBlock = false;    // Flag for inside a block comment
+    let firstNonCommentText = ''; // Store the first non-comment line of code
+    let inCommentBlock = false; // Flag for inside a block comment
 
     // Loop through each line of the file
     for await (const line of rl) {
@@ -57,7 +56,8 @@ export default async function treeMaker(validDir: string): Promise<Directory[] |
           inCommentBlock = false;
 
           // Remove the block comment and check the remaining text if there is a comment and code on the same line
-          const modifiedLine = line.slice(0, startCommentIndex) + line.slice(endCommentIndex + 2);
+          const modifiedLine =
+            line.slice(0, startCommentIndex) + line.slice(endCommentIndex + 2);
           if (modifiedLine.trim()) {
             firstNonCommentText = modifiedLine.trim();
             break;
@@ -78,15 +78,10 @@ export default async function treeMaker(validDir: string): Promise<Directory[] |
     // Close the Readable Stream
     rl.close();
 
-    // Log the first non-comment text for debugging
-    console.log(`First non-comment text in ${filePath}: ${firstNonCommentText}`);
-
     // Check if the first non-comment text contains any form of "use client"
     const targetStrings = ['"use client"', "'use client'", '`use client`'];
-    return targetStrings.some(target => firstNonCommentText.includes(target));
+    return targetStrings.some((target) => firstNonCommentText.includes(target));
   }
-
-
 
   // Recursive function to list files and populate structure
   async function listFiles(dir: string, parent: number): Promise<void> {
@@ -102,7 +97,7 @@ export default async function treeMaker(validDir: string): Promise<Directory[] |
           parentNode: parent,
           path: fullPath,
           contents: [],
-          render: 'server'
+          render: 'server',
         };
 
         structure.push(directoryData);
@@ -122,7 +117,6 @@ export default async function treeMaker(validDir: string): Promise<Directory[] |
     await listFiles(validDir, 0);
     return structure;
   } catch (err) {
-    console.error('Error building the tree:', err);
     return {};
   }
 }
