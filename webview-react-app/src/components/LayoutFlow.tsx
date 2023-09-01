@@ -4,10 +4,8 @@ import React, {
   useState,
   useCallback,
   useLayoutEffect,
-  useEffect,
 } from "react";
 import ReactFlow, {
-  ReactFlowProvider,
   addEdge,
   Panel,
   useNodesState,
@@ -17,25 +15,22 @@ import ReactFlow, {
   Connection,
 } from "reactflow";
 import {
-  Card,
   Button,
   Heading,
   FormControl,
-  FormLabel,
+  Icon,
+  IconButton,
   Input,
   FormErrorMessage,
-  FormHelperText,
   Popover,
   PopoverTrigger,
   PopoverContent,
   PopoverHeader,
   PopoverBody,
-  PopoverFooter,
-  PopoverArrow,
-  PopoverCloseButton,
-  PopoverAnchor,
 } from "@chakra-ui/react";
-import { VsCodeApiProvider, useVsCodeApi } from "../VsCodeApiContext";
+import { useVsCodeApi } from "../VsCodeApiContext";
+
+import { BiImport, BiRefresh, BiSitemap } from "react-icons/bi";
 
 export type FileNode = {
   id: number;
@@ -158,6 +153,13 @@ export default function LayoutFlow({
   // console.log('component rendered');
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+  const [view, setView] = useState("RIGHT");
+
+  const [isOpen, setIsOpen] = useState(false);
+  const open = () => setIsOpen(!isOpen);
+  const close = () => setIsOpen(false);
+
   const { fitView } = useReactFlow(); //needed to position the tree within the window
   const vscode = useVsCodeApi();
 
@@ -204,7 +206,7 @@ export default function LayoutFlow({
     console.log("initNodes", initialNodes);
 
     //sets the initial direction of the graph:
-    onLayout({ direction: "RIGHT", useInitialNodes: true });
+    onLayout({ direction: view, useInitialNodes: true });
   }, [initialNodes]);
 
   //BACKGROUND OF THE APP
@@ -232,82 +234,114 @@ export default function LayoutFlow({
       style={reactFlowStyle}
       minZoom={0.1} //Required to show the full tree and allow user to zoom out more.
     >
-      {/*Stores the buttons in the top right*/}
-      <Panel position="top-right">
-        <Heading color="#FFFFFF">Next.Nav</Heading>
-        <Card
-          flexDir="column"
-          gap="1.5rem"
-          padding="2vh 20px"
-          borderRadius="10px"
-          mr="10px"
-          mt="10px"
-          boxShadow="2xl"
-          bgColor="#454545">
-          {validDir ? (
-            <Button
-              fontSize="10px"
-              bgColor="#010101"
-              color="white"
-              onClick={() => {
-                handleRequestDir();
-                parseData();
-              }}>
-              Refresh
-            </Button>
-          ) : (
-            ""
-          )}
-          <Button
-            bgColor="#010101"
-            color="white"
-            fontSize="10px"
-            onClick={() => {
-              onLayout({ direction: "DOWN" });
-            }}>
-            vertical layout
-          </Button>
-          <Button
-            bgColor="#010101"
-            color="white"
-            fontSize="10px"
-            onClick={() => {
-              onLayout({ direction: "RIGHT" });
-            }}>
-            horizontal layout
-          </Button>
-        </Card>
-      </Panel>
       <Panel position="top-left">
-        <Popover>
+        <Heading color="#FFFFFF">NEXT.NAV</Heading>
+      </Panel>
+      <Panel position="top-right">
+        <Popover 
+          placement="bottom"
+          isOpen={isOpen}
+          onClose={close}
+          returnFocusOnClose={false}
+          preventOverflow={true}
+        >
           <PopoverTrigger>
-            <Button>Select File</Button>
+            <IconButton
+              size="lg"
+              color="white"
+              aria-label="import app router"
+              variant="ghost"
+              icon={<Icon as={BiImport}/>}
+              _hover={{bg: 'white', textColor: 'black'}}
+              onClick={open}
+            />
           </PopoverTrigger>
-          <PopoverContent>
-            <PopoverBody>
-              <FormControl>
-                <FormLabel>Paste your app path here</FormLabel>
-                <Input
-                  value={dirFormValue}
-                  onChange={(e) => {
-                    setDirFormValue(e.target.value);
-                  }}
-                />
-                <FormHelperText>
-                  To find path, right click on the app folder and click copy
-                  path
-                </FormHelperText>
+          <PopoverContent
+            border="0px"
+            bgColor="#454545"
+            textColor="#FFFFFF"
+            borderRadius="10px"
+            marginRight="1rem"
+          >
+            <PopoverHeader border="0px">Import Path</PopoverHeader>
+            <PopoverBody
+              display="flex"
+              flexDir="row"
+              gap="2"
+            >
+                <FormControl 
+                  flexDir="column"
+                  isInvalid={!dirFormValue}
+                >
+                  <Input
+                    id="importPath"
+                    type="text"
+                    bgColor="#121212"
+                    placeholder="src/app"
+                    flexGrow="3"
+                    value={dirFormValue}
+                    onChange={(e) => {
+                      setDirFormValue(e.target.value);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        handleSubmitDir();
+                        close();
+                        setDirFormValue("");
+                      }
+                    }}
+                  />
+                  <FormErrorMessage> 
+                    To find path, right click on the app folder and click copy relative or absolute path.
+                  </FormErrorMessage>
+                </FormControl>
                 <Button
+                  size="md"
+                  colorScheme="green"
+                  isDisabled={!dirFormValue}
                   onClick={() => {
                     handleSubmitDir();
+                    close();
                     setDirFormValue("");
                   }}>
                   Submit
                 </Button>
-              </FormControl>
             </PopoverBody>
           </PopoverContent>
         </Popover>
+      {' '}
+        <IconButton
+          color="white"
+          size="lg"
+          aria-label="switch view"
+          variant="ghost"
+          icon={view === "DOWN" ? <Icon style={{rotate: "-90deg"}} as={BiSitemap}/> : <Icon as={BiSitemap}/>}
+          _hover={{bg: 'white', textColor: 'black'}} 
+          onClick={() => {
+            if(view === "DOWN") {
+              onLayout({ direction: "RIGHT" });
+              setView("RIGHT");
+            } else {
+              onLayout({ direction: "DOWN" });
+              setView("DOWN");
+            }
+          }}
+        />
+      {' '}
+        <IconButton
+            color="white"
+            size="lg"
+            aria-label="switch view"
+            variant="ghost"
+            icon={<Icon as={BiRefresh}/>}
+            _hover={{bg: 'white', textColor: 'black'}} 
+            onClick={() => {
+              if(validDir) {
+                handleRequestDir();
+                parseData();
+              }
+            }}
+        />
       </Panel>
     </ReactFlow>
   );

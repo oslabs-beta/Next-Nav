@@ -19,6 +19,7 @@ import { PiFolderNotchPlusFill, PiPlusCircleBold } from 'react-icons/pi';
 type Props = {
   path: String;
   parentNode: Number | null;
+  render: string;
   handlePostMessage: (
     filePath: string,
     // event:
@@ -29,7 +30,7 @@ type Props = {
   ) => void;
 };
 
-const FolderAdd = ({ path, parentNode, handlePostMessage }: Props) => {
+const FolderAdd = ({ path, parentNode, render, handlePostMessage }: Props) => {
   const OverlayOne = () => (
     <ModalOverlay
       bg="blackAlpha.300"
@@ -46,12 +47,14 @@ const FolderAdd = ({ path, parentNode, handlePostMessage }: Props) => {
     onClose: addOnClose,
   } = useDisclosure();
 
+  const boxShadowColor = render === 'client' ? '#ffcf9e' : '#9FFFCB';
+
   return (
     <>
       <Button
         position="absolute"
         bgColor="#050505"
-        textColor="#fff"
+        textColor="#050505"
         padding="0"
         right="0"
         bottom="0"
@@ -60,7 +63,7 @@ const FolderAdd = ({ path, parentNode, handlePostMessage }: Props) => {
         // linear-gradient(90deg, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)
         _hover={{
           bg: `linear-gradient(90deg, #050505 0%, ${
-            parentNode === null ? '#FF9ED2' : '#9FFFCB'
+            parentNode === null ? '#FF9ED2' : boxShadowColor
           } 100%)`,
         }}
         // _hover={{boxShadow: `0px 0px 7px 1px ${

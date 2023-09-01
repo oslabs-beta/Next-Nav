@@ -33,7 +33,7 @@ type Props = {
 
 const Node = ({ data, handlePostMessage }: Props): JSX.Element => {
   //deconstruct props here. Used let to account for undefined checking.
-  let { contents, parentNode, folderName, path }: FileNode = data;
+  let { contents, parentNode, folderName, path, render }: FileNode = data;
 
   const {
     isOpen: nodeIsOpen,
@@ -89,13 +89,16 @@ const Node = ({ data, handlePostMessage }: Props): JSX.Element => {
           color="#050505"
           backgroundColor={icon[1]}
           icon={<Icon as={icon[0]} />}
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             handlePostMessage(path.concat('/', contents[i]), 'open_file');
           }}
         />
       </Tooltip>
     );
   }
+
+  const boxShadowColor = render === 'client' ? '#ffcf9e' : '#9FFFCB';
 
   return (
     <div
@@ -118,7 +121,7 @@ const Node = ({ data, handlePostMessage }: Props): JSX.Element => {
         borderRadius="15px"
         position="relative"
         boxShadow={`0px 0px 7px 1px ${
-          parentNode === null ? '#FF9ED2' : '#9FFFCB'
+          parentNode === null ? '#FF9ED2' : boxShadowColor
         }`}
       >
         <CardHeader>
@@ -131,12 +134,15 @@ const Node = ({ data, handlePostMessage }: Props): JSX.Element => {
             {files}
           </HStack>
         </CardBody>
-        <CardFooter></CardFooter>
+        <CardFooter color="#454545" fontSize="20px" m="3px 0 0 0" padding="0">
+          {render === 'client' ? 'Client' : 'Server'}
+        </CardFooter>
       </Card>
 
       <FolderAdd
         path={path}
         parentNode={parentNode}
+        render={render}
         handlePostMessage={handlePostMessage}
       />
 
@@ -144,6 +150,7 @@ const Node = ({ data, handlePostMessage }: Props): JSX.Element => {
         path={path}
         folderName={folderName}
         parentNode={parentNode}
+        render={render}
         handlePostMessage={handlePostMessage}
       />
 

@@ -20,7 +20,8 @@ import { PiMinusCircleBold } from 'react-icons/pi';
 type Props = {
   path: string;
   parentNode: Number | null;
-  folderName: String;
+  folderName: string;
+  render: string;
   handlePostMessage: (
     filePath: string,
     // event:
@@ -35,6 +36,7 @@ const FolderDelete = ({
   path,
   parentNode,
   folderName,
+  render,
   handlePostMessage,
 }: Props) => {
   const OverlayOne = () => (
@@ -53,13 +55,15 @@ const FolderDelete = ({
     onClose: deleteOnClose,
   } = useDisclosure();
 
+  const boxShadowColor = render === 'client' ? '#ffcf9e' : '#9FFFCB';
+
   return (
     <>
       {parentNode !== null && (
         <Button
           position="absolute"
           bgColor="#050505"
-          textColor="#fff"
+          textColor="#050505"
           padding="0"
           right="left"
           bottom="0"
@@ -68,7 +72,7 @@ const FolderDelete = ({
           // linear-gradient(90deg, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)
           _hover={{
             bg: `linear-gradient(270deg, #050505 0%, ${
-              parentNode === null ? '#FF9ED2' : '#9FFFCB'
+              parentNode === null ? '#FF9ED2' : boxShadowColor
             } 100%)`,
           }}
           // _hover={{boxShadow: `0px 0px 7px 1px ${
