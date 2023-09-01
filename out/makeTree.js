@@ -7,7 +7,6 @@ const path = require("path");
 //function to make the tree
 async function treeMaker(validDir) {
     let idCounter = 1;
-    //we only want files with these endings
     const extensions = /\.(js|jsx|css|ts|tsx)$/;
     //directory to be put into the output structure, id of the directory will match its index in the structure
     const structure = [
@@ -17,14 +16,14 @@ async function treeMaker(validDir) {
             parentNode: null,
             path: validDir,
             contents: [],
-            render: 'server'
-        }
+            render: 'server',
+        },
     ];
     // Function used to parse through file and check if its client side rendered
     async function checkForClientDirective(filePath) {
         // Create a Readable Stream to read the file
         const rl = (0, readline_1.createInterface)({
-            input: (0, fs_1.createReadStream)(filePath, { end: 999 }) // Read up to the first 1000 bytes assuming the client is in there dont want to read whole file
+            input: (0, fs_1.createReadStream)(filePath, { end: 999 }), // Read up to the first 1000 bytes assuming the client is in there dont want to read whole file
         });
         let firstNonCommentText = ''; // Store the first non-comment line of code
         let inCommentBlock = false; // Flag for inside a block comment
@@ -66,11 +65,9 @@ async function treeMaker(validDir) {
         }
         // Close the Readable Stream
         rl.close();
-        // Log the first non-comment text for debugging
-        console.log(`First non-comment text in ${filePath}: ${firstNonCommentText}`);
         // Check if the first non-comment text contains any form of "use client"
         const targetStrings = ['"use client"', "'use client'", '`use client`'];
-        return targetStrings.some(target => firstNonCommentText.includes(target));
+        return targetStrings.some((target) => firstNonCommentText.includes(target));
     }
     // Recursive function to list files and populate structure
     async function listFiles(dir, parent) {
@@ -84,7 +81,7 @@ async function treeMaker(validDir) {
                     parentNode: parent,
                     path: fullPath,
                     contents: [],
-                    render: 'server'
+                    render: 'server',
                 };
                 structure.push(directoryData);
                 await listFiles(fullPath, directoryData.id);
@@ -103,7 +100,6 @@ async function treeMaker(validDir) {
         return structure;
     }
     catch (err) {
-        console.error('Error building the tree:', err);
         return {};
     }
 }
