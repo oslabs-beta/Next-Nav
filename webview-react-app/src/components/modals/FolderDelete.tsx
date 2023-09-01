@@ -54,7 +54,6 @@ const FolderDelete = ({
     onOpen: deleteOnOpen,
     onClose: deleteOnClose,
   } = useDisclosure();
-
   const boxShadowColor = render === 'client' ? '#ffcf9e' : '#9FFFCB';
 
   return (
@@ -87,7 +86,12 @@ const FolderDelete = ({
         </Button>
       )}
 
-      <Modal isCentered isOpen={deleteIsOpen} onClose={deleteOnClose}>
+      <Modal
+        isCentered
+        isOpen={deleteIsOpen}
+        onClose={deleteOnClose}
+        trapFocus={false}
+      >
         {overlay}
         <ModalContent
           //style modal here:

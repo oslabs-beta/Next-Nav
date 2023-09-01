@@ -77,7 +77,12 @@ const FolderAdd = ({ path, parentNode, render, handlePostMessage }: Props) => {
         <Icon as={PiPlusCircleBold} />
       </Button>
 
-      <Modal isCentered isOpen={addIsOpen} onClose={addOnClose}>
+      <Modal
+        isCentered
+        isOpen={addIsOpen}
+        onClose={addOnClose}
+        trapFocus={false}
+      >
         {overlay}
         <ModalContent
           //style modal here:

@@ -30,6 +30,7 @@ function activate(context) {
         });
         //When we get requests from React
         webview.webview.onDidReceiveMessage(async (message) => {
+            console.log('Received message:', message);
             switch (message.command) {
                 //save directory for future use
                 case 'submitDir':
@@ -54,9 +55,9 @@ function activate(context) {
                 case 'getRequest':
                     if (lastSubmittedDir) {
                         await sendUpdatedDirectory(webview, lastSubmittedDir);
-                        vscode.window.showInformationMessage('Sent Directory for path: ' + lastSubmittedDir);
                     }
                     else {
+                        console.error('No directory has been submitted yet.');
                         vscode.window.showErrorMessage('No directory has been submitted yet.');
                     }
                     break;
@@ -66,22 +67,23 @@ function activate(context) {
                     try {
                         const document = await vscode.workspace.openTextDocument(filePath);
                         await vscode.window.showTextDocument(document);
-                        vscode.window.showInformationMessage(`Switched to tab with file: ${filePath}`);
+                        console.log(`Switched to tab with file: ${filePath}`);
                     }
                     catch (err) {
                         vscode.window.showErrorMessage(`Error opening file: ${err.message}`);
+                        console.error(`Error opening file: ${err}`);
                     }
                     break;
                 //add a new file in at specified path
                 case 'addFile':
                     try {
                         const filePath = message.filePath;
-                        await fs_1.promises.writeFile(filePath, '//This is your new file!');
+                        await fs_1.promises.writeFile(filePath, '"This is your new file!"');
                         //let the React know we added a file
-                        vscode.window.showInformationMessage(`Added a new file at path: ${filePath}`);
                         webview.webview.postMessage({ command: 'added_addFile' });
                     }
                     catch (error) {
+                        console.error('Error creating file:', error.message);
                         vscode.window.showErrorMessage('Error creating file: ' + error.message);
                     }
                     break;
@@ -90,10 +92,10 @@ function activate(context) {
                     try {
                         const folderPath = message.filePath;
                         await fs_1.promises.mkdir(folderPath);
-                        vscode.window.showInformationMessage(`Added a new folder at path: ${folderPath}`);
                         webview.webview.postMessage({ command: 'added_addFolder' });
                     }
                     catch (error) {
+                        console.error('Error creating folder:', error.message);
                         vscode.window.showErrorMessage('Error creating folder: ' + error.message);
                     }
                     break;
@@ -104,7 +106,6 @@ function activate(context) {
                         const uri = vscode.Uri.file(filePath);
                         if (await fs_1.promises.stat(filePath)) {
                             await vscode.workspace.fs.delete(uri, { useTrash: true });
-                            vscode.window.showInformationMessage(`Deleted file at path: ${filePath}`);
                         }
                         else {
                             throw new Error('File does not exist');
@@ -113,6 +114,7 @@ function activate(context) {
                         webview.webview.postMessage({ command: 'added_deleteFile' });
                     }
                     catch (error) {
+                        console.error('Error deleting file:', error.message);
                         vscode.window.showErrorMessage('Error deleting file: ' + error.message);
                     }
                     break;
@@ -127,7 +129,6 @@ function activate(context) {
                                 recursive: true,
                                 useTrash: true,
                             });
-                            vscode.window.showInformationMessage(`Deleted folder at path: ${folderPath}`);
                         }
                         else {
                             throw new Error('Folder does not exist');
