@@ -1,5 +1,5 @@
  <p align="center">
-  <img src="./assets/next_nav_logo.png" />
+  <img src="" />
   </p>
 
 ## NEXT.NAV
@@ -16,10 +16,6 @@ Next.nav allows Next.js developers to:
 - Add / Remove routes to a clearly defined parent route.
 - Add / Remove files to routes.
 - Display whether routes render Client side or Server side.
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
 
 ## Getting Started
 
@@ -39,15 +35,23 @@ Next.nav allows Next.js developers to:
 
 ### Deleting Files
 
+**waring:** this will **permanently** delete the file.
+
 1. Click on any blank space on a folder node to open a modal to view a folders contents.
 2. Click the red trash icon next to the file you want to delete.
-3. Click confirm in the pop-over to permanently delete the file. (**waring:** this can not be undone)
+3. Click confirm in the pop-over to **permanently** delete the file. (**waring:** this can not be undone)
 
 ### Adding Folders
 
-1. Click on the
+1. Click on the plus icon on the right edge of the folder node you want your new folder to be nested in.
+2. Give your new folder a name and submit.
 
 ### Deleting Folders
+
+**waring:** this will **permanently** delete all contained files and sub folders
+
+1. Click on the minus icon on the left edge of the folder node you want to delete
+2. Type the name of the folder to confirm deletion of the directory and all sub directories and files contained. (**waring:** this can not be undone)
 
 ## Want to Contribute?
 
@@ -57,6 +61,8 @@ Next.Nav is an Open Source product and we encourage developers to contribute. Pl
 
 - Demo Tree initially loads in upper let corner on first load
 - Client side render checking logic might not work in extreme edge cases
+
+### Features to Add
 
 ## Release Notes
 
