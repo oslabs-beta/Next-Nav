@@ -59,7 +59,7 @@ exports.checkForClientDirective = checkForClientDirective;
 //function to make the tree
 async function treeMaker(validDir) {
     let idCounter = 1;
-    const extensions = /\.(js|jsx|css|ts|tsx)$/;
+    const extensions = /\.(js|jsx|css|ts|tsx|sass|scss)$/;
     //directory to be put into the output structure, id of the directory will match its index in the structure
     const structure = [
         {
