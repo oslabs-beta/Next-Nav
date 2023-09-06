@@ -284,7 +284,7 @@ export default function LayoutFlow({
                       setDirFormValue(e.target.value);
                     }}
                     onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
+                      if (e.key === 'Enter' && dirFormValue) {
                         handleSubmitDir();
                         close();
                         setDirFormValue("");
