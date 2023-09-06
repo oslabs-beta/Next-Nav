@@ -16,7 +16,13 @@ import {
 
 import { IconType } from 'react-icons';
 import { PiFileCodeFill } from 'react-icons/pi';
-import { SiCss3, SiReact, SiJavascript, SiTypescript } from 'react-icons/si';
+import {
+  SiCss3,
+  SiReact,
+  SiJavascript,
+  SiTypescript,
+  SiSass,
+} from 'react-icons/si';
 
 import DetailsView from './modals/DetailsView';
 import FolderAdd from './modals/FolderAdd';
@@ -55,6 +61,8 @@ const Node = ({ data, handlePostMessage }: Props): JSX.Element => {
     const iconStore: { [index: string]: [IconType, string] } = {
       default: [PiFileCodeFill, 'white'],
       css: [SiCss3, '#264de4'],
+      sass: [SiSass, '#cf6d99'],
+      scss: [SiSass, '#cf6d99'],
       jsx: [SiReact, '#61DBFB'],
       js: [SiJavascript, '#f7df1e'],
       ts: [SiTypescript, '#007acc'],
