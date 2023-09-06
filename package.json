@@ -2,7 +2,8 @@
   "name": "next-extension",
   "displayName": "next-extension",
   "description": "",
-  "version": "0.0.1",
+  "icon": "https://raw.githubusercontent.com/FANFICPDF/Next-Nav/readme/assets/next_nav_logo.png",
+  "version": "1.0.0",
   "engines": {
     "vscode": "^1.81.0"
   },
