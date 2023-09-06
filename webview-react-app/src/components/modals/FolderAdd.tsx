@@ -74,7 +74,7 @@ const FolderAdd = ({ path, parentNode, render, handlePostMessage }: Props) => {
           addOnOpen();
         }}
       >
-        <Icon as={PiPlusCircleBold} />
+        <Icon marginLeft="0.5rem" as={PiPlusCircleBold} />
       </Button>
 
       <Modal

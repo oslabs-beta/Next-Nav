@@ -82,7 +82,7 @@ const FolderDelete = ({
             deleteOnOpen();
           }}
         >
-          <Icon as={PiMinusCircleBold} />
+          <Icon marginRight="0.5rem" as={PiMinusCircleBold} />
         </Button>
       )}
 
