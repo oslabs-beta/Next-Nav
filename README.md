@@ -1,71 +1,134 @@
-# next-extension README
+ <p align="center">
+  <img src="https://raw.githubusercontent.com/FANFICPDF/Next-Nav/readme/assets/next_nav_logo.png" alt="next.nav logo" />
+  </p>
 
-This is the README for your extension "next-extension". After writing up a brief description, we recommend including the following sections.
+## NEXT.NAV
+
+Welcome to <a href="https://www.next-nav.com" >Next.Nav</a>, a Visual Studio Code extension for viewing and manipulating projects using the Next.js App Router.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+Next.nav allows Next.js developers to:
 
-For example if there is an image subfolder under your extension project workspace:
+- Load a projects src/app route.
+- View routes in a legible node based tree view.
+- Easily access files in nested routes.
+- Add / Remove routes to a clearly defined parent route.
+- Add / Remove files to routes.
+- Display whether routes render Client side or Server side.
 
-\!\[feature X\]\(images/feature-x.png\)
+## Getting Started
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+### Launching the Extension and Opening a Tree
 
-## Requirements
+1. Install VSCode
+2. Install the extension by searching "Next Nav" in the extension marketplace or Launch VS Code Quick Open (Ctrl+P in Windows/Linux) or (Command+P MacOS), paste the following command `ext install NextNav.NextNav` and press enter.
+3. Open a Next.js project that is using the App Router in VSCode
+   ![Launching the Extension](https://i.imgur.com/10qMgfY.gif 'Launching the Extension')
+4. Launch Next.Nav by opening the command palette using (Ctrl+Shift+P in Windows/Linux) or (Command+Shift+P MacOS) and typing `Next.Nav` highlight and press Enter
+   ![Opening a Tree](https://i.imgur.com/sVYwqVu.gif 'Opening a Tree')
+5. Select the Import Path icon and input the relative or absolute path of your root App route
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+### Opening Files
 
-## Extension Settings
+![Opening Files](https://i.imgur.com/zDKCPjo.gif 'Opening Files')
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+1. When you hover over a file type in the tree it will tell you the name
+2. You can click on the icon of the file in the folder to open it.
+   Alternatively, you can click on the folder to open a modal with all of the files
+3. Click on a file to open it
 
-For example:
+### Adding Files
 
-This extension contributes the following settings:
+![Adding Files](https://i.imgur.com/xdraVMG.gif 'Adding Files')
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+1. Click on any blank space on a folder node to open a modal to view its contents.
+2. Add a file name and extension in the input field.
+3. Add file with the green add file icon.
 
-## Known Issues
+### Deleting Files
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+**warning:** this will **permanently** delete the file.
+
+![Deleting Files](https://i.imgur.com/U4KE5DN.gif 'Deleting Files')
+
+1. Click on any blank space on a folder node to open a modal to view a folders contents.
+2. Click the red trash icon next to the file you want to delete.
+3. Click confirm in the pop-over to **permanently** delete the file. (**warning:** this can not be undone)
+
+### Adding Folders
+
+![Adding Folders](https://i.imgur.com/2b3FngG.gif 'Adding Folders')
+
+1. Click on the plus icon on the right edge of the folder node you want your new folder to be nested in.
+2. Give your new folder a name and submit.
+
+### Deleting Folders
+
+**warning:** this will **permanently** delete all contained files and sub folders
+
+![Deleting Folders](https://i.imgur.com/qXMlm0Y.gif 'Deleting Folders')
+
+1. Click on the minus icon on the left edge of the folder node you want to delete
+2. Type the name of the folder to confirm deletion of the directory and all sub directories and files contained. (**warning:** this can not be undone)
+
+## Want to Contribute?
+
+Next.Nav is an Open Source product and we encourage developers to contribute. Please create a fork of the dev branch and create a feature branch on your own repo. Please make all pull request from your feature branch into Next.Nav's dev branch.
+
+### Known Issues
+
+- Demo Tree initially loads in upper let corner on first load
+- Long file names clip on node edge
+
+### Features to Add
+
+- Renaming folders and files: add an edit button for file and folder names
+- Moving folders and files
+- Checklist for file types: add a filter panel to show specified file types
+- Add more supported file types
+- Add toggle option to not show client and server side render text for non-Next apps
+- Recently used route (time stamp)
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
-
 ### 1.0.0
 
-Initial release of ...
+Initial release of Next.Nav
 
-### 1.0.1
+## Contributors
 
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+<table>
+  <tr>
+    <td align="center">
+      <img src="https://avatars.githubusercontent.com/u/137316253?v=4" width="140px;" alt="a photo of Anatoliy Sokolov"/>
+      <br />
+      <sub><b>Anatoliy Sokolov</b></sub>
+      <br />
+      <a href="https://www.linkedin.com/in/anatoliy-sokolov/">Linkedin</a> |
+      <a href="https://github.com/AnatoliySokolov98">GitHub</a>
+    </td>
+     <td align="center">
+      <img src="https://avatars.githubusercontent.com/u/18522517?v=4" width="140px;" alt="a photo of Brian Henkel"/>
+      <br />
+      <sub><b>Brian Henkel</b></sub>
+      <br />
+      <a href="https://www.linkedin.com/in/b-henkel/">Linkedin</a> |
+      <a href="https://github.com/FANFICPDF">GitHub</a>
+    </td> <td align="center">
+      <img src="https://avatars.githubusercontent.com/u/106214861?v=4" width="140px;" alt="a photo of Jordan Querubin"/>
+      <br />
+      <sub><b>Jordan Querubin</b></sub>
+      <br />
+      <a href="https://www.linkedin.com/in/jordanquerubin/">Linkedin</a> |
+      <a href="https://github.com/jequerubin">GitHub</a>
+    </td> <td align="center">
+      <img src="https://avatars.githubusercontent.com/u/122189452?v=4" width="140px;" alt="a photo of Nathan Peel"/>
+      <br />
+      <sub><b>Nathan Peel</b></sub>
+      <br />
+      <a href="https://www.linkedin.com/in/nathaniel-peel/">Linkedin</a> |
+      <a href="https://github.com/nathanpeel">GitHub</a>
+    </td>     
+  </tr>
+</table>
