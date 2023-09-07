@@ -1,0 +1,38 @@
+/*REQUIRED TO AVOID WHITE BAR. DO NOT REMOVE*/
+body {
+  /*There is a padding setting applied to the body from vscode. This setting prevents that*/
+  padding: unset
+}
+
+div button {
+  /*ensures that all or most of the next is white by default*/
+  color: white
+}
+.react-flow__node {
+  border: none;
+}
+
+.react-flow__node:focus {
+  border: none;
+}
+
+.react-flow__edge-path {
+  stroke-width: 5;
+  stroke: rgb(255, 255, 255);
+}
+
+
+/*Styling for the ReactFlow attribution*/
+.react-flow__attribution{
+  border-top-left-radius: 7px ;
+  background-color: rgb(40, 33, 33);
+}
+
+.react-flow__handle {
+  background-color: #050505;
+  z-index: -1000000000000;
+}
+
+.react-flow__node-default.selected {
+  border: unset
+}
