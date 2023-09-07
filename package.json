@@ -2,9 +2,9 @@
   "name": "NextNav",
   "displayName": "Next.Nav",
   "publisher": "NextNav",
-  "description": "",
+  "description": "Navigate and create routes easily in your Next.js application",
   "icon": "assets/next_nav_logo.png",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "engines": {
     "vscode": "^1.81.0"
   },

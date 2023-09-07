@@ -78,7 +78,7 @@ function activate(context) {
                 case 'addFile':
                     try {
                         const filePath = message.filePath;
-                        await fs_1.promises.writeFile(filePath, '"This is your new file!"');
+                        await fs_1.promises.writeFile(filePath, '');
                         //let the React know we added a file
                         webview.webview.postMessage({ command: 'added_addFile' });
                     }
