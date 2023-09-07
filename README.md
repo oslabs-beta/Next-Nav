@@ -80,6 +80,7 @@ Next.Nav is an Open Source product and we encourage developers to contribute. Pl
 
 - Demo Tree initially loads in upper let corner on first load
 - Long file names clip on node edge
+- File deletion popover does not disappear after confirm click
 
 ### Features to Add
 
