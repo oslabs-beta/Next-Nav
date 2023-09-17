@@ -156,7 +156,7 @@ export default function LayoutFlow({
 
   const [view, setView] = useState("RIGHT");
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const open = () => setIsOpen(!isOpen);
   const close = () => setIsOpen(false);
 
