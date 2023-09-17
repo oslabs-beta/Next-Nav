@@ -4,7 +4,7 @@
 
 <div align="center">
 
-![Version: 1.0.2](https://img.shields.io/badge/version-1.0.2-black)
+![Version: 1.0.3](https://img.shields.io/badge/version-1.0.2-black)
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
 
 </div>
@@ -99,7 +99,6 @@ Next.Nav is an Open Source product and we encourage developers to contribute. Pl
 ### Known Issues
 
 - Demo Tree initially loads in upper let corner on first load
-- Long file names clip on node edge
 - File deletion popover does not disappear after confirm click
 
 ### Features to Add
@@ -127,6 +126,13 @@ Next.Nav is an Open Source product and we encourage developers to contribute. Pl
     <li>Fix to remove string after new file creation</li>
     <li>Improve various UI elements</li>
     <li>Update README.md to reflect new known issues</li>
+  </ul>
+</details>
+
+<details><summary>1.0.3</summary>
+  <ul>
+    <li>Fix to stop long folder names from clipping node edge (c/o <a href="https://github.com/miso-devel" >miso-devel</a>!)</li>
+    <li>Update to show import popover on load</li>
   </ul>
 </details>
 
