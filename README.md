@@ -131,7 +131,7 @@ Next.Nav is an Open Source product and we encourage developers to contribute. Pl
 
 <details><summary>1.0.3</summary>
   <ul>
-    <li>Fix to stop long file names from clipping node edge (c/o <a href="https://github.com/miso-devel" >miso-devel</a>!)</li>
+    <li>Fix to stop long folder names from clipping node edge (c/o <a href="https://github.com/miso-devel" >miso-devel</a>!)</li>
     <li>Update to show import popover on load</li>
   </ul>
 </details>

@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.3] - 2023-09-17
 
 ### Fixed
-- Fix to stop long file names from clipping node edge
+- Fix to stop long folder names from clipping node edge
 
 ### Updated
 - Update to show import popover on load
