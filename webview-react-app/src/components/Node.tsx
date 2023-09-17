@@ -133,7 +133,7 @@ const Node = ({ data, handlePostMessage }: Props): JSX.Element => {
         }`}
       >
         <CardHeader>
-          <Heading size="lg" color="#FFFFFF">
+          <Heading size="lg" color="#FFFFFF" wordBreak='break-word'>
             {folderName}
           </Heading>
         </CardHeader>

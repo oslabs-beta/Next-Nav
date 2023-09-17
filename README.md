@@ -2,6 +2,26 @@
   <img src="https://raw.githubusercontent.com/FANFICPDF/Next-Nav/readme/assets/next_nav_logo.png" alt="next.nav logo" />
   </p>
 
+<div align="center">
+
+![Version: 1.0.2](https://img.shields.io/badge/version-1.0.2-black)
+![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
+
+</div>
+
+<div align="center">
+
+![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
+![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+![Webpack](https://img.shields.io/badge/webpack-%238DD6F9.svg?style=for-the-badge&logo=webpack&logoColor=black)
+![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white)
+
+
+</div>
+
+#
+
 ## NEXT.NAV
 
 Welcome to <a href="https://www.next-nav.com" >Next.Nav</a>, a Visual Studio Code extension for viewing and manipulating projects using the Next.js App Router.
@@ -80,21 +100,35 @@ Next.Nav is an Open Source product and we encourage developers to contribute. Pl
 
 - Demo Tree initially loads in upper let corner on first load
 - Long file names clip on node edge
+- File deletion popover does not disappear after confirm click
 
 ### Features to Add
 
 - Renaming folders and files: add an edit button for file and folder names
-- Moving folders and files
-- Checklist for file types: add a filter panel to show specified file types
-- Add more supported file types
-- Add toggle option to not show client and server side render text for non-Next apps
+- Moving folders and files: adjust routes through drag and drop
+- Filter for file types: add a checklist panel to highlight selected file types
+- Add support for more file types
+- Add toggle option for client/serverside render text on nodes
 - Recently used route (time stamp)
+
+### Possible Iterations
+
+- Implement debugging and optimization insights for routes
+- Provide a pages router to app router converter
+- Expand to prototyping tool for Next.js projects
 
 ## Release Notes
 
-### 1.0.0
+### 1.0.0 - Initial release of Next.Nav
 
-Initial release of Next.Nav
+<details><summary>1.0.2</summary>
+  <ul>
+    <li>Fix to disallow submit on enter keypress for an empty input field within import popover</li>
+    <li>Fix to remove string after new file creation</li>
+    <li>Improve various UI elements</li>
+    <li>Update README.md to reflect new known issues</li>
+  </ul>
+</details>
 
 ## Contributors
 

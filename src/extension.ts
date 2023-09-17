@@ -98,7 +98,7 @@ export function activate(context: vscode.ExtensionContext) {
             case 'addFile':
               try {
                 const filePath = message.filePath;
-                await fs.writeFile(filePath, '"This is your new file!"');
+                await fs.writeFile(filePath, '');
                 //let the React know we added a file
                 webview.webview.postMessage({ command: 'added_addFile' });
               } catch (error: any) {

@@ -3,6 +3,7 @@
 src/**
 .gitignore
 .yarnrc
+**/node_modules
 vsc-extension-quickstart.md
 **/tsconfig.json
 **/.eslintrc.json
