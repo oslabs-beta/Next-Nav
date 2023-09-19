@@ -90,6 +90,9 @@ async function treeMaker(validDir) {
             }
             else if (extensions.test(entity.name)) {
                 structure[parent].contents.push(entity.name);
+                if (!/^page\.(js|jsx|ts|tsx)$/.test(entity.name)) {
+                    continue;
+                }
                 // Check if this file has the 'use client' directive
                 if (await checkForClientDirective(fullPath)) {
                     structure[parent].render = 'client';

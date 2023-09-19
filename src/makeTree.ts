@@ -83,7 +83,7 @@ export default async function treeMaker(
     },
   ];
 
-  
+
 
   // Recursive function to list files and populate structure
   async function listFiles(dir: string, parent: number): Promise<void> {
@@ -106,6 +106,10 @@ export default async function treeMaker(
         await listFiles(fullPath, directoryData.id);
       } else if (extensions.test(entity.name)) {
         structure[parent].contents.push(entity.name);
+
+        if (!/^page\.(js|jsx|ts|tsx)$/.test(entity.name)) {
+          continue;
+        }
 
         // Check if this file has the 'use client' directive
         if (await checkForClientDirective(fullPath)) {
