@@ -47,7 +47,7 @@ Next.nav allows Next.js developers to:
    ![Launching the Extension](https://i.imgur.com/10qMgfY.gif 'Launching the Extension')
 4. Launch Next.Nav by opening the command palette using (Ctrl+Shift+P in Windows/Linux) or (Command+Shift+P MacOS) and typing `Next.Nav` highlight and press Enter
    ![Opening a Tree](https://i.imgur.com/sVYwqVu.gif 'Opening a Tree')
-5. Select the Import Path icon and input the relative or absolute path of your root App route
+5. Select the Import Path icon and input the relative or absolute path of your root App route (Note: Next.Nav will automatically grab your file structure if it is under the 'src/app' route)
 
 ### Opening Files
 
@@ -133,6 +133,13 @@ Next.Nav is an Open Source product and we encourage developers to contribute. Pl
   <ul>
     <li>Fix to stop long folder names from clipping node edge (c/o <a href="https://github.com/miso-devel" >miso-devel</a>!)</li>
     <li>Update to show import popover on load</li>
+  </ul>
+</details>
+
+<details><summary>1.0.4</summary>
+  <ul>
+    <li>Update import to grab 'src/app' automatically if present</li>
+    <li>Revert change to show import popover on load</li>
   </ul>
 </details>
 
