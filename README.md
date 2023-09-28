@@ -1,10 +1,10 @@
  <p align="center">
-  <img src="https://raw.githubusercontent.com/FANFICPDF/Next-Nav/readme/assets/next_nav_logo.png" alt="next.nav logo" />
+  <img src="https://raw.githubusercontent.com/b-henkel/Next-Nav/readme/assets/next_nav_logo.png" alt="next.nav logo" />
   </p>
 
 <div align="center">
 
-![Version: 1.0.3](https://img.shields.io/badge/version-1.0.2-black)
+![Version: 1.0.4](https://img.shields.io/badge/version-1.0.4-black)
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
 
 </div>
@@ -47,7 +47,7 @@ Next.nav allows Next.js developers to:
    ![Launching the Extension](https://i.imgur.com/10qMgfY.gif 'Launching the Extension')
 4. Launch Next.Nav by opening the command palette using (Ctrl+Shift+P in Windows/Linux) or (Command+Shift+P MacOS) and typing `Next.Nav` highlight and press Enter
    ![Opening a Tree](https://i.imgur.com/sVYwqVu.gif 'Opening a Tree')
-5. Select the Import Path icon and input the relative or absolute path of your root App route
+5. Select the Import Path icon and input the relative or absolute path of your root App route (Note: Next.Nav will automatically grab your file structure if it is under the 'src/app' route)
 
 ### Opening Files
 
@@ -136,6 +136,13 @@ Next.Nav is an Open Source product and we encourage developers to contribute. Pl
   </ul>
 </details>
 
+<details><summary>1.0.4</summary>
+  <ul>
+    <li>Update import to grab 'src/app' automatically if present</li>
+    <li>Revert change to show import popover on load</li>
+  </ul>
+</details>
+
 ## Contributors
 
 <table>
@@ -154,7 +161,7 @@ Next.Nav is an Open Source product and we encourage developers to contribute. Pl
       <sub><b>Brian Henkel</b></sub>
       <br />
       <a href="https://www.linkedin.com/in/b-henkel/">Linkedin</a> |
-      <a href="https://github.com/FANFICPDF">GitHub</a>
+      <a href="https://github.com/b-henkel">GitHub</a>
     </td> <td align="center">
       <img src="https://avatars.githubusercontent.com/u/106214861?v=4" width="140px;" alt="a photo of Jordan Querubin"/>
       <br />

@@ -4,6 +4,7 @@ import React, {
   useState,
   useCallback,
   useLayoutEffect,
+  useEffect,
 } from "react";
 import ReactFlow, {
   addEdge,
@@ -61,7 +62,7 @@ const elkOptions = {
   "elk.spacing.nodeNode": "100",
 };
 
-//---For Update the types later--??
+//---For Update the types later--
 // interface customElkNode extends ElkNode {
 //   data?: {
 //     label: string;
@@ -156,7 +157,7 @@ export default function LayoutFlow({
 
   const [view, setView] = useState("RIGHT");
 
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const open = () => setIsOpen(!isOpen);
   const close = () => setIsOpen(false);
 
@@ -214,14 +215,21 @@ export default function LayoutFlow({
     background: "linear-gradient(#212121, #000000)",
   };
 
-  const handleSubmitDir = () => {
+  const handleSubmitDir = (showError = true) => {
     console.log(vscode);
     console.log("Sending directory", dirFormValue);
     vscode.postMessage({
       command: "submitDir",
       folderName: dirFormValue,
+      showError: showError
     });
   };
+
+  //on-load send message
+  useEffect(() => {
+    handleSubmitDir(false);
+    setDirFormValue("");
+  }, []);
 
   return (
     <ReactFlow
@@ -331,7 +339,7 @@ export default function LayoutFlow({
         <IconButton
             color="white"
             size="lg"
-            aria-label="switch view"
+            aria-label="refresh view"
             variant="ghost"
             icon={<Icon as={BiRefresh}/>}
             _hover={{bg: 'white', textColor: 'black'}} 
