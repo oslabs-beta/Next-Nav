@@ -1,10 +1,10 @@
  <p align="center">
-  <img src="https://raw.githubusercontent.com/FANFICPDF/Next-Nav/readme/assets/next_nav_logo.png" alt="next.nav logo" />
+  <img src="https://raw.githubusercontent.com/b-henkel/Next-Nav/readme/assets/next_nav_logo.png" alt="next.nav logo" />
   </p>
 
 <div align="center">
 
-![Version: 1.0.3](https://img.shields.io/badge/version-1.0.2-black)
+![Version: 1.0.4](https://img.shields.io/badge/version-1.0.4-black)
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
 
 </div>
@@ -154,7 +154,7 @@ Next.Nav is an Open Source product and we encourage developers to contribute. Pl
       <sub><b>Brian Henkel</b></sub>
       <br />
       <a href="https://www.linkedin.com/in/b-henkel/">Linkedin</a> |
-      <a href="https://github.com/FANFICPDF">GitHub</a>
+      <a href="https://github.com/b-henkel">GitHub</a>
     </td> <td align="center">
       <img src="https://avatars.githubusercontent.com/u/106214861?v=4" width="140px;" alt="a photo of Jordan Querubin"/>
       <br />

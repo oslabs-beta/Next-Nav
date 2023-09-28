@@ -86,7 +86,7 @@ export default function TreeContainer() {
 
   //state for managing path input
   const [validDir, setValidDir] = useState(false);
-  const [dirFormValue, setDirFormValue] = useState("");
+  const [dirFormValue, setDirFormValue] = useState("src/app");
 
   // Update the refs whenever srcDir or appDir changes
   useEffect(() => {
@@ -138,7 +138,9 @@ export default function TreeContainer() {
           null,
           2
         );
-        setDirectory(formattedDirectory);
+        if (formattedDirectory.length) {
+          setDirectory(formattedDirectory);
+        }
         break;
       //file was just added we need to get directory again
       case "added_addFile":

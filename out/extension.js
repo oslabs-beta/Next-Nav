@@ -44,7 +44,9 @@ function activate(context) {
                         });
                     }
                     else {
-                        vscode.window.showErrorMessage('Invalid directory: ' + message.folderName);
+                        if (message.showError) {
+                            vscode.window.showErrorMessage('Invalid directory: ' + message.folderName);
+                        }
                         webview.webview.postMessage({
                             command: 'submitDirResponse',
                             result: false,
