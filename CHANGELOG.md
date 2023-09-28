@@ -22,3 +22,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Updated
 - Update to show import popover on load
+
+## [1.0.4] - 2023-09-28
+
+### Updated
+- Update import to grab 'src/app' automatically if present
+
+### Deprecated
+- Change to show import popover on load
