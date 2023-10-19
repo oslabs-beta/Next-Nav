@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import LayoutFlow from "./LayoutFlow";
-import { ReactFlowProvider } from "reactflow";
+import { ReactFlowProvider, Controls, MiniMap } from "reactflow";
 import Node from "./Node";
 // import { handleReceivedMessage, handleRequestDirectory } from "../functions";
 import { useVsCodeApi } from "../VsCodeApiContext";
@@ -247,7 +247,7 @@ export default function TreeContainer() {
               validDir={validDir}
               dirFormValue={dirFormValue}
               setDirFormValue={setDirFormValue}
-            />
+              />
           </ReactFlowProvider>
         </div>
       ) : (
