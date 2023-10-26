@@ -20,6 +20,12 @@ async function sendUpdatedDirectory(webview, dirName) {
     }
 }
 function activate(context) {
+    const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 200);
+    statusBarItem.text = 'Next.Nav';
+    statusBarItem.command = 'next-extension.next-nav';
+    statusBarItem.tooltip = 'Launch Next Nav';
+    statusBarItem.show();
+    context.subscriptions.push(statusBarItem);
     //runs when extension is called every time
     let disposable = vscode.commands.registerCommand('next-extension.next-nav', async () => {
         //create a webview to put React on

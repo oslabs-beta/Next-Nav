@@ -23,6 +23,17 @@ async function sendUpdatedDirectory(
 }
 
 export function activate(context: vscode.ExtensionContext) {
+  const statusBarItem = vscode.window.createStatusBarItem(
+    vscode.StatusBarAlignment.Left,
+    200
+  );
+  statusBarItem.text = 'Next.Nav';
+  statusBarItem.command = 'next-extension.next-nav';
+  statusBarItem.tooltip = 'Launch Next Nav';
+  statusBarItem.show();
+
+  context.subscriptions.push(statusBarItem);
+
   //runs when extension is called every time
   let disposable = vscode.commands.registerCommand(
     'next-extension.next-nav',
@@ -58,11 +69,11 @@ export function activate(context: vscode.ExtensionContext) {
                   result: true,
                 });
               } else {
-                if(message.showError){
+                if (message.showError) {
                   vscode.window.showErrorMessage(
                     'Invalid directory: ' + message.folderName
                   );
-                } 
+                }
                 webview.webview.postMessage({
                   command: 'submitDirResponse',
                   result: false,

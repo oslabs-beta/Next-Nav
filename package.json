@@ -19,7 +19,15 @@
         "command": "next-extension.next-nav",
         "title": "Next.Nav"
       }
-    ]
+    ],
+    "menus": {
+      "statusBar": [
+        {
+          "command": "next-extension.next-nav",
+          "when": "true"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run esbuild-base -- --minify",
