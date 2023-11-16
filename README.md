@@ -4,7 +4,7 @@
 
 <div align="center">
 
-![Version: 1.0.4](https://img.shields.io/badge/version-1.0.4-black)
+![Version: 1.0.5](https://img.shields.io/badge/version-1.0.5-black)
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
 
 </div>
@@ -16,7 +16,6 @@
 ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
 ![Webpack](https://img.shields.io/badge/webpack-%238DD6F9.svg?style=for-the-badge&logo=webpack&logoColor=black)
 ![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white)
-
 
 </div>
 
@@ -44,14 +43,14 @@ Next.nav allows Next.js developers to:
 1. Install VSCode
 2. Install the extension by searching "Next Nav" in the extension marketplace or Launch VS Code Quick Open (Ctrl+P in Windows/Linux) or (Command+P MacOS), paste the following command `ext install NextNav.NextNav` and press enter.
 3. Open a Next.js project that is using the App Router in VSCode
-   ![Launching the Extension](https://i.imgur.com/10qMgfY.gif 'Launching the Extension')
-4. Launch Next.Nav by opening the command palette using (Ctrl+Shift+P in Windows/Linux) or (Command+Shift+P MacOS) and typing `Next.Nav` highlight and press Enter
-   ![Opening a Tree](https://i.imgur.com/sVYwqVu.gif 'Opening a Tree')
+   ![Launching the Extension](https://i.imgur.com/10qMgfY.gif "Launching the Extension")
+4. Launch Next.Nav from status bar or by opening the command palette using (Ctrl+Shift+P in Windows/Linux) or (Command+Shift+P MacOS) and typing `Next.Nav` highlight and press Enter
+   ![Opening a Tree](https://i.imgur.com/sVYwqVu.gif "Opening a Tree")
 5. Select the Import Path icon and input the relative or absolute path of your root App route (Note: Next.Nav will automatically grab your file structure if it is under the 'src/app' route)
 
 ### Opening Files
 
-![Opening Files](https://i.imgur.com/zDKCPjo.gif 'Opening Files')
+![Opening Files](https://i.imgur.com/zDKCPjo.gif "Opening Files")
 
 1. When you hover over a file type in the tree it will tell you the name
 2. You can click on the icon of the file in the folder to open it.
@@ -60,7 +59,7 @@ Next.nav allows Next.js developers to:
 
 ### Adding Files
 
-![Adding Files](https://i.imgur.com/xdraVMG.gif 'Adding Files')
+![Adding Files](https://i.imgur.com/xdraVMG.gif "Adding Files")
 
 1. Click on any blank space on a folder node to open a modal to view its contents.
 2. Add a file name and extension in the input field.
@@ -70,7 +69,7 @@ Next.nav allows Next.js developers to:
 
 **warning:** this will **permanently** delete the file.
 
-![Deleting Files](https://i.imgur.com/U4KE5DN.gif 'Deleting Files')
+![Deleting Files](https://i.imgur.com/U4KE5DN.gif "Deleting Files")
 
 1. Click on any blank space on a folder node to open a modal to view a folders contents.
 2. Click the red trash icon next to the file you want to delete.
@@ -78,7 +77,7 @@ Next.nav allows Next.js developers to:
 
 ### Adding Folders
 
-![Adding Folders](https://i.imgur.com/2b3FngG.gif 'Adding Folders')
+![Adding Folders](https://i.imgur.com/2b3FngG.gif "Adding Folders")
 
 1. Click on the plus icon on the right edge of the folder node you want your new folder to be nested in.
 2. Give your new folder a name and submit.
@@ -87,7 +86,7 @@ Next.nav allows Next.js developers to:
 
 **warning:** this will **permanently** delete all contained files and sub folders
 
-![Deleting Folders](https://i.imgur.com/qXMlm0Y.gif 'Deleting Folders')
+![Deleting Folders](https://i.imgur.com/qXMlm0Y.gif "Deleting Folders")
 
 1. Click on the minus icon on the left edge of the folder node you want to delete
 2. Type the name of the folder to confirm deletion of the directory and all sub directories and files contained. (**warning:** this can not be undone)
@@ -140,6 +139,12 @@ Next.Nav is an Open Source product and we encourage developers to contribute. Pl
   <ul>
     <li>Update import to grab 'src/app' automatically if present</li>
     <li>Revert change to show import popover on load</li>
+  </ul>
+</details>
+<details><summary>1.0.5</summary>
+  <ul>
+    <li>Adds status-bar launch item. This makes it seamless when navigating back to the extension.</li>
+    <li>Adds limit to icons displayed </li>
   </ul>
 </details>
 

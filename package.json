@@ -4,14 +4,16 @@
   "publisher": "NextNav",
   "description": "Navigate and create routes easily in your Next.js application",
   "icon": "assets/next_nav_logo.png",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "engines": {
     "vscode": "^1.81.0"
   },
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
@@ -19,7 +21,15 @@
         "command": "next-extension.next-nav",
         "title": "Next.Nav"
       }
-    ]
+    ],
+    "menus": {
+      "statusBar": [
+        {
+          "command": "next-extension.next-nav",
+          "when": "true"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run esbuild-base -- --minify",
