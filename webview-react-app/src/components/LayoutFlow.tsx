@@ -62,7 +62,7 @@ const elkOptions = {
   "elk.spacing.nodeNode": "100",
 };
 
-//---For Update the types later--
+//---For Updating the types later--
 // interface customElkNode extends ElkNode {
 //   data?: {
 //     label: string;

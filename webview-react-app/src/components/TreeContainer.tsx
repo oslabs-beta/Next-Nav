@@ -77,6 +77,7 @@ export default function TreeContainer() {
   const [isParsed, setIsParsed] = useState(false); //tracks if the parseData function was called
   const [directory, setDirectory] = useState(tutorialTree);
   const vscode = useVsCodeApi();
+  // TODO create path history array useState for back button, add path on entry subpath. Pop off on back click
 
   //state for communicating with "backend"
   const [srcDir, setSrcDir] = useState("src");
