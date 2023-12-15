@@ -56,6 +56,10 @@ function activate(context) {
                 switch (message.command) {
                     //save directory for future use
                     case 'submitDir':
+                        let formCheck = false;
+                        if (message['form']) {
+                            formCheck = true;
+                        }
                         const folderLocation = await (0, functions_1.getValidDirectoryPath)(message.folderName);
                         if (folderLocation) {
                             lastSubmittedDir = folderLocation;
@@ -63,6 +67,7 @@ function activate(context) {
                             cloneView.webview.postMessage({
                                 command: 'submitDirResponse',
                                 result: true,
+                                form: formCheck,
                             });
                         }
                         else {
@@ -72,6 +77,7 @@ function activate(context) {
                             cloneView.webview.postMessage({
                                 command: 'submitDirResponse',
                                 result: false,
+                                form: formCheck,
                             });
                         }
                         break;

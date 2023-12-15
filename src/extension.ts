@@ -75,6 +75,10 @@ export function activate(context: vscode.ExtensionContext) {
             switch (message.command) {
               //save directory for future use
               case 'submitDir':
+                let formCheck = false;
+                if(message['form']) {
+                  formCheck = true;
+                }
                 const folderLocation = await getValidDirectoryPath(
                   message.folderName
                 );
@@ -86,6 +90,7 @@ export function activate(context: vscode.ExtensionContext) {
                   cloneView.webview.postMessage({
                     command: 'submitDirResponse',
                     result: true,
+                    form: formCheck,
                   });
                 } else {
                   if (message.showError) {
@@ -96,6 +101,7 @@ export function activate(context: vscode.ExtensionContext) {
                   cloneView.webview.postMessage({
                     command: 'submitDirResponse',
                     result: false,
+                    form: formCheck,
                   });
                 }
                 break;
