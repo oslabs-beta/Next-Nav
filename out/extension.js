@@ -14,6 +14,7 @@ async function sendUpdatedDirectory(webview, dirName) {
         // Call treeMaker with only one folder name
         const result = await (0, makeTree_1.default)(dirName);
         const sendString = JSON.stringify(result);
+        //console.log(sendString);
         webview.webview.postMessage({ command: 'sendString', data: sendString });
     }
     catch (error) {

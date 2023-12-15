@@ -24,8 +24,7 @@ import {
   SiTypescript,
   SiSass,
 } from "react-icons/si";
-import { BiImport,BiArrowBack } from "react-icons/bi";
-
+import { BiImport, BiArrowBack } from "react-icons/bi";
 
 import DetailsView from "./modals/DetailsView";
 import FolderAdd from "./modals/FolderAdd";
@@ -38,9 +37,20 @@ type Props = {
     command: string,
     setterFunc?: (string: string) => any
   ) => void;
+  onPathChange: (string: string) => void;
+  pathStack: Array<string>;
+  onRemovePath: () => void;
+  rootPath: string
 };
 
-const Node = ({ data, handlePostMessage }: Props): JSX.Element => {
+const Node = ({
+  data,
+  handlePostMessage,
+  onPathChange,
+  pathStack,
+  onRemovePath,
+  rootPath
+}: Props): JSX.Element => {
   //deconstruct props here. Used let to account for undefined checking.
   let { contents, parentNode, folderName, path, render }: FileNode = data;
   const vscode = useVsCodeApi();
@@ -59,20 +69,31 @@ const Node = ({ data, handlePostMessage }: Props): JSX.Element => {
     path = "";
   }
 
-  //function that creates a new view using this node as the root node
+  //function that creates a new view using this node as the root node when we go into a subtree
   const handleSubmitDir = () => {
+    onPathChange(rootPath);
     console.log(vscode);
     console.log("Creating new root with", path);
+    console.log("path", pathStack);
     vscode.postMessage({
       command: "submitDir",
       folderName: path,
       showError: false,
     });
   };
-  
 
+  const handlePrevDir = () => {
+    const newDir = pathStack[pathStack.length - 1];
+    console.log("newDir", newDir);
+    onRemovePath();
+    console.log("path", pathStack);
+    vscode.postMessage({
+      command: "submitDir",
+      folderName: newDir,
+      showError: false,
+    });
+  };
 
-  
   // selects an icon to use based on a file name
   const getIcon = (fileString: string): [IconType, string] => {
     // store of file extensions and their respective icons and icon background color
@@ -150,6 +171,7 @@ const Node = ({ data, handlePostMessage }: Props): JSX.Element => {
         }`}>
         <CardHeader>
           {parentNode !== null ? (
+            //forward button
             <IconButton
               size="lg"
               color="white"
@@ -157,18 +179,27 @@ const Node = ({ data, handlePostMessage }: Props): JSX.Element => {
               variant="ghost"
               icon={<Icon as={BiImport} />}
               _hover={{ bg: "white", textColor: "black" }}
-              onClick={handleSubmitDir}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleSubmitDir();
+              }}
             />
           ) : (
-            <IconButton
-              size="lg"
-              color="white"
-              aria-label="set source"
-              variant="ghost"
-              icon={<Icon as={BiArrowBack} />}
-              _hover={{ bg: "white", textColor: "black" }}
-              // onClick={handleSubmitDir}
-            />
+            //back button
+            pathStack.length === 0 ? null: (
+              <IconButton
+                size="lg"
+                color="white"
+                aria-label="set source"
+                variant="ghost"
+                icon={<Icon as={BiArrowBack} />}
+                _hover={{ bg: "white", textColor: "black" }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handlePrevDir();
+                }}
+              />
+            )
           )}
           <Heading size="lg" color="#FFFFFF" wordBreak="break-word">
             {folderName}

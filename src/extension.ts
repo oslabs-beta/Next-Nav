@@ -15,6 +15,7 @@ async function sendUpdatedDirectory(
     // Call treeMaker with only one folder name
     const result = await treeMaker(dirName);
     const sendString = JSON.stringify(result);
+    //console.log(sendString);
     webview.webview.postMessage({ command: 'sendString', data: sendString });
   } catch (error: any) {
     vscode.window.showErrorMessage(
