@@ -184,6 +184,9 @@ export default function TreeContainer() {
         console.log("recieved", message);
         setValidDir(message.result);
         if (message.result) {
+          if(message.form) {
+            setPathStack([]);
+          }
           handleRequestDirectory(srcDirRef, appDirRef);
         }
     }

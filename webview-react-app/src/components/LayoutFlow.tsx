@@ -223,6 +223,7 @@ export default function LayoutFlow({
       command: "submitDir",
       folderName: dirFormValue,
       showError: showError,
+      form: true,
     });
   };
 
