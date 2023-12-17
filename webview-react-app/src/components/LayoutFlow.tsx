@@ -62,7 +62,7 @@ const elkOptions = {
   "elk.spacing.nodeNode": "100",
 };
 
-//---For Update the types later--
+//---For Updating the types later--
 // interface customElkNode extends ElkNode {
 //   data?: {
 //     label: string;
@@ -140,6 +140,7 @@ type props = {
   validDir: boolean;
   dirFormValue: string;
   setDirFormValue: (string: string) => void;
+  
 };
 
 export default function LayoutFlow({
@@ -222,6 +223,7 @@ export default function LayoutFlow({
       command: "submitDir",
       folderName: dirFormValue,
       showError: showError,
+      form: true,
     });
   };
 

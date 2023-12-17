@@ -14,6 +14,7 @@ async function sendUpdatedDirectory(webview, dirName) {
         // Call treeMaker with only one folder name
         const result = await (0, makeTree_1.default)(dirName);
         const sendString = JSON.stringify(result);
+        //console.log(sendString);
         webview.webview.postMessage({ command: 'sendString', data: sendString });
     }
     catch (error) {
@@ -55,6 +56,10 @@ function activate(context) {
                 switch (message.command) {
                     //save directory for future use
                     case 'submitDir':
+                        let formCheck = false;
+                        if (message['form']) {
+                            formCheck = true;
+                        }
                         const folderLocation = await (0, functions_1.getValidDirectoryPath)(message.folderName);
                         if (folderLocation) {
                             lastSubmittedDir = folderLocation;
@@ -62,6 +67,7 @@ function activate(context) {
                             cloneView.webview.postMessage({
                                 command: 'submitDirResponse',
                                 result: true,
+                                form: formCheck,
                             });
                         }
                         else {
@@ -71,6 +77,7 @@ function activate(context) {
                             cloneView.webview.postMessage({
                                 command: 'submitDirResponse',
                                 result: false,
+                                form: formCheck,
                             });
                         }
                         break;

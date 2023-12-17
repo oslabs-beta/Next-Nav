@@ -76,7 +76,9 @@ export default function TreeContainer() {
   const [initialEdges, setInitialEdges] = useState<any[]>([]);
   const [isParsed, setIsParsed] = useState(false); //tracks if the parseData function was called
   const [directory, setDirectory] = useState(tutorialTree);
+  const [pathStack, setPathStack] = useState<string[]>([]);
   const vscode = useVsCodeApi();
+  // TODO create path history array useState for back button, add path on entry subpath. Pop off on back click
 
   //state for communicating with "backend"
   const [srcDir, setSrcDir] = useState("src");
@@ -112,8 +114,24 @@ export default function TreeContainer() {
     };
   }, [srcDir, appDir]);
 
+  const handleAddPath = (path: string):void => {
+    setPathStack([...pathStack, path]);
+  };
+
+  const handleRemovePath = ():void => {
+    if(pathStack.length === 0){
+      console.log("Removing from empty Path");
+      return;
+    }
+    const newPath = [...pathStack];
+    newPath.pop();
+    console.log('newPath: ', newPath);
+    setPathStack(newPath);
+    
+  };
+
   const handleRequestDirectory = (srcDirRef: string, appDirRef: string) => {
-    console.log("srcDir: ", srcDirRef, " appDir: ", appDirRef);
+    //console.log("srcDir: ", srcDirRef, " appDir: ", appDirRef);
     console.log("asking for directory");
     vscode.postMessage({
       command: "getRequest",
@@ -166,6 +184,9 @@ export default function TreeContainer() {
         console.log("recieved", message);
         setValidDir(message.result);
         if (message.result) {
+          if(message.form) {
+            setPathStack([]);
+          }
           handleRequestDirectory(srcDirRef, appDirRef);
         }
     }
@@ -192,13 +213,23 @@ export default function TreeContainer() {
         setterFunc("");
       }
     };
+    
 
     serverResponse.forEach((obj) => {
       //populate the newNodes with the data from the "server"
       newNodes.push({
         id: `${obj.id}`,
         data: {
-          label: <Node data={obj} handlePostMessage={handlePostMessage} />,
+          label: (
+            <Node
+              data={obj}
+              handlePostMessage={handlePostMessage}
+              onPathChange={handleAddPath}
+              pathStack={pathStack}
+              onRemovePath={handleRemovePath}
+              rootPath={serverResponse[0].path}
+            />
+          ),
         },
         position,
       });
@@ -247,7 +278,7 @@ export default function TreeContainer() {
               validDir={validDir}
               dirFormValue={dirFormValue}
               setDirFormValue={setDirFormValue}
-              />
+            />
           </ReactFlowProvider>
         </div>
       ) : (

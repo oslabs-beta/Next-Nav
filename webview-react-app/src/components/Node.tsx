@@ -1,5 +1,6 @@
 import React from "react";
 import { FileNode } from "./TreeContainer";
+import { useVsCodeApi } from "../VsCodeApiContext";
 
 import {
   Card,
@@ -23,6 +24,7 @@ import {
   SiTypescript,
   SiSass,
 } from "react-icons/si";
+import { BiImport, BiArrowBack } from "react-icons/bi";
 
 import DetailsView from "./modals/DetailsView";
 import FolderAdd from "./modals/FolderAdd";
@@ -35,11 +37,23 @@ type Props = {
     command: string,
     setterFunc?: (string: string) => any
   ) => void;
+  onPathChange: (string: string) => void;
+  pathStack: Array<string>;
+  onRemovePath: () => void;
+  rootPath: string
 };
 
-const Node = ({ data, handlePostMessage }: Props): JSX.Element => {
+const Node = ({
+  data,
+  handlePostMessage,
+  onPathChange,
+  pathStack,
+  onRemovePath,
+  rootPath
+}: Props): JSX.Element => {
   //deconstruct props here. Used let to account for undefined checking.
   let { contents, parentNode, folderName, path, render }: FileNode = data;
+  const vscode = useVsCodeApi();
 
   const {
     isOpen: nodeIsOpen,
@@ -54,6 +68,31 @@ const Node = ({ data, handlePostMessage }: Props): JSX.Element => {
   if (!path) {
     path = "";
   }
+
+  //function that creates a new view using this node as the root node when we go into a subtree
+  const handleSubmitDir = () => {
+    onPathChange(rootPath);
+    console.log(vscode);
+    console.log("Creating new root with", path);
+    console.log("path", pathStack);
+    vscode.postMessage({
+      command: "submitDir",
+      folderName: path,
+      showError: false,
+    });
+  };
+
+  const handlePrevDir = () => {
+    const newDir = pathStack[pathStack.length - 1];
+    console.log("newDir", newDir);
+    onRemovePath();
+    console.log("path", pathStack);
+    vscode.postMessage({
+      command: "submitDir",
+      folderName: newDir,
+      showError: false,
+    });
+  };
 
   // selects an icon to use based on a file name
   const getIcon = (fileString: string): [IconType, string] => {
@@ -131,25 +170,56 @@ const Node = ({ data, handlePostMessage }: Props): JSX.Element => {
           parentNode === null ? "#FF9ED2" : boxShadowColor
         }`}>
         <CardHeader>
+          {parentNode !== null ? (
+            //forward button
+            <IconButton
+              size="lg"
+              color="white"
+              aria-label="set source"
+              variant="ghost"
+              icon={<Icon as={BiImport} />}
+              _hover={{ bg: "white", textColor: "black" }}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleSubmitDir();
+              }}
+            />
+          ) : (
+            //back button
+            pathStack.length === 0 ? null: (
+              <IconButton
+                size="lg"
+                color="white"
+                aria-label="set source"
+                variant="ghost"
+                icon={<Icon as={BiArrowBack} />}
+                _hover={{ bg: "white", textColor: "black" }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handlePrevDir();
+                }}
+              />
+            )
+          )}
           <Heading size="lg" color="#FFFFFF" wordBreak="break-word">
             {folderName}
           </Heading>
         </CardHeader>
         <CardBody padding="0px 28px 0px 28px">
           <HStack spacing="10px" wrap="wrap" justify={"center"}>
-              {files}
-              {contents.length > 8 && (
-                <Tooltip label="more files" fontSize="md">
-                  <IconButton
-                    aria-label="more icon"
-                    isRound={true}
-                    variant={"solid"}
-                    color="#050505"
-                    backgroundColor={"#FFFFFF"}
-                    icon={<Icon as={PiDotsThreeOutlineFill} />}
-                  />
-                </Tooltip>
-              )}
+            {files}
+            {contents.length > 8 && (
+              <Tooltip label="more files" fontSize="md">
+                <IconButton
+                  aria-label="more icon"
+                  isRound={true}
+                  variant={"solid"}
+                  color="#050505"
+                  backgroundColor={"#FFFFFF"}
+                  icon={<Icon as={PiDotsThreeOutlineFill} />}
+                />
+              </Tooltip>
+            )}
           </HStack>
         </CardBody>
         <CardFooter color="#454545" fontSize="20px" m="3px 0 0 0" padding="0">
