@@ -76,11 +76,11 @@ export function activate(context: vscode.ExtensionContext) {
               //save directory for future use
               case 'submitDir':
                 let formCheck = false;
-                if(message['form']) {
+                if (message['form']) {
                   formCheck = true;
                 }
                 const folderLocation = await getValidDirectoryPath(
-                  message.folderName
+                  path.normalize(message.folderName)
                 );
                 if (folderLocation) {
                   lastSubmittedDir = folderLocation;
@@ -136,7 +136,7 @@ export function activate(context: vscode.ExtensionContext) {
               case 'addFile':
                 try {
                   const filePath = message.filePath;
-                  await fs.writeFile(filePath, '');
+                  await fs.writeFile(path.normalize(filePath), '');
                   //let the React know we added a file
                   cloneView.webview.postMessage({ command: 'added_addFile' });
                 } catch (error: any) {
@@ -150,7 +150,7 @@ export function activate(context: vscode.ExtensionContext) {
               case 'addFolder':
                 try {
                   const folderPath = message.filePath;
-                  await fs.mkdir(folderPath);
+                  await fs.mkdir(path.normalize(folderPath));
                   cloneView.webview.postMessage({ command: 'added_addFolder' });
                 } catch (error: any) {
                   console.error('Error creating folder:', error.message);
@@ -164,7 +164,7 @@ export function activate(context: vscode.ExtensionContext) {
               case 'deleteFile':
                 try {
                   const filePath = message.filePath;
-                  const uri = vscode.Uri.file(filePath);
+                  const uri = vscode.Uri.file(path.normalize(filePath));
                   if (await fs.stat(filePath)) {
                     await vscode.workspace.fs.delete(uri, { useTrash: true });
                   } else {
@@ -185,7 +185,7 @@ export function activate(context: vscode.ExtensionContext) {
               case 'deleteFolder':
                 try {
                   const folderPath = message.filePath;
-                  const uri = vscode.Uri.file(folderPath);
+                  const uri = vscode.Uri.file(path.normalize(folderPath));
 
                   //delete folder and subfolders
                   if (await fs.stat(folderPath)) {
@@ -237,7 +237,9 @@ export function activate(context: vscode.ExtensionContext) {
           </script>
         </body>
         </html>`;
-        } catch (err) {}
+        } catch (err) {
+          console.log(err);
+        }
         vscode.window.showInformationMessage('Welcome to Next.Nav!');
       }
     }
