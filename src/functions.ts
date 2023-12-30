@@ -2,6 +2,13 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 import * as vscode from 'vscode';
 
+function isSubdirectory(parent: string, child: string) {
+  const parentPath = path.resolve(parent).toLowerCase();
+  const childPath = path.resolve(child).toLowerCase();
+
+  return parentPath.startsWith(childPath);
+}
+
 export async function getValidDirectoryPath(dirPath: string): Promise<string> {
   try {
     if (!vscode.workspace.workspaceFolders) {
@@ -12,15 +19,23 @@ export async function getValidDirectoryPath(dirPath: string): Promise<string> {
     const absoluteDirPath = path.isAbsolute(dirPath)
       ? dirPath
       : path.join(workspaceDir, dirPath);
+    console.log(absoluteDirPath);
+
     // Validate if this path is within the workspace directory
-    if (!absoluteDirPath.startsWith(workspaceDir)) {
+    if (isSubdirectory(workspaceDir, absoluteDirPath)) {
+      console.log('workspace: ', workspaceDir);
+      console.log('absolute: ', absoluteDirPath);
+      console.log('not within working dir');
       return '';
     }
     // Check if the directory actually exists
     const stat = await fs.stat(absoluteDirPath);
     if (!stat.isDirectory()) {
+      console.log('doesnt exist');
       return '';
     }
+    //logging path to test in windows
+
     return absoluteDirPath; // Return the validated absolute directory path
   } catch (err: any) {
     return '';
