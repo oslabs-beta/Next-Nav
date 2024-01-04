@@ -4,9 +4,12 @@ exports.getValidDirectoryPath = void 0;
 const fs = require("fs/promises");
 const path = require("path");
 const vscode = require("vscode");
+//Checks that child directory is within parent directory
 function isSubdirectory(parent, child) {
     const parentPath = path.resolve(parent).toLowerCase();
     const childPath = path.resolve(child).toLowerCase();
+    console.log('p: ' + parentPath);
+    console.log('c: ' + childPath);
     return parentPath.startsWith(childPath);
 }
 async function getValidDirectoryPath(dirPath) {
@@ -21,7 +24,7 @@ async function getValidDirectoryPath(dirPath) {
             : path.join(workspaceDir, dirPath);
         console.log(absoluteDirPath);
         // Validate if this path is within the workspace directory
-        if (isSubdirectory(workspaceDir, absoluteDirPath)) {
+        if (!isSubdirectory(absoluteDirPath, workspaceDir)) {
             console.log('workspace: ', workspaceDir);
             console.log('absolute: ', absoluteDirPath);
             console.log('not within working dir');
