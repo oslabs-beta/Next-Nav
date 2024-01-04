@@ -1,6 +1,6 @@
-import React from "react";
-import { FileNode } from "./TreeContainer";
-import { useVsCodeApi } from "../VsCodeApiContext";
+import React from 'react';
+import { FileNode } from './TreeContainer';
+import { useVsCodeApi } from '../VsCodeApiContext';
 
 import {
   Card,
@@ -13,22 +13,22 @@ import {
   Icon,
   IconButton,
   Tooltip,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 
-import { IconType } from "react-icons";
-import { PiFileCodeFill, PiDotsThreeOutlineFill } from "react-icons/pi";
+import { IconType } from 'react-icons';
+import { PiFileCodeFill, PiDotsThreeOutlineFill } from 'react-icons/pi';
 import {
   SiCss3,
   SiReact,
   SiJavascript,
   SiTypescript,
   SiSass,
-} from "react-icons/si";
-import { BiImport, BiArrowBack } from "react-icons/bi";
+} from 'react-icons/si';
+import { BiImport, BiArrowBack } from 'react-icons/bi';
 
-import DetailsView from "./modals/DetailsView";
-import FolderAdd from "./modals/FolderAdd";
-import FolderDelete from "./modals/FolderDelete";
+import DetailsView from './modals/DetailsView';
+import FolderAdd from './modals/FolderAdd';
+import FolderDelete from './modals/FolderDelete';
 
 type Props = {
   data: FileNode;
@@ -40,7 +40,7 @@ type Props = {
   onPathChange: (string: string) => void;
   pathStack: Array<string>;
   onRemovePath: () => void;
-  rootPath: string
+  rootPath: string;
 };
 
 const Node = ({
@@ -49,7 +49,7 @@ const Node = ({
   onPathChange,
   pathStack,
   onRemovePath,
-  rootPath
+  rootPath,
 }: Props): JSX.Element => {
   //deconstruct props here. Used let to account for undefined checking.
   let { contents, parentNode, folderName, path, render }: FileNode = data;
@@ -66,17 +66,17 @@ const Node = ({
     contents = [];
   }
   if (!path) {
-    path = "";
+    path = '';
   }
 
   //function that creates a new view using this node as the root node when we go into a subtree
   const handleSubmitDir = () => {
     onPathChange(rootPath);
     console.log(vscode);
-    console.log("Creating new root with", path);
-    console.log("path", pathStack);
+    console.log('Creating new root with', path);
+    console.log('path', pathStack);
     vscode.postMessage({
-      command: "submitDir",
+      command: 'submitDir',
       folderName: path,
       showError: false,
     });
@@ -84,11 +84,11 @@ const Node = ({
 
   const handlePrevDir = () => {
     const newDir = pathStack[pathStack.length - 1];
-    console.log("newDir", newDir);
+    console.log('newDir', newDir);
     onRemovePath();
-    console.log("path", pathStack);
+    console.log('path', pathStack);
     vscode.postMessage({
-      command: "submitDir",
+      command: 'submitDir',
       folderName: newDir,
       showError: false,
     });
@@ -98,14 +98,14 @@ const Node = ({
   const getIcon = (fileString: string): [IconType, string] => {
     // store of file extensions and their respective icons and icon background color
     const iconStore: { [index: string]: [IconType, string] } = {
-      default: [PiFileCodeFill, "white"],
-      css: [SiCss3, "#264de4"],
-      sass: [SiSass, "#cf6d99"],
-      scss: [SiSass, "#cf6d99"],
-      jsx: [SiReact, "#61DBFB"],
-      js: [SiJavascript, "#f7df1e"],
-      ts: [SiTypescript, "#007acc"],
-      tsx: [SiReact, "#007acc"],
+      default: [PiFileCodeFill, 'white'],
+      css: [SiCss3, '#264de4'],
+      sass: [SiSass, '#cf6d99'],
+      scss: [SiSass, '#cf6d99'],
+      jsx: [SiReact, '#61DBFB'],
+      js: [SiJavascript, '#f7df1e'],
+      ts: [SiTypescript, '#007acc'],
+      tsx: [SiReact, '#007acc'],
     };
     // finds files extension type with regEx matching
     const ext: RegExpMatchArray | null = fileString.match(/[^.]*$/); //['ts']
@@ -128,102 +128,114 @@ const Node = ({
   for (let i = 0; i < length; i++) {
     const icon = getIcon(contents[i]);
     files.push(
-      <Tooltip label={`${contents[i]}`} fontSize="md">
+      <Tooltip label={`${contents[i]}`} fontSize='md'>
         <IconButton
-          aria-label="file icon"
+          aria-label='file icon'
           isRound={true}
-          variant={"solid"}
-          color="#050505"
+          variant={'solid'}
+          color='#050505'
           backgroundColor={icon[1]}
           icon={<Icon as={icon[0]} />}
           onClick={(e) => {
             e.stopPropagation();
-            handlePostMessage(path.concat("/", contents[i]), "open_file");
+            handlePostMessage(path.concat('/', contents[i]), 'open_file');
           }}
         />
       </Tooltip>
     );
   }
 
-  const boxShadowColor = render === "client" ? "#ffcf9e" : "#9FFFCB";
+  const boxShadowColor = render === 'client' ? '#ffcf9e' : '#9FFFCB';
 
   return (
     <div
-      className="test"
+      className='test'
       style={{
-        border: "none",
-        position: "relative",
-      }}>
+        border: 'none',
+        position: 'relative',
+      }}
+    >
       <Card
         onClick={() => {
           nodeOnOpen();
         }}
-        bgColor="#050505"
-        align="center"
-        minW="15rem"
-        w="15rem"
-        minH="12rem"
-        padding="10px 20px"
-        borderRadius="15px"
-        position="relative"
+        bgColor='#050505'
+        align='center'
+        minW='15rem'
+        w='15rem'
+        minH='12rem'
+        padding='10px 20px'
+        borderRadius='15px'
+        position='relative'
         boxShadow={`0px 0px 7px 1px ${
-          parentNode === null ? "#FF9ED2" : boxShadowColor
-        }`}>
+          parentNode === null ? '#FF9ED2' : boxShadowColor
+        }`}
+      >
         <CardHeader>
-          {parentNode !== null ? (
-            //forward button
-            <IconButton
-              size="lg"
-              color="white"
-              aria-label="set source"
-              variant="ghost"
-              icon={<Icon as={BiImport} />}
-              _hover={{ bg: "white", textColor: "black" }}
-              onClick={(e) => {
-                e.stopPropagation();
-                handleSubmitDir();
-              }}
-            />
-          ) : (
-            //back button
-            pathStack.length === 0 ? null: (
-              <IconButton
-                size="lg"
-                color="white"
-                aria-label="set source"
-                variant="ghost"
-                icon={<Icon as={BiArrowBack} />}
-                _hover={{ bg: "white", textColor: "black" }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handlePrevDir();
-                }}
-              />
-            )
-          )}
-          <Heading size="lg" color="#FFFFFF" wordBreak="break-word">
+          <Heading size='lg' color='#FFFFFF' wordBreak='break-word'>
             {folderName}
           </Heading>
         </CardHeader>
-        <CardBody padding="0px 28px 0px 28px">
-          <HStack spacing="10px" wrap="wrap" justify={"center"}>
+        <CardBody padding='0px 28px 0px 28px'>
+          <HStack spacing='10px' wrap='wrap' justify={'center'}>
             {files}
             {contents.length > 8 && (
-              <Tooltip label="more files" fontSize="md">
+              <Tooltip label='more files' fontSize='md'>
                 <IconButton
-                  aria-label="more icon"
+                  aria-label='more icon'
                   isRound={true}
-                  variant={"solid"}
-                  color="#050505"
-                  backgroundColor={"#FFFFFF"}
+                  variant={'solid'}
+                  color='#050505'
+                  backgroundColor={'#FFFFFF'}
                   icon={<Icon as={PiDotsThreeOutlineFill} />}
                 />
               </Tooltip>
             )}
           </HStack>
         </CardBody>
-        <CardFooter color="#454545" fontSize="20px" m="3px 0 0 0" padding="0">
-          {render === "client" ? "Client" : "Server"}
+        <CardFooter
+          color='#454545'
+          fontSize='20px'
+          m='3px 0 0 0'
+          padding='0'
+          justify='space-between'
+          alignItems='center'
+          gap='5px'
+        >
+          {render === 'client' ? 'Client' : 'Server'}
+          {parentNode !== null ? (
+            //forward button
+            <Tooltip label='subtree'>
+              <IconButton
+                size='lg'
+                color='white'
+                aria-label='set source'
+                variant='ghost'
+                icon={<Icon as={BiImport} />}
+                _hover={{ bg: 'white', textColor: 'black' }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleSubmitDir();
+                }}
+              />
+            </Tooltip>
+          ) : //back button
+          pathStack.length === 0 ? null : (
+            <Tooltip label='previous tree'>
+              <IconButton
+                size='lg'
+                color='white'
+                aria-label='set source'
+                variant='ghost'
+                icon={<Icon as={BiArrowBack} />}
+                _hover={{ bg: 'white', textColor: 'black' }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handlePrevDir();
+                }}
+              />
+            </Tooltip>
+          )}
         </CardFooter>
       </Card>
 
