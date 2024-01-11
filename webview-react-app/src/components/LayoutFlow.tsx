@@ -14,7 +14,7 @@ import ReactFlow, {
   useReactFlow,
   Edge,
   Connection,
-} from "reactflow";
+Controls, MiniMap} from "reactflow";
 import {
   Button,
   Heading,
@@ -62,7 +62,7 @@ const elkOptions = {
   "elk.spacing.nodeNode": "100",
 };
 
-//---For Update the types later--
+//---For Updating the types later--
 // interface customElkNode extends ElkNode {
 //   data?: {
 //     label: string;
@@ -140,6 +140,7 @@ type props = {
   validDir: boolean;
   dirFormValue: string;
   setDirFormValue: (string: string) => void;
+  
 };
 
 export default function LayoutFlow({
@@ -221,7 +222,8 @@ export default function LayoutFlow({
     vscode.postMessage({
       command: "submitDir",
       folderName: dirFormValue,
-      showError: showError
+      showError: showError,
+      form: true,
     });
   };
 
@@ -246,21 +248,20 @@ export default function LayoutFlow({
         <Heading color="#FFFFFF">NEXT.NAV</Heading>
       </Panel>
       <Panel position="top-right">
-        <Popover 
+        <Popover
           placement="bottom"
           isOpen={isOpen}
           onClose={close}
           returnFocusOnClose={false}
-          preventOverflow={true}
-        >
+          preventOverflow={true}>
           <PopoverTrigger>
             <IconButton
               size="lg"
               color="white"
               aria-label="import app router"
               variant="ghost"
-              icon={<Icon as={BiImport}/>}
-              _hover={{bg: 'white', textColor: 'black'}}
+              icon={<Icon as={BiImport} />}
+              _hover={{ bg: "white", textColor: "black" }}
               onClick={open}
             />
           </PopoverTrigger>
@@ -269,64 +270,62 @@ export default function LayoutFlow({
             bgColor="#454545"
             textColor="#FFFFFF"
             borderRadius="10px"
-            marginRight="1rem"
-          >
+            marginRight="1rem">
             <PopoverHeader border="0px">Import Path</PopoverHeader>
-            <PopoverBody
-              display="flex"
-              flexDir="row"
-              gap="2"
-            >
-                <FormControl 
-                  flexDir="column"
-                  isInvalid={!dirFormValue}
-                >
-                  <Input
-                    id="importPath"
-                    type="text"
-                    bgColor="#121212"
-                    placeholder="src/app"
-                    flexGrow="3"
-                    value={dirFormValue}
-                    onChange={(e) => {
-                      setDirFormValue(e.target.value);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && dirFormValue) {
-                        handleSubmitDir();
-                        close();
-                        setDirFormValue("");
-                      }
-                    }}
-                  />
-                  <FormErrorMessage> 
-                    To find path, right click on the app folder and click copy relative or absolute path.
-                  </FormErrorMessage>
-                </FormControl>
-                <Button
-                  size="md"
-                  colorScheme="green"
-                  isDisabled={!dirFormValue}
-                  onClick={() => {
-                    handleSubmitDir();
-                    close();
-                    setDirFormValue("");
-                  }}>
-                  Submit
-                </Button>
+            <PopoverBody display="flex" flexDir="row" gap="2">
+              <FormControl flexDir="column" isInvalid={!dirFormValue}>
+                <Input
+                  id="importPath"
+                  type="text"
+                  bgColor="#121212"
+                  placeholder="src/app"
+                  flexGrow="3"
+                  value={dirFormValue}
+                  onChange={(e) => {
+                    setDirFormValue(e.target.value);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && dirFormValue) {
+                      handleSubmitDir();
+                      close();
+                      setDirFormValue("");
+                    }
+                  }}
+                />
+                <FormErrorMessage>
+                  To find path, right click on the app folder and click copy
+                  relative or absolute path.
+                </FormErrorMessage>
+              </FormControl>
+              <Button
+                size="md"
+                colorScheme="green"
+                isDisabled={!dirFormValue}
+                onClick={() => {
+                  handleSubmitDir();
+                  close();
+                  setDirFormValue("");
+                }}>
+                Submit
+              </Button>
             </PopoverBody>
           </PopoverContent>
-        </Popover>
-      {' '}
+        </Popover>{" "}
         <IconButton
           color="white"
           size="lg"
           aria-label="switch view"
           variant="ghost"
-          icon={view === "DOWN" ? <Icon style={{rotate: "-90deg"}} as={BiSitemap}/> : <Icon as={BiSitemap}/>}
-          _hover={{bg: 'white', textColor: 'black'}} 
+          icon={
+            view === "DOWN" ? (
+              <Icon style={{ rotate: "-90deg" }} as={BiSitemap} />
+            ) : (
+              <Icon as={BiSitemap} />
+            )
+          }
+          _hover={{ bg: "white", textColor: "black" }}
           onClick={() => {
-            if(view === "DOWN") {
+            if (view === "DOWN") {
               onLayout({ direction: "RIGHT" });
               setView("RIGHT");
             } else {
@@ -334,21 +333,20 @@ export default function LayoutFlow({
               setView("DOWN");
             }
           }}
-        />
-      {' '}
+        />{" "}
         <IconButton
-            color="white"
-            size="lg"
-            aria-label="refresh view"
-            variant="ghost"
-            icon={<Icon as={BiRefresh}/>}
-            _hover={{bg: 'white', textColor: 'black'}} 
-            onClick={() => {
-              if(validDir) {
-                handleRequestDir();
-                parseData();
-              }
-            }}
+          color="white"
+          size="lg"
+          aria-label="refresh view"
+          variant="ghost"
+          icon={<Icon as={BiRefresh} />}
+          _hover={{ bg: "white", textColor: "black" }}
+          onClick={() => {
+            if (validDir) {
+              handleRequestDir();
+              parseData();
+            }
+          }}
         />
       </Panel>
     </ReactFlow>
