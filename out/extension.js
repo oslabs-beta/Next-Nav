@@ -63,7 +63,9 @@ function activate(context) {
                         const folderLocation = await (0, functions_1.getValidDirectoryPath)(path.normalize(message.folderName));
                         if (folderLocation) {
                             lastSubmittedDir = folderLocation;
-                            vscode.window.showInformationMessage('Directory is now ' + lastSubmittedDir);
+                            // vscode.window.showInformationMessage(
+                            //   'Directory is now ' + lastSubmittedDir
+                            // );
                             cloneView.webview.postMessage({
                                 command: 'submitDirResponse',
                                 result: true,
@@ -200,7 +202,7 @@ function activate(context) {
             catch (err) {
                 console.log(err);
             }
-            vscode.window.showInformationMessage('Welcome to Next.Nav!');
+            // vscode.window.showInformationMessage('Welcome to Next.Nav!');
         }
     });
     context.subscriptions.push(disposable);
