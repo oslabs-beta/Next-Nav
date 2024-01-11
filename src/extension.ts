@@ -84,9 +84,9 @@ export function activate(context: vscode.ExtensionContext) {
                 );
                 if (folderLocation) {
                   lastSubmittedDir = folderLocation;
-                  vscode.window.showInformationMessage(
-                    'Directory is now ' + lastSubmittedDir
-                  );
+                  // vscode.window.showInformationMessage(
+                  //   'Directory is now ' + lastSubmittedDir
+                  // );
                   cloneView.webview.postMessage({
                     command: 'submitDirResponse',
                     result: true,
@@ -240,7 +240,7 @@ export function activate(context: vscode.ExtensionContext) {
         } catch (err) {
           console.log(err);
         }
-        vscode.window.showInformationMessage('Welcome to Next.Nav!');
+        // vscode.window.showInformationMessage('Welcome to Next.Nav!');
       }
     }
   );

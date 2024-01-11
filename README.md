@@ -4,7 +4,7 @@
 
 <div align="center">
 
-![Version: 1.0.5](https://img.shields.io/badge/version-1.0.5-black)
+![Version: 1.1.0](https://img.shields.io/badge/version-1.1.0-black)
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
 
 </div>
@@ -117,6 +117,14 @@ Next.Nav is an Open Source product and we encourage developers to contribute. Pl
 
 ## Release Notes
 
+### 1.1.0 - Feature Update
+<details><summary>1.1.0</summary>
+  <ul>
+    <li>Adds sub-tree traversal and focus feature</li>
+    <li>Adds fixes for Windows file path directory</li>    
+  </ul>
+</details>
+
 ### 1.0.0 - Initial release of Next.Nav
 
 <details><summary>1.0.2</summary>
@@ -147,6 +155,8 @@ Next.Nav is an Open Source product and we encourage developers to contribute. Pl
     <li>Adds limit to icons displayed </li>
   </ul>
 </details>
+
+
 
 ## Contributors
 
