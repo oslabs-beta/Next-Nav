@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import  { useState, useRef } from 'react';
 import { FileNode } from '../TreeContainer';
+import { IconType } from 'react-icons';
 import {
   Modal,
   ModalOverlay,
@@ -11,6 +12,7 @@ import {
   Popover,
   PopoverTrigger,
   PopoverContent,
+  PopoverCloseButton,
   PopoverBody,
   PopoverArrow,
   Portal,
@@ -26,20 +28,21 @@ import {
 import { PiTrashFill, PiFilePlusFill } from 'react-icons/pi';
 
 import { useVsCodeApi } from '../../VsCodeApiContext';
+import ListItem from './ListItem';
 
 type Props = {
   props: FileNode;
   handlePostMessage: (filePath: string,
     command: string,
     setterFunc?: (string: string) => any) => void;
-  getIcon: Function;
+  getIcon: (id: string) => [IconType, string];
   isOpen: boolean;
   onClose: () => void;
 };
 const DetailsView = ({ props, handlePostMessage, getIcon, isOpen, onClose }: Props): JSX.Element => {
   let { contents, folderName, path }: FileNode = props;
   const vscode = useVsCodeApi();
-  const ref = React.useRef(null);
+  const ref = useRef(null);
   const [addFileValue, setAddFileValue] = useState('');
 
   if (!contents) {
@@ -52,61 +55,7 @@ const DetailsView = ({ props, handlePostMessage, getIcon, isOpen, onClose }: Pro
   for (let i = 0; i < contents.length; i++) {
     const icon = getIcon(contents[i]);
     modalFiles.push(
-      <Box>
-        {' '}
-        <Flex gap="2">
-          {' '}
-          <Button
-            bgColor="#010101"
-            color="white"
-            flexGrow="3"
-            _hover={{ bg: 'white', textColor: 'black' }}
-            leftIcon={<Icon as={icon[0]} />}
-            onClick={() => {
-              handlePostMessage(path.concat("/", contents[i]), "open_file");
-            }}
-          >
-            {' '}
-            {contents[i]}
-          </Button>
-          {/* <Spacer /> */}
-          <Popover>
-            <PopoverTrigger>
-              <IconButton
-                isRound={true}
-                variant="solid"
-                size="md"
-                colorScheme="red"
-                aria-label="Done"
-                icon={<Icon as={PiTrashFill} />}
-              />
-            </PopoverTrigger>
-            <Portal containerRef={ref}>
-              <PopoverContent
-                // boxShadow="2xl"
-                bgColor="#010101"
-                textColor="#FFFFFF"
-                borderRadius="10px"
-                maxWidth="unset"
-                width="unset"
-              >
-                <PopoverArrow bgColor="#010101" />
-                <PopoverBody>
-                  <Button
-                    size="sm"
-                    colorScheme="red"
-                    onClick={(e) => {
-                      handlePostMessage(path.concat('/', contents[i]), 'deleteFile');
-                    }}
-                  >
-                    Confirm
-                  </Button>
-                </PopoverBody>
-              </PopoverContent>
-            </Portal>
-          </Popover>
-        </Flex>
-      </Box>
+      <ListItem props={props} handlePostMessage={handlePostMessage} isOpen={isOpen} onClose={onClose} icon={icon[0]} fileName={contents[i]} containerRef={ref}/>
     );
   }
 

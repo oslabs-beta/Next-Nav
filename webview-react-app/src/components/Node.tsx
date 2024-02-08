@@ -23,6 +23,7 @@ import {
   SiJavascript,
   SiTypescript,
   SiSass,
+  SiHtml5,
 } from 'react-icons/si';
 import { BiImport, BiArrowBack } from 'react-icons/bi';
 
@@ -99,6 +100,7 @@ const Node = ({
     // store of file extensions and their respective icons and icon background color
     const iconStore: { [index: string]: [IconType, string] } = {
       default: [PiFileCodeFill, 'white'],
+      html: [SiHtml5,'#e34c26'],
       css: [SiCss3, '#264de4'],
       sass: [SiSass, '#cf6d99'],
       scss: [SiSass, '#cf6d99'],

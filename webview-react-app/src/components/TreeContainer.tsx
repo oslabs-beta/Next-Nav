@@ -5,6 +5,7 @@ import Node from "./Node";
 // import { handleReceivedMessage, handleRequestDirectory } from "../functions";
 import { useVsCodeApi } from "../VsCodeApiContext";
 
+
 export type FileNode = {
   id: number;
   folderName: string;
