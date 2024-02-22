@@ -5,6 +5,7 @@ import Node from "./Node";
 // import { handleReceivedMessage, handleRequestDirectory } from "../functions";
 import { useVsCodeApi } from "../VsCodeApiContext";
 
+
 export type FileNode = {
   id: number;
   folderName: string;
@@ -77,6 +78,7 @@ export default function TreeContainer() {
   const [isParsed, setIsParsed] = useState(false); //tracks if the parseData function was called
   const [directory, setDirectory] = useState(tutorialTree);
   const [pathStack, setPathStack] = useState<string[]>([]);
+  const [isDefault, setIsDefault] = useState(true);
   const vscode = useVsCodeApi();
   // TODO create path history array useState for back button, add path on entry subpath. Pop off on back click
 
@@ -89,6 +91,11 @@ export default function TreeContainer() {
   //state for managing path input
   const [validDir, setValidDir] = useState(false);
   const [dirFormValue, setDirFormValue] = useState("src/app");
+
+  //update state for making icons clickable
+  useEffect(() => {
+    setIsDefault(false);
+  }, [directory]);
 
   // Update the refs whenever srcDir or appDir changes
   useEffect(() => {
@@ -181,7 +188,7 @@ export default function TreeContainer() {
         handleRequestDirectory(srcDirRef, appDirRef);
         break;
       case "submitDirResponse":
-        console.log("recieved", message);
+        console.log("received", message);
         setValidDir(message.result);
         if (message.result) {
           if(message.form) {
@@ -228,6 +235,7 @@ export default function TreeContainer() {
               pathStack={pathStack}
               onRemovePath={handleRemovePath}
               rootPath={serverResponse[0].path}
+              isDefault={isDefault}
             />
           ),
         },

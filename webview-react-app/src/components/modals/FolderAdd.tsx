@@ -20,6 +20,7 @@ type Props = {
   path: String;
   parentNode: Number | null;
   render: string;
+  clickWrapper: Function;
   handlePostMessage: (
     filePath: string,
     // event:
@@ -28,9 +29,10 @@ type Props = {
     command: string,
     setterFunc?: (string: string) => any
   ) => void;
+  isDefault: boolean;
 };
 
-const FolderAdd = ({ path, parentNode, render, handlePostMessage }: Props) => {
+const FolderAdd = ({ path, parentNode, render, handlePostMessage, clickWrapper, isDefault }: Props) => {
   const OverlayOne = () => (
     <ModalOverlay
       bg="blackAlpha.300"
@@ -97,6 +99,7 @@ const FolderAdd = ({ path, parentNode, render, handlePostMessage }: Props) => {
             <FormControl display="flex" flexDir="row" gap="2">
               <Input
                 id="folderName"
+                autoFocus
                 type="text"
                 bgColor="#121212"
                 placeholder="new folder"
@@ -104,10 +107,7 @@ const FolderAdd = ({ path, parentNode, render, handlePostMessage }: Props) => {
                 textAlign="center"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
-                    handlePostMessage(
-                      path.concat('/', addFolderValue),
-                      'addFolder'
-                    );
+                    clickWrapper(handlePostMessage, isDefault, path.concat('/', addFolderValue), 'addFolder');
                     addOnClose();
                   }
                 }}
@@ -127,11 +127,7 @@ const FolderAdd = ({ path, parentNode, render, handlePostMessage }: Props) => {
                 colorScheme="green"
                 icon={<Icon as={PiFolderNotchPlusFill} />}
                 onClick={(e) => {
-                  handlePostMessage(
-                    path.concat('/', addFolderValue),
-                    'addFolder',
-                    setAddFolderValue
-                  );
+                  clickWrapper(handlePostMessage, isDefault, path.concat('/', addFolderValue), 'addFolder');
                   addOnClose();
                 }}
               />

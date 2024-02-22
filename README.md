@@ -4,7 +4,7 @@
 
 <div align="center">
 
-![Version: 1.1.0](https://img.shields.io/badge/version-1.1.0-black)
+![Version: 1.1.1](https://img.shields.io/badge/version-1.1.1-black)
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
 
 </div>
@@ -41,16 +41,24 @@ Next.nav allows Next.js developers to:
 ### Launching the Extension and Opening a Tree
 
 1. Install VSCode
-2. Install the extension by searching "Next Nav" in the extension marketplace or Launch VS Code Quick Open (Ctrl+P in Windows/Linux) or (Command+P MacOS), paste the following command `ext install NextNav.NextNav` and press enter.
+2. Install the extension by searching "Next Nav" in the extension marketplace or Launch VS Code Quick Open (Ctrl+P in Windows/Linux) or (Command+P in MacOS), paste the following command `ext install NextNav.NextNav` and press enter.
 3. Open a Next.js project that is using the App Router in VSCode
-   ![Launching the Extension](https://i.imgur.com/10qMgfY.gif "Launching the Extension")
-4. Launch Next.Nav from status bar or by opening the command palette using (Ctrl+Shift+P in Windows/Linux) or (Command+Shift+P MacOS) and typing `Next.Nav` highlight and press Enter
-   ![Opening a Tree](https://i.imgur.com/sVYwqVu.gif "Opening a Tree")
+   ![Launching the Extension](https://i.imgur.com/JB0a26c.gif "Launching the Extension")
+4. Launch Next.Nav from status bar or by opening the command palette using (Ctrl+Shift+P in Windows/Linux) or (Command+Shift+P in MacOS) and typing `Next.Nav` highlight and press Enter
+   ![Opening a Tree](https://i.imgur.com/EMVb6w9.gif "Opening a Tree")
 5. Select the Import Path icon and input the relative or absolute path of your root App route (Note: Next.Nav will automatically grab your file structure if it is under the 'src/app' route)
+
+### Route Traversal
+
+![Route Traversal](https://i.imgur.com/tfJXtFD.gif "Route Traversal")
+
+- You can traverse into sub trees/folders by pressing the sub-directory icon (to the right of the client/server) of the node you want to become the root node
+- From the sub-directory, you can exit to the original tree by press the exit button on the root node. If this button is not there, you are already in the original tree.
+- The original tree is determined by the initial folder path the extension opens on or the path you enter into the path field.
 
 ### Opening Files
 
-![Opening Files](https://i.imgur.com/zDKCPjo.gif "Opening Files")
+![Opening Files](https://i.imgur.com/LLZQi6V.gif "Opening Files")
 
 1. When you hover over a file type in the tree it will tell you the name
 2. You can click on the icon of the file in the folder to open it.
@@ -59,7 +67,7 @@ Next.nav allows Next.js developers to:
 
 ### Adding Files
 
-![Adding Files](https://i.imgur.com/xdraVMG.gif "Adding Files")
+![Adding Files](https://i.imgur.com/MTga1G1.gif "Adding Files")
 
 1. Click on any blank space on a folder node to open a modal to view its contents.
 2. Add a file name and extension in the input field.
@@ -69,7 +77,7 @@ Next.nav allows Next.js developers to:
 
 **warning:** this will **permanently** delete the file.
 
-![Deleting Files](https://i.imgur.com/U4KE5DN.gif "Deleting Files")
+![Deleting Files](https://i.imgur.com/rZi5r9q.gif "Deleting Files")
 
 1. Click on any blank space on a folder node to open a modal to view a folders contents.
 2. Click the red trash icon next to the file you want to delete.
@@ -77,7 +85,7 @@ Next.nav allows Next.js developers to:
 
 ### Adding Folders
 
-![Adding Folders](https://i.imgur.com/2b3FngG.gif "Adding Folders")
+![Adding Folders](https://i.imgur.com/DSLN7aL.gif "Adding Folders")
 
 1. Click on the plus icon on the right edge of the folder node you want your new folder to be nested in.
 2. Give your new folder a name and submit.
@@ -86,7 +94,7 @@ Next.nav allows Next.js developers to:
 
 **warning:** this will **permanently** delete all contained files and sub folders
 
-![Deleting Folders](https://i.imgur.com/qXMlm0Y.gif "Deleting Folders")
+![Deleting Folders](https://i.imgur.com/WZtWYx4.gif "Deleting Folders")
 
 1. Click on the minus icon on the left edge of the folder node you want to delete
 2. Type the name of the folder to confirm deletion of the directory and all sub directories and files contained. (**warning:** this can not be undone)
@@ -106,7 +114,7 @@ Next.Nav is an Open Source product and we encourage developers to contribute. Pl
 - Moving folders and files: adjust routes through drag and drop
 - Filter for file types: add a checklist panel to highlight selected file types
 - Add support for more file types
-- Add toggle option for client/serverside render text on nodes
+- Add toggle option for client/server-side render text on nodes
 - Recently used route (time stamp)
 
 ### Possible Iterations
@@ -118,10 +126,19 @@ Next.Nav is an Open Source product and we encourage developers to contribute. Pl
 ## Release Notes
 
 ### 1.1.0 - Feature Update
+
 <details><summary>1.1.0</summary>
   <ul>
     <li>Adds sub-tree traversal and focus feature</li>
     <li>Adds fixes for Windows file path directory</li>    
+  </ul>
+</details>
+
+<details><summary>1.1.1</summary>
+  <ul>
+    <li>fixes tutorial tree errors</li>
+    <li>adds auto focus to input fields</li>
+    <li>updates "getting started" instructions in README</li>      
   </ul>
 </details>
 
@@ -156,8 +173,6 @@ Next.Nav is an Open Source product and we encourage developers to contribute. Pl
   </ul>
 </details>
 
-
-
 ## Contributors
 
 <table>
@@ -177,7 +192,8 @@ Next.Nav is an Open Source product and we encourage developers to contribute. Pl
       <br />
       <a href="https://www.linkedin.com/in/b-henkel/">Linkedin</a> |
       <a href="https://github.com/b-henkel">GitHub</a>
-    </td> <td align="center">
+    </td> 
+    <td align="center">
       <img src="https://avatars.githubusercontent.com/u/106214861?v=4" width="140px;" alt="a photo of Jordan Querubin"/>
       <br />
       <sub><b>Jordan Querubin</b></sub>
@@ -191,6 +207,14 @@ Next.Nav is an Open Source product and we encourage developers to contribute. Pl
       <br />
       <a href="https://www.linkedin.com/in/nathaniel-peel/">Linkedin</a> |
       <a href="https://github.com/nathanpeel">GitHub</a>
-    </td>     
+    </td>
+     <td align="center">
+      <img src="https://avatars.githubusercontent.com/u/1166090?v=4" width="140px;" alt="a photo of Darren Pavel"/>
+      <br />
+      <sub><b>Darren Pavel</b></sub>
+      <br />
+      <a href="https://www.linkedin.com/in/darren-pavel/">Linkedin</a> |
+      <a href="https://github.com/dcpavel">GitHub</a>
+    </td>      
   </tr>
 </table>
