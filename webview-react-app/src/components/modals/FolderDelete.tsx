@@ -23,13 +23,16 @@ type Props = {
   parentNode: Number | null;
   folderName: string;
   render: string;
+  clickWrapper: Function;
+  isDefault: boolean;
   handlePostMessage: (
     filePath: string,
     // event:
     //   | React.MouseEvent<HTMLButtonElement>
     //   | React.KeyboardEvent<HTMLInputElement>,
     command: string,
-    setterFunc?: (string: string) => any
+    setterFunc?: (string: string) => any,
+
   ) => void;
 };
 
@@ -39,6 +42,8 @@ const FolderDelete = ({
   folderName,
   render,
   handlePostMessage,
+  clickWrapper,
+  isDefault
 }: Props) => {
   const OverlayOne = () => (
     <ModalOverlay
@@ -110,6 +115,7 @@ const FolderDelete = ({
             >
               <Input
                 id='folderName'
+                autoFocus
                 type='text'
                 bgColor='#121212'
                 textAlign='center'
@@ -117,11 +123,7 @@ const FolderDelete = ({
                 placeholder={`${folderName}`}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && deleteFolderValue === folderName) {
-                    handlePostMessage(
-                      path,
-                      'deleteFolder',
-                      setDeleteFolderValue
-                    );
+                    clickWrapper(handlePostMessage, isDefault, path, 'deleteFolder', setDeleteFolderValue);
                     deleteOnClose();
                   }
                 }}
@@ -138,7 +140,7 @@ const FolderDelete = ({
               isDisabled={deleteFolderValue !== folderName}
               colorScheme='red'
               onClick={(e) => {
-                handlePostMessage(path, 'deleteFolder', setDeleteFolderValue);
+                clickWrapper(handlePostMessage, isDefault, path, 'deleteFolder', setDeleteFolderValue);
                 deleteOnClose();
               }}
             >

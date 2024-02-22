@@ -4,7 +4,7 @@
 
 <div align="center">
 
-![Version: 1.1.0](https://img.shields.io/badge/version-1.1.0-black)
+![Version: 1.1.1](https://img.shields.io/badge/version-1.1.1-black)
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
 
 </div>
@@ -136,6 +136,8 @@ Next.Nav is an Open Source product and we encourage developers to contribute. Pl
 
 <details><summary>1.1.1</summary>
   <ul>
+    <li>fixes tutorial tree errors</li>
+    <li>adds auto focus to input fields</li>
     <li>updates "getting started" instructions in README</li>      
   </ul>
 </details>
@@ -205,6 +207,14 @@ Next.Nav is an Open Source product and we encourage developers to contribute. Pl
       <br />
       <a href="https://www.linkedin.com/in/nathaniel-peel/">Linkedin</a> |
       <a href="https://github.com/nathanpeel">GitHub</a>
-    </td>     
+    </td>
+     <td align="center">
+      <img src="https://avatars.githubusercontent.com/u/1166090?v=4" width="140px;" alt="a photo of Darren Pavel"/>
+      <br />
+      <sub><b>Darren Pavel</b></sub>
+      <br />
+      <a href="https://www.linkedin.com/in/darren-pavel/">Linkedin</a> |
+      <a href="https://github.com/dcpavel">GitHub</a>
+    </td>      
   </tr>
 </table>

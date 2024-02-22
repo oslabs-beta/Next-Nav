@@ -38,8 +38,10 @@ type Props = {
   getIcon: (id: string) => [IconType, string];
   isOpen: boolean;
   onClose: () => void;
+  clickWrapper: Function,
+  isDefault: boolean
 };
-const DetailsView = ({ props, handlePostMessage, getIcon, isOpen, onClose }: Props): JSX.Element => {
+const DetailsView = ({ props, handlePostMessage, getIcon, isOpen, onClose, clickWrapper, isDefault }: Props): JSX.Element => {
   let { contents, folderName, path }: FileNode = props;
   const vscode = useVsCodeApi();
   const ref = useRef(null);
@@ -82,6 +84,7 @@ const DetailsView = ({ props, handlePostMessage, getIcon, isOpen, onClose }: Pro
           <FormControl justifyContent={'center'}>
             <Input
               id="fileName"
+              autoFocus
               type="text"
               bgColor="#121212"
               placeholder="file name"
@@ -89,7 +92,7 @@ const DetailsView = ({ props, handlePostMessage, getIcon, isOpen, onClose }: Pro
               textAlign="center"
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
-                  handlePostMessage(path.concat('/', addFileValue), 'addFile', setAddFileValue);
+                  clickWrapper(handlePostMessage, isDefault, path.concat('/', addFileValue), 'addFile', setAddFileValue);                  
                 }
               }}
               onChange={(e) => {
@@ -111,7 +114,7 @@ const DetailsView = ({ props, handlePostMessage, getIcon, isOpen, onClose }: Pro
             icon={<Icon as={PiFilePlusFill} />}
             onClick={(e) => {
               console.log(addFileValue);
-              handlePostMessage(path.concat('/', addFileValue), 'addFile', setAddFileValue);
+              clickWrapper(handlePostMessage, isDefault, path.concat('/', addFileValue), 'addFile', setAddFileValue);
             }}
           />
         </ModalFooter>

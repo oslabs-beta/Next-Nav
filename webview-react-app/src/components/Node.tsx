@@ -42,6 +42,7 @@ type Props = {
   pathStack: Array<string>;
   onRemovePath: () => void;
   rootPath: string;
+  isDefault: boolean;
 };
 
 const Node = ({
@@ -51,6 +52,7 @@ const Node = ({
   pathStack,
   onRemovePath,
   rootPath,
+  isDefault,
 }: Props): JSX.Element => {
   //deconstruct props here. Used let to account for undefined checking.
   let { contents, parentNode, folderName, path, render }: FileNode = data;
@@ -140,12 +142,20 @@ const Node = ({
           icon={<Icon as={icon[0]} />}
           onClick={(e) => {
             e.stopPropagation();
-            handlePostMessage(path.concat('/', contents[i]), 'open_file');
+            clickWrapper(handlePostMessage,isDefault,path.concat('/', contents[i]), 'open_file');
           }}
         />
       </Tooltip>
     );
   }
+
+  const clickWrapper = (onClickFunction: Function, isDefault: boolean, ...args: any[]): void => {
+    if (!isDefault) {
+      return onClickFunction(...args);
+    }
+    console.log('This is a default node, no action will be taken');
+    return;
+  };
 
   const boxShadowColor = render === 'client' ? '#ffcf9e' : '#9FFFCB';
 
@@ -158,9 +168,7 @@ const Node = ({
       }}
     >
       <Card
-        onClick={() => {
-          nodeOnOpen();
-        }}
+        onClick={() => {clickWrapper(nodeOnOpen, isDefault);}}
         bgColor='#050505'
         align='center'
         minW='15rem'
@@ -217,7 +225,7 @@ const Node = ({
                 _hover={{ bg: 'white', textColor: 'black' }}
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleSubmitDir();
+                  clickWrapper(handleSubmitDir, isDefault);
                 }}
               />
             </Tooltip>
@@ -233,7 +241,7 @@ const Node = ({
                 _hover={{ bg: 'white', textColor: 'black' }}
                 onClick={(e) => {
                   e.stopPropagation();
-                  handlePrevDir();
+                  clickWrapper(handlePrevDir, isDefault);
                 }}
               />
             </Tooltip>
@@ -246,6 +254,8 @@ const Node = ({
         parentNode={parentNode}
         render={render}
         handlePostMessage={handlePostMessage}
+        clickWrapper={clickWrapper}
+        isDefault={isDefault}
       />
 
       <FolderDelete
@@ -254,6 +264,8 @@ const Node = ({
         parentNode={parentNode}
         render={render}
         handlePostMessage={handlePostMessage}
+        clickWrapper={clickWrapper}
+        isDefault={isDefault}
       />
 
       {/* node modal */}
@@ -263,6 +275,8 @@ const Node = ({
         getIcon={getIcon}
         isOpen={nodeIsOpen}
         onClose={nodeOnClose}
+        clickWrapper={clickWrapper}
+        isDefault={isDefault}
       />
     </div>
   );
